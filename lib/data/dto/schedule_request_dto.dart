@@ -13,7 +13,7 @@ class ScheduleRequestDTO {
         "title": title,
         "scheduleEnum": scheduleEnum,
         "betweenDay": betweenDay,
-        "targetDay": targetDay.toString(),
+        "targetDay": targetDay == null ? null : targetDay.toString(),
       };
 
   @override

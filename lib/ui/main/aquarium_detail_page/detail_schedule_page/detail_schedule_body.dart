@@ -18,25 +18,27 @@ class DetailScheduleBody extends ConsumerStatefulWidget {
 }
 
 class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
+  TextEditingController _eventController = new TextEditingController();
+
   DateTime day0101 = DateTime.utc(DateTime.now().year - 1, 01, 01);
   DateTime selectedDay = DateTime.now();
-
   int durationDay = 1095; // 3년
 
   late MainModel model;
   late AquariumDTO aquariumDTO;
 
-  late bool toggleFood;
-  late bool toggleWaterChange;
-  late bool toggleImportant;
+  bool toggleFood = false;
+  bool toggleWaterChange = false;
+  bool toggleImportant = false;
 
   Map<DateTime, List<Event>> events = {};
 
-  TextEditingController _eventController = new TextEditingController();
-
   late final ValueNotifier<List<Event>> _selectedEvents;
-
   late List<ScheduleDTO> scheduleDTOList = aquariumDTO.scheduleDTOList;
+
+  List<Event> _getEventsForDay(DateTime day) {
+    return events[day] ?? [];
+  }
 
   @override
   void didChangeDependencies() {
@@ -46,17 +48,12 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
     MainModel? model = ref.watch(mainProvider);
     if (model == null) {
       ref.read(mainProvider.notifier).notifyInit();
-      // return Center(child: CircularProgressIndicator());
     }
 
     ParamStore paramStore = ref.read(paramProvider);
 
     aquariumDTO = model!.aquariumDTOList //
         .firstWhere((element) => element.id == paramStore.aquariumDetailId);
-
-    toggleFood = false;
-    toggleWaterChange = false;
-    toggleImportant = false;
 
     scheduleDTOList.forEach((scheduleDTO) {
       if (scheduleDTO.scheduleEnum == "지정") {
@@ -82,6 +79,20 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                 .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
           }
         }
+        if (scheduleDTO.betweenDay == 2) {
+          for (int i = 0; i < durationDay; i += 2) {
+            events[day0101.add(Duration(days: i))] ??= [];
+            events[day0101.add(Duration(days: i))]!
+                .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
+          }
+        }
+        if (scheduleDTO.betweenDay == 4) {
+          for (int i = 0; i < durationDay; i += 4) {
+            events[day0101.add(Duration(days: i))] ??= [];
+            events[day0101.add(Duration(days: i))]!
+                .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
+          }
+        }
         if (scheduleDTO.betweenDay == 10) {
           for (int i = 0; i < durationDay; i += 10) {
             events[day0101.add(Duration(days: i))] ??= [];
@@ -89,35 +100,19 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                 .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
           }
         }
+        if (scheduleDTO.betweenDay == 30) {
+          for (int i = 0; i < durationDay; i += 30) {
+            events[day0101.add(Duration(days: i))] ??= [];
+            events[day0101.add(Duration(days: i))]!
+                .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
+          }
+        }
       }
-
-      // print("events4:${events}");
     });
-
-    // for (int i = 0; i < durationDay; i += 1) {
-    //   events[day0101.add(Duration(days: i))] ??= [];
-    //   events[day0101.add(Duration(days: i))]!.add(Event("사료 급여"));
-    // }
-    // print("events5:${events}");
-    //
-    // for (int i = 0; i < durationDay; i += 7) {
-    //   events[day0101.add(Duration(days: i))] ??= [];
-    //   events[day0101.add(Duration(days: i))]!.add(Event("물 환수"));
-    // }
 
     String formattedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').format(selectedDay);
     DateTime parsedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').parseUTC(formattedDate);
-
     _selectedEvents = ValueNotifier(_getEventsForDay(parsedDate));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  List<Event> _getEventsForDay(DateTime day) {
-    return events[day] ?? [];
   }
 
   @override
@@ -154,15 +149,12 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                     calendarBuilders: CalendarBuilders(
                       markerBuilder: (context, day, events) {
                         if (events.isEmpty) return SizedBox();
-                        // print("events: ${events}");
-                        // print(events.runtimeType);
 
                         return ListView.builder(
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemCount: events.length,
                             itemBuilder: (context, index) {
-                              // print("events: ${events}");
                               return Container(
                                 margin: const EdgeInsets.only(top: 25),
                                 padding: const EdgeInsets.all(1),
@@ -420,9 +412,8 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                                   // print(events);
                                   Navigator.of(context).pop();
                                   _selectedEvents.value = _getEventsForDay(selectedDay);
-                                  setState(() {});
+                                  // setState(() {});
                                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
-                                  setState(() {});
                                   print("다시그림");
                                 },
                                 child: Text("제출"),
@@ -535,7 +526,8 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
 
         Navigator.of(context).pop();
         _selectedEvents.value = _getEventsForDay(selectedDay);
-        setState(() {});
+        // setState(() {});
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
       },
     );
   }
@@ -550,12 +542,16 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
         ),
         child: Text("${week}", style: TextStyle(color: Colors.white)),
       ),
-      onTap: () {
+      onTap: () async {
         if (_eventController.text == "") {
           return;
         }
 
         DateTime targetWeek = day0101;
+
+        ScheduleRequestDTO scheduleRequestDTO = new ScheduleRequestDTO(title: _eventController.text, scheduleEnum: "간격", betweenDay: dayInt);
+
+        await ref.watch(mainProvider.notifier).notifyScheduleCreate(aquariumDTO.id, scheduleRequestDTO);
 
         for (int i = 0; i < durationDay; i += dayInt) {
           events[targetWeek.add(Duration(days: i))] ??= [];
@@ -564,7 +560,8 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
 
         Navigator.of(context).pop();
         _selectedEvents.value = _getEventsForDay(selectedDay);
-        setState(() {});
+        // setState(() {});
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
       },
     );
   }
