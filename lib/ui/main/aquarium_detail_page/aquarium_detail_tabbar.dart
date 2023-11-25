@@ -43,7 +43,7 @@ class _AquariumDetailTabBarState extends State<AquariumDetailTabBar> with Single
           child: TabBarView(
             controller: _tabController,
             children: [
-              DetailScheduleBody(widget.aquariumDTO),
+              DetailScheduleBody(),
               DetailFishBody(),
               DetailOtherBody(),
             ],
