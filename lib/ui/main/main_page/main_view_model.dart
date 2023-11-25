@@ -75,6 +75,29 @@ class MainViewModel extends StateNotifier<MainModel?> {
     state = MainModel(aquariumDTOList: aquariumDTOList);
   }
 
+  Future<void> scheduleDelete(int scheduleId) async {
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ResponseDTO responseDTO = await AquariumRepository().fetchScheduleDelete(sessionUser.jwt!, scheduleId);
+
+    if (responseDTO.success == false) {
+      print("삭제실패 : ${responseDTO}");
+      notifyInit();
+      return;
+    }
+
+    ScheduleDTO scheduleDTO = responseDTO.data;
+
+    List<AquariumDTO> aquariumDTOList = state!.aquariumDTOList;
+
+    aquariumDTOList
+        .firstWhere((e) => e.id == scheduleDTO.aquariumId) //
+        .scheduleDTOList //
+        .removeWhere((e) => e.id == scheduleDTO.id);
+
+    state = MainModel(aquariumDTOList: aquariumDTOList);
+  }
+
 // Future<void> notifyEpisodeViewUpdate(int epId) async {
   //   if (state == null) {
   //     print("웹툰 디테일 거쳐서 접근하지 않음");

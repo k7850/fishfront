@@ -248,151 +248,157 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
               child: ValueListenableBuilder<List<Event>>(
                 valueListenable: _selectedEvents,
                 builder: (context, value, _) {
-                  return Column(
-                    children: value.map((event) {
-                      return DateTime.now().day == selectedDay.day &&
-                              DateTime.now().month == selectedDay.month &&
-                              DateTime.now().year == selectedDay.year
-                          ? InkWell(
-                              onTap: () {
-                                // print("events:${events}");
-                                // print("event:${event}");
-                                // print("_selectedEvents:${_selectedEvents}");
-                                // print(selectedDay);
-                                // print(DateTime.now());
-
-                                scheduleDTOList.forEach((schedule) async {
-                                  if (schedule.id == event.scheduleId) {
-                                    await ref.watch(mainProvider.notifier).scheduleCheck(schedule.id, schedule.isCompleted);
-
-                                    event.isCompleted = !event.isCompleted;
-                                    // schedule.isCompleted = !schedule.isCompleted;
-                                  }
-                                });
-                                setState(() {});
-                              },
-                              child: Container(
-                                margin: EdgeInsets.symmetric(vertical: 4),
-                                // decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
-                                child: Row(
-                                  children: [
-                                    event.isCompleted ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
-                                    SizedBox(width: 5),
-                                    Container(
-                                      constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.6),
-                                      // width: sizeGetScreenWidth(context) * 0.6,
-                                      child: Text(
-                                        "${event.title}",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                            color: event.isCompleted ? Colors.grey[600] : Colors.black,
-                                            decoration: event.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
-                                            decorationThickness: 3),
-                                      ),
-                                    ),
-                                    SizedBox(width: 5),
-                                    InkWell(
-                                      onTap: () {
-                                        print("삭제누름");
-                                        // print("events:${events}");
-                                        // print("event:${event}");
-                                        // print("_selectedEvents:${_selectedEvents}");
-                                        // print(selectedDay);
-                                        // print(DateTime.now());
-                                        //
-                                        // print("scheduleDTOList : ${scheduleDTOList}");
-                                        // print("${scheduleDTOList.length}");
-
-                                        scheduleDTOList.removeWhere((schedule) => schedule.id == event.scheduleId);
-
-                                        List<Event>? selectedEvents = events[selectedDay];
-
-                                        if (selectedEvents != null) {
-                                          selectedEvents.remove(event);
-
-                                          // 만약 해당 일자의 이벤트 목록이 더 이상 비어있지 않다면, events에 업데이트합니다.
-                                          if (selectedEvents.isNotEmpty) {
-                                            events[selectedDay] = selectedEvents;
-                                          } else {
-                                            // 이벤트 목록이 비어 있다면 해당 일자를 events에서 제거합니다.
-                                            events.remove(selectedDay);
-                                          }
-                                        }
-
-                                        print("events : ${events}");
-                                        print("events.runtimeType : ${events.runtimeType}");
-                                        print("events[selectedDay] : ${events[selectedDay]}");
-
-                                        // setState(() {});
-
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
-                                      },
-                                      child: Icon(Icons.delete_outline, color: Colors.red),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Container(
-                              margin: EdgeInsets.symmetric(vertical: 4),
-                              // decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.6),
-                                    // width: sizeGetScreenWidth(context) * 0.6,
-                                    child: Text(
-                                      " ${event.title}",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  InkWell(
+                  return value.length == 0
+                      ? Container(child: Text(" 일정이 없거나, 날짜를 선택하지 않음."), margin: EdgeInsets.symmetric(vertical: 6))
+                      : Column(
+                          children: value.map((event) {
+                            return DateTime.now().day == selectedDay.day &&
+                                    DateTime.now().month == selectedDay.month &&
+                                    DateTime.now().year == selectedDay.year
+                                ? InkWell(
                                     onTap: () {
-                                      print("삭제누름");
                                       // print("events:${events}");
                                       // print("event:${event}");
                                       // print("_selectedEvents:${_selectedEvents}");
                                       // print(selectedDay);
                                       // print(DateTime.now());
-                                      //
-                                      // print("scheduleDTOList : ${scheduleDTOList}");
-                                      // print("${scheduleDTOList.length}");
 
-                                      scheduleDTOList.removeWhere((schedule) => schedule.id == event.scheduleId);
+                                      scheduleDTOList.forEach((schedule) async {
+                                        if (schedule.id == event.scheduleId) {
+                                          await ref.watch(mainProvider.notifier).scheduleCheck(schedule.id, schedule.isCompleted);
 
-                                      List<Event>? selectedEvents = events[selectedDay];
-
-                                      if (selectedEvents != null) {
-                                        selectedEvents.remove(event);
-
-                                        // 만약 해당 일자의 이벤트 목록이 더 이상 비어있지 않다면, events에 업데이트합니다.
-                                        if (selectedEvents.isNotEmpty) {
-                                          events[selectedDay] = selectedEvents;
-                                        } else {
-                                          // 이벤트 목록이 비어 있다면 해당 일자를 events에서 제거합니다.
-                                          events.remove(selectedDay);
+                                          event.isCompleted = !event.isCompleted;
+                                          // schedule.isCompleted = !schedule.isCompleted;
                                         }
-                                      }
-
-                                      print("events : ${events}");
-                                      print("events.runtimeType : ${events.runtimeType}");
-                                      print("events[selectedDay] : ${events[selectedDay]}");
-
-                                      // setState(() {});
-
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
+                                      });
+                                      setState(() {});
                                     },
-                                    child: Icon(Icons.delete_outline, color: Colors.red),
-                                  ),
-                                ],
-                              ),
-                            );
-                    }).toList(),
-                  );
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(vertical: 4),
+                                      // decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+                                      child: Row(
+                                        children: [
+                                          event.isCompleted ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
+                                          SizedBox(width: 5),
+                                          Container(
+                                            constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.6),
+                                            // width: sizeGetScreenWidth(context) * 0.6,
+                                            child: Text(
+                                              "${event.title}",
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  color: event.isCompleted ? Colors.grey[600] : Colors.black,
+                                                  decoration: event.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
+                                                  decorationThickness: 3),
+                                            ),
+                                          ),
+                                          SizedBox(width: 5),
+                                          InkWell(
+                                            onTap: () {
+                                              print("삭제누름");
+                                              // print("events:${events}");
+                                              // print("event:${event}");
+                                              // print("_selectedEvents:${_selectedEvents}");
+                                              // print(selectedDay);
+                                              // print(DateTime.now());
+                                              //
+                                              // print("scheduleDTOList : ${scheduleDTOList}");
+                                              // print("${scheduleDTOList.length}");
+
+                                              ref.watch(mainProvider.notifier).scheduleDelete(event.scheduleId!);
+
+                                              scheduleDTOList.removeWhere((schedule) => schedule.id == event.scheduleId);
+
+                                              List<Event>? selectedEvents = events[selectedDay];
+
+                                              if (selectedEvents != null) {
+                                                selectedEvents.remove(event);
+
+                                                // 만약 해당 일자의 이벤트 목록이 더 이상 비어있지 않다면, events에 업데이트합니다.
+                                                if (selectedEvents.isNotEmpty) {
+                                                  events[selectedDay] = selectedEvents;
+                                                } else {
+                                                  // 이벤트 목록이 비어 있다면 해당 일자를 events에서 제거합니다.
+                                                  events.remove(selectedDay);
+                                                }
+                                              }
+
+                                              print("events : ${events}");
+                                              print("events.runtimeType : ${events.runtimeType}");
+                                              print("events[selectedDay] : ${events[selectedDay]}");
+
+                                              // setState(() {});
+
+                                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
+                                            },
+                                            child: Icon(Icons.delete_outline, color: Colors.red),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    margin: EdgeInsets.symmetric(vertical: 4),
+                                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.6),
+                                          // width: sizeGetScreenWidth(context) * 0.6,
+                                          child: Text(
+                                            " ${event.title}",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                        SizedBox(width: 5),
+                                        InkWell(
+                                          onTap: () {
+                                            print("삭제누름");
+                                            // print("events:${events}");
+                                            // print("event:${event}");
+                                            // print("_selectedEvents:${_selectedEvents}");
+                                            // print(selectedDay);
+                                            // print(DateTime.now());
+                                            //
+                                            // print("scheduleDTOList : ${scheduleDTOList}");
+                                            // print("${scheduleDTOList.length}");
+
+                                            ref.watch(mainProvider.notifier).scheduleDelete(event.scheduleId!);
+
+                                            scheduleDTOList.removeWhere((schedule) => schedule.id == event.scheduleId);
+
+                                            List<Event>? selectedEvents = events[selectedDay];
+
+                                            if (selectedEvents != null) {
+                                              selectedEvents.remove(event);
+
+                                              // 만약 해당 일자의 이벤트 목록이 더 이상 비어있지 않다면, events에 업데이트합니다.
+                                              if (selectedEvents.isNotEmpty) {
+                                                events[selectedDay] = selectedEvents;
+                                              } else {
+                                                // 이벤트 목록이 비어 있다면 해당 일자를 events에서 제거합니다.
+                                                events.remove(selectedDay);
+                                              }
+                                            }
+
+                                            print("events : ${events}");
+                                            print("events.runtimeType : ${events.runtimeType}");
+                                            print("events[selectedDay] : ${events[selectedDay]}");
+
+                                            // setState(() {});
+
+                                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
+                                          },
+                                          child: Icon(Icons.delete_outline, color: Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                          }).toList(),
+                        );
                 },
               ),
             ),
@@ -403,7 +409,8 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                    child: Text("${selectedDay.month}월 ${selectedDay.day}일 계획"),
+                    child: Text(
+                        "${selectedDay.month < 10 ? "0${selectedDay.month}" : selectedDay.month}월 ${selectedDay.day < 10 ? "0${selectedDay.day}" : selectedDay.day}일 계획"),
                     style: ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 10))),
                     onPressed: () {
                       _eventController.text = "";

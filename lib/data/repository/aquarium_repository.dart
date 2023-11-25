@@ -63,5 +63,25 @@ class AquariumRepository {
     }
   }
 
+  Future<ResponseDTO> fetchScheduleDelete(String jwt, int scheduleId) async {
+    try {
+      Response response = await dio.delete("/schedules/${scheduleId}", options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response.data: ${response.data}");
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new ScheduleDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
 //
 }
