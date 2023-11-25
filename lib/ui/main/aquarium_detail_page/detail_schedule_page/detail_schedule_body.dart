@@ -55,13 +55,16 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
     aquariumDTO = model!.aquariumDTOList //
         .firstWhere((element) => element.id == paramStore.aquariumDetailId);
 
+    // 달력에 스케줄 반영
     scheduleDTOList.forEach((scheduleDTO) {
       if (scheduleDTO.scheduleEnum == "지정") {
         String formattedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').format(scheduleDTO.targetDay!);
         DateTime parsedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').parseUTC(formattedDate);
         events[parsedDate] ??= [];
         events[parsedDate]!.add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
-      } else if (scheduleDTO.scheduleEnum == "요일") {
+      }
+
+      if (scheduleDTO.scheduleEnum == "요일") {
         DateTime targetWeek = day0101;
         while (targetWeek.weekday != scheduleDTO.betweenDay) {
           targetWeek = targetWeek.add(Duration(days: 1));
@@ -71,42 +74,14 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
           events[targetWeek.add(Duration(days: i))]!
               .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
         }
-      } else {
-        if (scheduleDTO.betweenDay == 1) {
-          for (int i = 0; i < durationDay; i += 1) {
-            events[day0101.add(Duration(days: i))] ??= [];
-            events[day0101.add(Duration(days: i))]!
-                .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
-          }
-        }
-        if (scheduleDTO.betweenDay == 2) {
-          for (int i = 0; i < durationDay; i += 2) {
-            events[day0101.add(Duration(days: i))] ??= [];
-            events[day0101.add(Duration(days: i))]!
-                .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
-          }
-        }
-        if (scheduleDTO.betweenDay == 4) {
-          for (int i = 0; i < durationDay; i += 4) {
-            events[day0101.add(Duration(days: i))] ??= [];
-            events[day0101.add(Duration(days: i))]!
-                .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
-          }
-        }
-        if (scheduleDTO.betweenDay == 10) {
-          for (int i = 0; i < durationDay; i += 10) {
-            events[day0101.add(Duration(days: i))] ??= [];
-            events[day0101.add(Duration(days: i))]!
-                .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
-          }
-        }
-        if (scheduleDTO.betweenDay == 30) {
-          for (int i = 0; i < durationDay; i += 30) {
-            events[day0101.add(Duration(days: i))] ??= [];
-            events[day0101.add(Duration(days: i))]!
-                .add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
-          }
-        }
+      }
+
+      if (scheduleDTO.scheduleEnum == "간격") {
+        calendarViewIf(scheduleDTO, 1);
+        calendarViewIf(scheduleDTO, 2);
+        calendarViewIf(scheduleDTO, 4);
+        calendarViewIf(scheduleDTO, 10);
+        calendarViewIf(scheduleDTO, 30);
       }
     });
 
@@ -131,6 +106,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
               decoration: BoxDecoration(color: Colors.blue.withOpacity(0.4), borderRadius: BorderRadius.circular(10)),
               child: Column(
                 children: [
+                  // 달력 부분
                   TableCalendar(
                     locale: 'ko_KR',
                     firstDay: day0101,
@@ -178,9 +154,9 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                       },
                     ),
                     calendarStyle: CalendarStyle(
-                      todayDecoration: BoxDecoration(color: Colors.yellow[200], shape: BoxShape.circle),
+                      todayDecoration: BoxDecoration(color: Colors.red[200], shape: BoxShape.circle),
                       todayTextStyle: TextStyle(fontSize: 20),
-                      selectedDecoration: BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
+                      selectedDecoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
                       selectedTextStyle: TextStyle(fontSize: 20),
                       // markerDecoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
                     ),
@@ -197,6 +173,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Divider(color: Colors.grey, height: 1, thickness: 1),
                   ),
+                  // 사료, 환수 숨기기 버튼
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -234,6 +211,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
               ),
             ),
             SizedBox(height: 15),
+            // 선택한 날짜 스케줄 보여주기
             Container(
               constraints: BoxConstraints(minHeight: 42),
               padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
@@ -249,134 +227,16 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                             return DateTime.now().day == selectedDay.day &&
                                     DateTime.now().month == selectedDay.month &&
                                     DateTime.now().year == selectedDay.year
-                                ? InkWell(
-                                    onTap: () {
-                                      scheduleDTOList.forEach((schedule) async {
-                                        if (schedule.id == event.scheduleId) {
-                                          await ref.watch(mainProvider.notifier).notifyScheduleCheck(schedule.id, schedule.isCompleted);
-
-                                          event.isCompleted = !event.isCompleted;
-                                          // schedule.isCompleted = !schedule.isCompleted;
-                                        }
-                                      });
-                                      setState(() {});
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(vertical: 4),
-                                      // decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
-                                      child: Row(
-                                        children: [
-                                          event.isCompleted ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
-                                          SizedBox(width: 5),
-                                          Container(
-                                            constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.6),
-                                            // width: sizeGetScreenWidth(context) * 0.6,
-                                            child: Text(
-                                              "${event.title}",
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyle(
-                                                  color: event.isCompleted ? Colors.grey[600] : Colors.black,
-                                                  decoration: event.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
-                                                  decorationThickness: 3),
-                                            ),
-                                          ),
-                                          SizedBox(width: 5),
-                                          InkWell(
-                                            onTap: () async {
-                                              print("삭제누름");
-
-                                              await ref.watch(mainProvider.notifier).notifyScheduleDelete(event.scheduleId!);
-
-                                              scheduleDTOList.removeWhere((schedule) => schedule.id == event.scheduleId);
-
-                                              List<Event>? selectedEvents = events[selectedDay];
-
-                                              if (selectedEvents != null) {
-                                                selectedEvents.remove(event);
-
-                                                // 만약 해당 일자의 이벤트 목록이 더 이상 비어있지 않다면, events에 업데이트합니다.
-                                                if (selectedEvents.isNotEmpty) {
-                                                  events[selectedDay] = selectedEvents;
-                                                } else {
-                                                  // 이벤트 목록이 비어 있다면 해당 일자를 events에서 제거합니다.
-                                                  events.remove(selectedDay);
-                                                }
-                                              }
-
-                                              print("events : ${events}");
-                                              print("events.runtimeType : ${events.runtimeType}");
-                                              print("events[selectedDay] : ${events[selectedDay]}");
-
-                                              // setState(() {});
-
-                                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
-                                            },
-                                            child: Icon(Icons.delete_outline, color: Colors.red),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    margin: EdgeInsets.symmetric(vertical: 4),
-                                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.6),
-                                          // width: sizeGetScreenWidth(context) * 0.6,
-                                          child: Text(
-                                            " ${event.title}",
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(color: Colors.black),
-                                          ),
-                                        ),
-                                        SizedBox(width: 5),
-                                        InkWell(
-                                          onTap: () async {
-                                            print("삭제누름");
-
-                                            await ref.watch(mainProvider.notifier).notifyScheduleDelete(event.scheduleId!);
-
-                                            scheduleDTOList.removeWhere((schedule) => schedule.id == event.scheduleId);
-
-                                            List<Event>? selectedEvents = events[selectedDay];
-
-                                            if (selectedEvents != null) {
-                                              selectedEvents.remove(event);
-
-                                              // 만약 해당 일자의 이벤트 목록이 더 이상 비어있지 않다면, events에 업데이트합니다.
-                                              if (selectedEvents.isNotEmpty) {
-                                                events[selectedDay] = selectedEvents;
-                                              } else {
-                                                // 이벤트 목록이 비어 있다면 해당 일자를 events에서 제거합니다.
-                                                events.remove(selectedDay);
-                                              }
-                                            }
-
-                                            print("events : ${events}");
-                                            print("events.runtimeType : ${events.runtimeType}");
-                                            print("events[selectedDay] : ${events[selectedDay]}");
-
-                                            // setState(() {});
-
-                                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
-                                          },
-                                          child: Icon(Icons.delete_outline, color: Colors.red),
-                                        ),
-                                      ],
-                                    ),
-                                  );
+                                ? buildTodayCheck(context, event)
+                                : buildOtherDayCheck(context, event);
                           }).toList(),
                         );
                 },
               ),
             ),
             SizedBox(height: 5),
+            // 스케줄 추가 버튼들
             Container(
-              // height: 30,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -492,6 +352,102 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
         ),
       ),
     );
+  }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+  Container buildOtherDayCheck(BuildContext context, Event event) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Container(
+            constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.6),
+            child: Text(
+              " ${event.title}",
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          SizedBox(width: 5),
+          buildScheduleDelete(event, context),
+        ],
+      ),
+    );
+  }
+
+  InkWell buildTodayCheck(BuildContext context, Event event) {
+    return InkWell(
+      onTap: () {
+        scheduleDTOList.forEach((schedule) async {
+          if (schedule.id == event.scheduleId) {
+            await ref.watch(mainProvider.notifier).notifyScheduleCheck(schedule.id, schedule.isCompleted);
+            event.isCompleted = !event.isCompleted;
+          }
+        });
+        setState(() {});
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            event.isCompleted ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
+            SizedBox(width: 5),
+            Container(
+              constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.6),
+              child: Text(
+                "${event.title}",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                    color: event.isCompleted ? Colors.grey[600] : Colors.black,
+                    decoration: event.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
+                    decorationThickness: 3),
+              ),
+            ),
+            SizedBox(width: 5),
+            buildScheduleDelete(event, context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  InkWell buildScheduleDelete(Event event, BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        print("삭제누름");
+
+        await ref.watch(mainProvider.notifier).notifyScheduleDelete(event.scheduleId!);
+
+        scheduleDTOList.removeWhere((schedule) => schedule.id == event.scheduleId);
+
+        List<Event>? selectedEvents = events[selectedDay];
+
+        if (selectedEvents != null) {
+          selectedEvents.remove(event);
+
+          if (selectedEvents.isNotEmpty) {
+            events[selectedDay] = selectedEvents;
+          } else {
+            events.remove(selectedDay);
+          }
+        }
+
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
+      },
+      child: Icon(Icons.delete_outline, color: Colors.red),
+    );
+  }
+
+  void calendarViewIf(ScheduleDTO scheduleDTO, int day) {
+    if (scheduleDTO.betweenDay == day) {
+      for (int i = 0; i < durationDay; i += day) {
+        events[day0101.add(Duration(days: i))] ??= [];
+        events[day0101.add(Duration(days: i))]!.add(Event("${scheduleDTO.title}", isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id));
+      }
+    }
   }
 
   InkWell buildWeekInkWell(BuildContext context, String week, int dayInt) {
