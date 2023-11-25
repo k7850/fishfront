@@ -2,6 +2,7 @@ import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
+import 'package:fishfront/data/dto/schedule_request_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/ui/main/aquarium_detail_page/aquarium_detail_page.dart';
 import 'package:fishfront/ui/main/main_page/main_view_model.dart';
@@ -13,7 +14,6 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Event {
-  // final String aquariumName;
   final String title;
   bool isCompleted;
   int? scheduleId;
@@ -265,7 +265,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
 
                                       scheduleDTOList.forEach((schedule) async {
                                         if (schedule.id == event.scheduleId) {
-                                          await ref.watch(mainProvider.notifier).scheduleCheck(schedule.id, schedule.isCompleted);
+                                          await ref.watch(mainProvider.notifier).notifyScheduleCheck(schedule.id, schedule.isCompleted);
 
                                           event.isCompleted = !event.isCompleted;
                                           // schedule.isCompleted = !schedule.isCompleted;
@@ -295,7 +295,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                                           ),
                                           SizedBox(width: 5),
                                           InkWell(
-                                            onTap: () {
+                                            onTap: () async {
                                               print("삭제누름");
                                               // print("events:${events}");
                                               // print("event:${event}");
@@ -306,7 +306,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                                               // print("scheduleDTOList : ${scheduleDTOList}");
                                               // print("${scheduleDTOList.length}");
 
-                                              ref.watch(mainProvider.notifier).scheduleDelete(event.scheduleId!);
+                                              await ref.watch(mainProvider.notifier).notifyScheduleDelete(event.scheduleId!);
 
                                               scheduleDTOList.removeWhere((schedule) => schedule.id == event.scheduleId);
 
@@ -355,7 +355,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                                         ),
                                         SizedBox(width: 5),
                                         InkWell(
-                                          onTap: () {
+                                          onTap: () async {
                                             print("삭제누름");
                                             // print("events:${events}");
                                             // print("event:${event}");
@@ -366,7 +366,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                                             // print("scheduleDTOList : ${scheduleDTOList}");
                                             // print("${scheduleDTOList.length}");
 
-                                            ref.watch(mainProvider.notifier).scheduleDelete(event.scheduleId!);
+                                            await ref.watch(mainProvider.notifier).notifyScheduleDelete(event.scheduleId!);
 
                                             scheduleDTOList.removeWhere((schedule) => schedule.id == event.scheduleId);
 
@@ -424,22 +424,35 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                             actions: [
                               ElevatedButton(
                                 style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.green)),
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_eventController.text == "") {
                                     return;
                                   }
 
+                                  // if (events.containsKey(selectedDay)) {
+                                  //   events[selectedDay]!.add(Event(_eventController.text));
+                                  // } else {
+                                  //   events[selectedDay] = [Event(_eventController.text)];
+                                  // }
+
                                   // print("selectedDay:${selectedDay}");
-                                  if (events.containsKey(selectedDay)) {
-                                    events[selectedDay]!.add(Event(_eventController.text));
-                                  } else {
-                                    events[selectedDay] = [Event(_eventController.text)];
-                                  }
+                                  // print(_eventController.text);
+
+                                  ScheduleRequestDTO scheduleRequestDTO =
+                                      new ScheduleRequestDTO(title: _eventController.text, scheduleEnum: "지정", targetDay: selectedDay);
+
+                                  await ref.watch(mainProvider.notifier).notifyScheduleCreate(widget.aquariumDTO.id, scheduleRequestDTO);
+
+                                  events[selectedDay] ??= [];
+                                  events[selectedDay]!.add(Event(_eventController.text));
 
                                   // print(events);
                                   Navigator.of(context).pop();
                                   _selectedEvents.value = _getEventsForDay(selectedDay);
                                   setState(() {});
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
+                                  setState(() {});
+                                  print("다시그림");
                                 },
                                 child: Text("제출"),
                               ),
@@ -541,7 +554,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
         ),
         child: Text("${week}", style: TextStyle(color: Colors.white)),
       ),
-      onTap: () {
+      onTap: () async {
         if (_eventController.text == "") {
           return;
         }
@@ -551,6 +564,10 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
         while (targetWeek.weekday != dayInt) {
           targetWeek = targetWeek.add(Duration(days: 1));
         }
+
+        ScheduleRequestDTO scheduleRequestDTO = new ScheduleRequestDTO(title: _eventController.text, scheduleEnum: "요일", betweenDay: dayInt);
+
+        await ref.watch(mainProvider.notifier).notifyScheduleCreate(widget.aquariumDTO.id, scheduleRequestDTO);
 
         for (int i = 0; i < durationDay; i += 7) {
           events[targetWeek.add(Duration(days: i))] ??= [];

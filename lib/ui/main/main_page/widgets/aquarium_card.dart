@@ -114,7 +114,7 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
     return InkWell(
       onTap: () async {
         print("체크누름");
-        await ref.watch(mainProvider.notifier).scheduleCheck(scheduleDTO.id, scheduleDTO.isCompleted);
+        await ref.watch(mainProvider.notifier).notifyScheduleCheck(scheduleDTO.id, scheduleDTO.isCompleted);
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 4),

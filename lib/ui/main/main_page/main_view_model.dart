@@ -1,6 +1,7 @@
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
+import 'package:fishfront/data/dto/schedule_request_dto.dart';
 import 'package:fishfront/data/provider/session_provider.dart';
 import 'package:fishfront/data/repository/aquarium_repository.dart';
 import 'package:fishfront/data/repository/board_repository.dart';
@@ -49,9 +50,11 @@ class MainViewModel extends StateNotifier<MainModel?> {
     ResponseDTO responseDTO = await AquariumRepository().fetchAquarium(sessionUser.jwt!);
 
     state = MainModel(aquariumDTOList: responseDTO.data);
+    print(state!.aquariumDTOList[0].scheduleDTOList[2].targetDay);
+    print(state!.aquariumDTOList[0].scheduleDTOList[2].targetDay.runtimeType);
   }
 
-  Future<void> scheduleCheck(int scheduleId, bool scheduleIsCompleted) async {
+  Future<void> notifyScheduleCheck(int scheduleId, bool scheduleIsCompleted) async {
     SessionUser sessionUser = ref.read(sessionProvider);
 
     ResponseDTO responseDTO = await AquariumRepository().fetchScheduleCheck(sessionUser.jwt!, scheduleId, scheduleIsCompleted);
@@ -75,7 +78,7 @@ class MainViewModel extends StateNotifier<MainModel?> {
     state = MainModel(aquariumDTOList: aquariumDTOList);
   }
 
-  Future<void> scheduleDelete(int scheduleId) async {
+  Future<void> notifyScheduleDelete(int scheduleId) async {
     SessionUser sessionUser = ref.read(sessionProvider);
 
     ResponseDTO responseDTO = await AquariumRepository().fetchScheduleDelete(sessionUser.jwt!, scheduleId);
@@ -94,6 +97,29 @@ class MainViewModel extends StateNotifier<MainModel?> {
         .firstWhere((e) => e.id == scheduleDTO.aquariumId) //
         .scheduleDTOList //
         .removeWhere((e) => e.id == scheduleDTO.id);
+
+    state = MainModel(aquariumDTOList: aquariumDTOList);
+  }
+
+  Future<void> notifyScheduleCreate(int aquariumId, ScheduleRequestDTO scheduleRequestDTO) async {
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ResponseDTO responseDTO = await AquariumRepository().fetchScheduleCreate(sessionUser.jwt!, aquariumId, scheduleRequestDTO);
+
+    if (responseDTO.success == false) {
+      print("생성실패 : ${responseDTO}");
+      notifyInit();
+      return;
+    }
+
+    ScheduleDTO scheduleDTO = responseDTO.data;
+
+    List<AquariumDTO> aquariumDTOList = state!.aquariumDTOList;
+
+    aquariumDTOList
+        .firstWhere((e) => e.id == scheduleDTO.aquariumId) //
+        .scheduleDTOList //
+        .add(scheduleDTO);
 
     state = MainModel(aquariumDTOList: aquariumDTOList);
   }

@@ -4,6 +4,7 @@ import 'package:fishfront/data/DTO/user_request.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
+import 'package:fishfront/data/dto/schedule_request_dto.dart';
 import 'package:fishfront/data/model/user.dart';
 import 'package:logger/logger.dart';
 
@@ -67,7 +68,30 @@ class AquariumRepository {
     try {
       Response response = await dio.delete("/schedules/${scheduleId}", options: Options(headers: {"Authorization": "${jwt}"}));
 
-      print("response.data: ${response.data}");
+      // print("response.data: ${response.data}");
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new ScheduleDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchScheduleCreate(String jwt, int aquariumId, ScheduleRequestDTO scheduleRequestDTO) async {
+    print("scheduleRequestDTO : ${scheduleRequestDTO}");
+    print("scheduleRequestDTO.toJson() : ${scheduleRequestDTO.toJson()}");
+    try {
+      Response response =
+          await dio.post("/schedules/${aquariumId}", data: scheduleRequestDTO.toJson(), options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response: ${response}");
       ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
 
       responseDTO.data = new ScheduleDTO.fromJson(responseDTO.data);
