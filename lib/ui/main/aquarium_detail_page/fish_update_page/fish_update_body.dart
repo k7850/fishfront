@@ -7,8 +7,10 @@ import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
+import 'package:fishfront/data/model/book.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/ui/auth/login_page/widgets/custom_login_text_form_field.dart';
+import 'package:fishfront/ui/book/book_page/book_view_model.dart';
 import 'package:fishfront/ui/main/main_page/main_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +39,8 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
   late bool? isMale = fishDTO.isMale;
 
   late String? photo = fishDTO.photo;
-  // late int aquariumId = fishDTO.aquariumId;
+
+  late Book? book = fishDTO.book;
 
   File? imageFile;
 
@@ -82,6 +85,11 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
       return Center(child: CircularProgressIndicator());
     }
 
+    List<Book>? bookList = ref.watch(bookProvider)?.bookList;
+    if (bookList == null) {
+      ref.read(bookProvider.notifier).notifyInit();
+    }
+
     return Form(
       key: widget._formKey,
       child: Padding(
@@ -97,7 +105,7 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                   child: imageFile != null
                       ? Image.file(imageFile!)
                       : Image.network(
-                          fishDTO.photo != null && fishDTO.photo!.isNotEmpty ? "${imageURL}${fishDTO.photo}" : "${imageURL}${fishDTO.book?.photo}",
+                          fishDTO.photo != null && fishDTO.photo!.isNotEmpty ? "${imageURL}${fishDTO.photo}" : "${imageURL}${book?.photo}",
                           errorBuilder: (context, error, stackTrace) {
                             return Image.asset("assets/fish.png");
                           },
@@ -432,28 +440,135 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
               decoration: BoxDecoration(color: Colors.green.withOpacity(0.4), borderRadius: BorderRadius.circular(10)),
               child: Column(
                 children: [
-                  Text("생물 도감", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
-                  SizedBox(height: 10),
-                  fishDTO.book == null
-                      ? ElevatedButton(
-                          onPressed: () {},
-                          child: Text("연결하기"),
-                        )
+                  Text("생물도감", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
+                  ElevatedButton(
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: RichText(
+                              text: TextSpan(
+                                text: "${fishDTO.name}",
+                                style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
+                                children: [
+                                  TextSpan(text: " 연동할 생물도감", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
+                                ],
+                              ),
+                            ),
+                            content: Container(
+                              height: 5 + (bookList!.length + 1) * 75,
+                              child: Column(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Divider(color: Colors.grey, height: 1, thickness: 1),
+                                      SizedBox(height: sizeS5),
+                                      InkWell(
+                                        onTap: () async {
+                                          if (book == null) {
+                                            print("현재소속도감없음");
+                                            return;
+                                          }
+                                          print("소속도감연동해제");
+                                          book = null;
+                                          Navigator.pop(context);
+                                          setState(() {});
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Spacer(),
+                                            Container(
+                                              height: sizeGetScreenWidth(context) * 0.15,
+                                              child: Center(child: Text("생물도감 연동 해제", style: TextStyle(fontSize: 18, fontFamily: "Giants"))),
+                                            ),
+                                            Spacer(),
+                                            book == null
+                                                ? Text("X ",
+                                                    style: TextStyle(fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold, fontFamily: ""))
+                                                : Text("> ", style: TextStyle(fontSize: 20, color: Colors.grey)),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: sizeS5),
+                                    ],
+                                  ),
+                                  for (Book e in bookList!)
+                                    Column(
+                                      children: [
+                                        Divider(color: Colors.grey, height: 1, thickness: 1),
+                                        SizedBox(height: sizeS5),
+                                        InkWell(
+                                          onTap: () async {
+                                            if (e.id == book?.id) {
+                                              print("현재소속도감임");
+                                              return;
+                                            }
+                                            print("${e.normalName}");
+                                            book = e;
+                                            Navigator.pop(context);
+                                            setState(() {});
+                                          },
+                                          child: Row(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius: BorderRadius.circular(10),
+                                                child: Image.network(
+                                                  "${imageURL}${e.photo}",
+                                                  width: sizeGetScreenWidth(context) * 0.2,
+                                                  height: sizeGetScreenWidth(context) * 0.15,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              SizedBox(width: sizeM10),
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("${e.normalName}", style: TextStyle(fontSize: 18, fontFamily: "Giants")),
+                                                  e.id == book?.id
+                                                      ? Text("현재 소속 생물도감",
+                                                          style: TextStyle(fontSize: 13, color: Colors.grey[600], fontFamily: "Giants"))
+                                                      : SizedBox(),
+                                                ],
+                                              ),
+                                              Spacer(),
+                                              e.id == book?.id
+                                                  ? Text("X ",
+                                                      style: TextStyle(fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold, fontFamily: ""))
+                                                  : Text("> ", style: TextStyle(fontSize: 20, color: Colors.grey)),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: sizeS5),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text("연동하기"),
+                  ),
+                  book == null
+                      ? SizedBox()
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            SizedBox(height: 10),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
-                                "${imageURL}${fishDTO.book!.photo}",
+                                "${imageURL}${book!.photo}",
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset("assets/fish.png");
                                 },
                               ),
                             ),
                             SizedBox(height: 15),
-                            Text("${fishDTO.book!.normalName}", style: TextStyle(fontSize: 17)),
-                            Text("${fishDTO.book!.biologyName}", style: TextStyle(color: Colors.grey[600])),
+                            Text("${book!.normalName}", style: TextStyle(fontSize: 17)),
+                            Text("${book!.biologyName}", style: TextStyle(color: Colors.grey[600])),
                             SizedBox(height: 5),
                             RichText(
                               maxLines: 1,
@@ -464,17 +579,17 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                                 children: [
                                   TextSpan(
                                     text:
-                                        "${fishDTO.book!.difficulty == 1 ? "아주 쉬움" : fishDTO.book!.difficulty == 2 ? "쉬움" : fishDTO.book!.difficulty == 3 ? "보통" : fishDTO.book!.difficulty == 4 ? "어려움" : "아주 어려움"}",
+                                        "${book!.difficulty == 1 ? "아주 쉬움" : book!.difficulty == 2 ? "쉬움" : book!.difficulty == 3 ? "보통" : book!.difficulty == 4 ? "어려움" : "아주 어려움"}",
                                     style: TextStyle(
                                         fontFamily: "Giants",
                                         fontSize: 15,
-                                        color: fishDTO.book!.difficulty == 1
+                                        color: book!.difficulty == 1
                                             ? Colors.green
-                                            : fishDTO.book!.difficulty == 2
+                                            : book!.difficulty == 2
                                                 ? Colors.blue
-                                                : fishDTO.book!.difficulty == 3
+                                                : book!.difficulty == 3
                                                     ? Colors.black
-                                                    : fishDTO.book!.difficulty == 4
+                                                    : book!.difficulty == 4
                                                         ? Colors.orange
                                                         : Colors.red[800]),
                                   ),
@@ -482,7 +597,7 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                               ),
                             ),
                             SizedBox(height: 10),
-                            Text("${fishDTO.book!.text}", style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+                            Text("${book!.text}", style: TextStyle(fontSize: 13, color: Colors.grey[600])),
                           ],
                         ),
                   SizedBox(height: 10),
@@ -497,7 +612,7 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                   print("validate통과");
 
                   FishRequestDTO fishRequestDTO =
-                      FishRequestDTO(fishClassEnum, _name.text, _text.text, quantity, isMale, photo, _price.text, fishDTO.book?.id);
+                      FishRequestDTO(fishClassEnum, _name.text, _text.text, quantity, isMale, photo, _price.text, book?.id);
 
                   await ref.watch(mainProvider.notifier).notifyFishUpdate(aquariumDTO.id, fishDTO.id, fishRequestDTO, imageFile);
                 }

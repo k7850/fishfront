@@ -47,6 +47,10 @@ class _DetailFishBodyState extends ConsumerState<DetailFishBody> {
       }
     });
 
+    onlyFishList.sort((a, b) => a.id.compareTo(b.id));
+    onlyPlantList.sort((a, b) => a.id.compareTo(b.id));
+    onlyOtherList.sort((a, b) => a.id.compareTo(b.id));
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: ListView(

@@ -7,9 +7,11 @@ import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
 import 'package:fishfront/data/dto/schedule_request_dto.dart';
+import 'package:fishfront/data/model/book.dart';
 import 'package:fishfront/data/provider/session_provider.dart';
 import 'package:fishfront/data/repository/aquarium_repository.dart';
 import 'package:fishfront/data/repository/board_repository.dart';
+import 'package:fishfront/data/repository/book_repository.dart';
 import 'package:fishfront/main.dart';
 import 'package:fishfront/ui/_common_widgets/my_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +37,14 @@ class MainViewModel extends StateNotifier<MainModel?> {
 
     ResponseDTO responseDTO = await AquariumRepository().fetchAquarium(sessionUser.jwt!);
 
+    if (responseDTO.success == false) {
+      print("notifyInit실패 : ${responseDTO}");
+      mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
+      notifyInit();
+      return;
+    }
+
     state = MainModel(aquariumDTOList: responseDTO.data);
-    print(state!.aquariumDTOList[0].scheduleDTOList[2].targetDay);
-    print(state!.aquariumDTOList[0].scheduleDTOList[2].targetDay.runtimeType);
   }
 
   Future<void> notifyScheduleCheck(int scheduleId, bool scheduleIsCompleted) async {
@@ -199,7 +206,7 @@ class MainViewModel extends StateNotifier<MainModel?> {
     if (responseDTO.success == false) {
       print("업데이트실패 : ${responseDTO}");
       mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
-      // notifyInit();
+      notifyInit();
       return;
     }
 

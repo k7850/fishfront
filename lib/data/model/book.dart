@@ -40,4 +40,9 @@ class Book {
         fishClassEnum = json["fishClassEnum"],
         createdAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["createdAt"]),
         updatedAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["updatedAt"]);
+
+  @override
+  String toString() {
+    return 'Book{id: $id, normalName: $normalName, biologyName: $biologyName, difficulty: $difficulty, photo: $photo, text: $text, fishClassEnum: $fishClassEnum, createdAt: $createdAt, updatedAt: $updatedAt}';
+  }
 }

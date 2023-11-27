@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 class AquariumDTO {
   int id;
   String title;
-  String intro;
+  String? intro;
   String? photo;
   bool? isFreshWater;
   String? size; // 길이/폭/높이
@@ -26,7 +26,7 @@ class AquariumDTO {
   AquariumDTO.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         title = json["title"],
-        intro = json["intro"],
+        intro = json["intro"] ?? "",
         photo = json["photo"],
         isFreshWater = json["isFreshWater"],
         size = json["size"],

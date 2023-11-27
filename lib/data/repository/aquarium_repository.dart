@@ -33,12 +33,11 @@ class AquariumRepository {
       return responseDTO;
     } catch (e) {
       if (e is DioError) {
-        Logger().d("오류: ${e.response!.data}");
+        print("e.response : ${e.response}");
         return new ResponseDTO.fromJson(e.response!.data);
       }
-
-      // return ResponseDTO(success: false, data: null, errorType: new ErrorType(message: "${e}", status: 404));
-      return ResponseDTO(success: false);
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
     }
   }
 

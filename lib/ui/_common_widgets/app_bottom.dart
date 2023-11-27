@@ -44,7 +44,7 @@ class _AppBottomState extends ConsumerState<AppBottom> {
               Icons.menu_book,
               color: ps.bottomNavigationBarIndex == 2 ? Colors.black : Colors.grey,
             ),
-            label: '생물 도감',
+            label: '생물도감',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.groups, color: ps.bottomNavigationBarIndex == 3 ? Colors.black : Colors.grey),
@@ -75,7 +75,7 @@ void onItemTapped(int index, BuildContext context, ParamStore ps) {
   } else if (index == 1 && ps.bottomNavigationBarIndex != index) {
     // Navigator.pushNamedAndRemoveUntil(context, Move.recommendPage, (route) => false);
   } else if (index == 2 && ps.bottomNavigationBarIndex != index) {
-    // Navigator.pushNamedAndRemoveUntil(context, Move.bestPage, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, "/book", (route) => false);
   } else if (index == 3 && ps.bottomNavigationBarIndex != index) {
     // Navigator.pushNamedAndRemoveUntil(context, Move.myPage, (route) => false);
   } else if (index == 4 && ps.bottomNavigationBarIndex != index) {
