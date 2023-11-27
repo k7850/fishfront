@@ -68,14 +68,8 @@ class _MainPageState extends ConsumerState<MainPage> {
     if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
       currentBackPressTime = now;
 
-      mySnackbar(
-        mContext,
-        2000,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text("'뒤로' 버튼을 한 번 더 누르시면 종료됩니다.")],
-        ),
-      );
+      mySnackbar(2000, Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text("'뒤로' 버튼을 한 번 더 누르시면 종료됩니다.")]));
+
       return Future.value(false);
     }
     return Future.value(true);

@@ -10,8 +10,9 @@ class FishRequestDTO {
   bool? isMale;
   String? photo;
   String? price;
+  int? bookId;
 
-  FishRequestDTO(this.fishClassEnum, this.name, this.text, this.quantity, this.isMale, this.photo, this.price);
+  FishRequestDTO(this.fishClassEnum, this.name, this.text, this.quantity, this.isMale, this.photo, this.price, this.bookId);
 
   Map<String, dynamic> toJson() => {
         "fishClassEnum": fishClassEnum,
@@ -21,6 +22,7 @@ class FishRequestDTO {
         "isMale": isMale,
         "photo": photo,
         "price": price,
+        "bookId": bookId,
       };
 
   FishRequestDTO.fromFishDTO(FishDTO fishDTO)
@@ -34,10 +36,11 @@ class FishRequestDTO {
         quantity = fishDTO.quantity,
         isMale = fishDTO.isMale,
         photo = fishDTO.photo,
-        price = fishDTO.price;
+        price = fishDTO.price,
+        bookId = fishDTO.book?.id;
 
   @override
   String toString() {
-    return 'FishRequestDTO{fishClassEnum: $fishClassEnum, name: $name, text: $text, quantity: $quantity, isMale: $isMale, photo: $photo, price: $price}';
+    return 'FishRequestDTO{fishClassEnum: $fishClassEnum, name: $name, text: $text, quantity: $quantity, isMale: $isMale, photo: $photo, price: $price, bookId: $bookId}';
   }
 }

@@ -14,5 +14,12 @@ final dio = Dio(
   ),
 );
 
+final dioFormData = Dio(
+  BaseOptions(
+    baseUrl: serverURL,
+    contentType: "multipart/form-data; charset=utf-8",
+  ),
+);
+
 // 휴대폰 로컬에 파일로 저장
 const secureStorage = FlutterSecureStorage();

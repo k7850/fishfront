@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/_core/utils/validator_util.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../_common_widgets/aquarium_textformfield.dart';
@@ -34,7 +37,11 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
   late bool? isMale = fishDTO.isMale;
 
   late String? photo = fishDTO.photo;
-  late int aquariumId = fishDTO.aquariumId;
+  // late int aquariumId = fishDTO.aquariumId;
+
+  File? imageFile;
+
+  MainModel? model;
 
   @override
   void initState() {
@@ -43,22 +50,37 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
   }
 
   @override
+  void didChangeDependencies() {
+    print("FishUpdateBody didChangeDependencies");
+
+    model = ref.watch(mainProvider);
+
+    ParamStore paramStore = ref.read(paramProvider);
+
+    // aquariumDTO = model!.aquariumDTOList //
+    //     .firstWhere((element) => element.id == paramStore.aquariumDetailId);
+    //
+    // fishDTO = aquariumDTO.fishDTOList //
+    //     .firstWhere((element) => element.id == paramStore.fishDetailId);
+
+    fishDTO = model!.aquariumDTOList
+        .expand((element) => element.fishDTOList) //
+        .firstWhere((element) => element.id == paramStore.fishDetailId);
+
+    aquariumDTO = model!.aquariumDTOList //
+        .firstWhere((element) => element.id == fishDTO.aquariumId);
+
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     print("FishUpdateBody빌드됨");
 
-    MainModel? model = ref.watch(mainProvider);
     if (model == null) {
       ref.read(mainProvider.notifier).notifyInit();
       return Center(child: CircularProgressIndicator());
     }
-
-    ParamStore paramStore = ref.read(paramProvider);
-
-    aquariumDTO = model.aquariumDTOList //
-        .firstWhere((element) => element.id == paramStore.aquariumDetailId);
-
-    fishDTO = aquariumDTO.fishDTOList //
-        .firstWhere((element) => element.id == paramStore.fishDetailId);
 
     return Form(
       key: widget._formKey,
@@ -72,15 +94,24 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    "${imageURL}${fishDTO.photo}",
-                    fit: BoxFit.cover,
-                  ),
+                  child: imageFile != null
+                      ? Image.file(imageFile!)
+                      : Image.network(
+                          fishDTO.photo != null && fishDTO.photo!.isNotEmpty ? "${imageURL}${fishDTO.photo}" : "${imageURL}${fishDTO.book?.photo}",
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset("assets/fish.png");
+                          },
+                        ),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5, right: 10),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                      if (image == null) return;
+                      imageFile = File(image.path);
+                      setState(() {});
+                    },
                     style: ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 0, horizontal: 10))),
                     child: Text("사진 변경"),
                   ),
@@ -93,7 +124,7 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
               decoration: BoxDecoration(color: Colors.blue.withOpacity(0.4), borderRadius: BorderRadius.circular(10)),
               child: Column(
                 children: [
-                  Text("주요 정보", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
+                  Text("필수 정보", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
                   AquariumTextFormField("생물 이름", _name, validateNormal()),
                   Container(
                     alignment: Alignment(-1, 0),
@@ -102,7 +133,83 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                   ),
                   InkWell(
                     onTap: () {
-                      print("소속어항클릭");
+                      print("소속어항");
+                      ScaffoldMessenger.of(context).clearSnackBars();
+
+                      List<AquariumDTO> aquariumDTOList = ref.watch(mainProvider)!.aquariumDTOList;
+
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: RichText(
+                              text: TextSpan(
+                                text: "${fishDTO.name}",
+                                style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
+                                children: [
+                                  TextSpan(text: " 소속시킬 어항", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
+                                ],
+                              ),
+                            ),
+                            content: Container(
+                              height: 5 + aquariumDTOList.length * 75,
+                              child: Column(
+                                children: [
+                                  for (AquariumDTO aquariumDTO in aquariumDTOList)
+                                    Column(
+                                      children: [
+                                        Divider(color: Colors.grey, height: 1, thickness: 1),
+                                        SizedBox(height: sizeS5),
+                                        InkWell(
+                                          onTap: () async {
+                                            if (aquariumDTO.id == fishDTO.aquariumId) {
+                                              print("현재소속어항임");
+                                              return;
+                                            }
+                                            print("${aquariumDTO.title}");
+                                            this.aquariumDTO = aquariumDTO;
+                                            Navigator.pop(context);
+                                            setState(() {});
+                                          },
+                                          child: Row(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius: BorderRadius.circular(10),
+                                                child: Image.network(
+                                                  "${imageURL}${aquariumDTO.photo}",
+                                                  width: sizeGetScreenWidth(context) * 0.2,
+                                                  height: sizeGetScreenWidth(context) * 0.15,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              SizedBox(width: sizeM10),
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("${aquariumDTO.title}", style: TextStyle(fontSize: 18, fontFamily: "Giants")),
+                                                  aquariumDTO.id == fishDTO.aquariumId
+                                                      ? Text("현재 소속 어항",
+                                                          style: TextStyle(fontSize: 13, color: Colors.grey[600], fontFamily: "Giants"))
+                                                      : SizedBox(),
+                                                ],
+                                              ),
+                                              Spacer(),
+                                              aquariumDTO.id == fishDTO.aquariumId
+                                                  ? Text("X ",
+                                                      style: TextStyle(fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold, fontFamily: ""))
+                                                  : Text("> ", style: TextStyle(fontSize: 20, color: Colors.grey)),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: sizeS5),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
                     },
                     child: Stack(
                       alignment: Alignment.bottomLeft,
@@ -202,7 +309,7 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
               decoration: BoxDecoration(color: Colors.red.withOpacity(0.4), borderRadius: BorderRadius.circular(10)),
               child: Column(
                 children: [
-                  Text("상세 정보", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
+                  Text("추가 정보", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
                   SizedBox(height: 10),
                   AquariumTextFormField("메모하기", _text, validateLong()),
                   AquariumTextFormField("가격", _price, validateNormal()),
@@ -328,12 +435,54 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                   Text("생물 도감", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
                   SizedBox(height: 10),
                   fishDTO.book == null
-                      ? Text("정보 없음")
-                      : Row(
+                      ? ElevatedButton(
+                          onPressed: () {},
+                          child: Text("연결하기"),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("${fishDTO.book!.normalName}"),
-                            Text("${fishDTO.book!.biologyName}"),
-                            Text("${fishDTO.book!.text}"),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                "${imageURL}${fishDTO.book!.photo}",
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset("assets/fish.png");
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 15),
+                            Text("${fishDTO.book!.normalName}", style: TextStyle(fontSize: 17)),
+                            Text("${fishDTO.book!.biologyName}", style: TextStyle(color: Colors.grey[600])),
+                            SizedBox(height: 5),
+                            RichText(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              text: TextSpan(
+                                text: "사육 난이도 : ",
+                                style: TextStyle(color: Colors.black, fontFamily: "Giants"),
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        "${fishDTO.book!.difficulty == 1 ? "아주 쉬움" : fishDTO.book!.difficulty == 2 ? "쉬움" : fishDTO.book!.difficulty == 3 ? "보통" : fishDTO.book!.difficulty == 4 ? "어려움" : "아주 어려움"}",
+                                    style: TextStyle(
+                                        fontFamily: "Giants",
+                                        fontSize: 15,
+                                        color: fishDTO.book!.difficulty == 1
+                                            ? Colors.green
+                                            : fishDTO.book!.difficulty == 2
+                                                ? Colors.blue
+                                                : fishDTO.book!.difficulty == 3
+                                                    ? Colors.black
+                                                    : fishDTO.book!.difficulty == 4
+                                                        ? Colors.orange
+                                                        : Colors.red[800]),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text("${fishDTO.book!.text}", style: TextStyle(fontSize: 13, color: Colors.grey[600])),
                           ],
                         ),
                   SizedBox(height: 10),
@@ -347,9 +496,10 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                 if (widget._formKey.currentState!.validate()) {
                   print("validate통과");
 
-                  FishRequestDTO fishRequestDTO = FishRequestDTO(fishClassEnum, _name.text, _text.text, quantity, isMale, photo, _price.text);
+                  FishRequestDTO fishRequestDTO =
+                      FishRequestDTO(fishClassEnum, _name.text, _text.text, quantity, isMale, photo, _price.text, fishDTO.book?.id);
 
-                  await ref.watch(mainProvider.notifier).notifyFishUpdate(aquariumId, fishDTO.id, fishRequestDTO);
+                  await ref.watch(mainProvider.notifier).notifyFishUpdate(aquariumDTO.id, fishDTO.id, fishRequestDTO, imageFile);
                 }
               },
               child: Text("제출하기"),
@@ -360,4 +510,14 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
       ),
     );
   }
+
+  // Future getImage() async {
+  //   var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  //
+  //   if (image == null) return;
+  //
+  //   imageFile = File(image.path);
+  //
+  //   setState(() {});
+  // }
 }

@@ -31,11 +31,18 @@ class _FishUpdatePageState extends ConsumerState<FishUpdatePage> {
 
     ParamStore paramStore = ref.read(paramProvider);
 
-    AquariumDTO aquariumDTO = model.aquariumDTOList //
-        .firstWhere((element) => element.id == paramStore.aquariumDetailId);
+    // AquariumDTO aquariumDTO = model.aquariumDTOList //
+    //     .firstWhere((element) => element.id == paramStore.aquariumDetailId);
+    //
+    // FishDTO fishDTO = aquariumDTO.fishDTOList //
+    //     .firstWhere((element) => element.id == paramStore.fishDetailId);
 
-    FishDTO fishDTO = aquariumDTO.fishDTOList //
+    FishDTO fishDTO = model.aquariumDTOList
+        .expand((element) => element.fishDTOList) //
         .firstWhere((element) => element.id == paramStore.fishDetailId);
+
+    AquariumDTO aquariumDTO = model.aquariumDTOList //
+        .firstWhere((element) => element.id == fishDTO.aquariumId);
 
     return Scaffold(
       appBar: AppBar(

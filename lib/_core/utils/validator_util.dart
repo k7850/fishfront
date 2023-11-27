@@ -80,8 +80,8 @@ Function validateOkEmpty() {
 
 Function validateLong() {
   return (String? value) {
-    if (value!.isEmpty) {
-      return "공백이 들어갈 수 없습니다.";
+    if (value == null) {
+      return "null입니다.";
     } else if (value.length > 100) {
       return "길이제한을 초과하였습니다.";
     } else {

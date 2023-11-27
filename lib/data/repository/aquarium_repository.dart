@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/data/DTO/user_request.dart';
@@ -129,12 +131,40 @@ class AquariumRepository {
     }
   }
 
-  Future<ResponseDTO> fetchFishCreate(String jwt, int aquariumId, FishRequestDTO fishRequestDTO) async {
-    print("fishRequestDTO : ${fishRequestDTO}");
-    print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
+  Future<ResponseDTO> fetchFishCreate(String jwt, int aquariumId, FishRequestDTO fishRequestDTO, File? imageFile) async {
+    // print("fishRequestDTO : ${fishRequestDTO}");
+    // print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
     try {
-      Response response =
-          await dio.post("/fishes/${aquariumId}", data: fishRequestDTO.toJson(), options: Options(headers: {"Authorization": "${jwt}"}));
+      Response response;
+      if (imageFile == null) {
+        FormData formData = FormData.fromMap({
+          "fishClassEnum": "${fishRequestDTO.fishClassEnum}",
+          "name": "${fishRequestDTO.name ?? ""}",
+          "text": "${fishRequestDTO.text ?? ""}",
+          "quantity": "${fishRequestDTO.quantity ?? ""}",
+          "isMale": "${fishRequestDTO.isMale ?? ""}",
+          "photo": "${fishRequestDTO.photo ?? ""}",
+          "price": "${fishRequestDTO.price ?? ""}",
+          fishRequestDTO.bookId == null ? "" : "bookId": "${fishRequestDTO.bookId}",
+        });
+        response = await dioFormData.post("/fishes/${aquariumId}", data: formData, options: Options(headers: {"Authorization": "${jwt}"}));
+      } else {
+        String fileName = imageFile.path.split('/').last;
+        FormData formData = FormData.fromMap({
+          "fishClassEnum": "${fishRequestDTO.fishClassEnum}",
+          "name": "${fishRequestDTO.name ?? ""}",
+          "text": "${fishRequestDTO.text ?? ""}",
+          "quantity": "${fishRequestDTO.quantity ?? ""}",
+          "isMale": "${fishRequestDTO.isMale ?? ""}",
+          "photo": "${fishRequestDTO.photo ?? ""}",
+          "price": "${fishRequestDTO.price ?? ""}",
+          fishRequestDTO.bookId == null ? "" : "bookId": "${fishRequestDTO.bookId}",
+          "photoFile": await MultipartFile.fromFile(imageFile.path, filename: fileName),
+        });
+
+        response = await dioFormData.post("/fishes/${aquariumId}", data: formData, options: Options(headers: {"Authorization": "${jwt}"}));
+      }
+      ;
 
       print("response: ${response}");
       ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
@@ -172,18 +202,45 @@ class AquariumRepository {
     }
   }
 
-  Future<ResponseDTO> fetchFishUpdate(String jwt, int aquariumId, int fishId, FishRequestDTO fishRequestDTO) async {
-    print("fishRequestDTO : ${fishRequestDTO}");
-    print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
+  Future<ResponseDTO> fetchFishUpdate(String jwt, int aquariumId, int fishId, FishRequestDTO fishRequestDTO, File? imageFile) async {
+    // print("fishRequestDTO : ${fishRequestDTO}");
+    // print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
+
     try {
-      Response response =
-          await dio.put("/fishes/${fishId}/${aquariumId}", data: fishRequestDTO.toJson(), options: Options(headers: {"Authorization": "${jwt}"}));
+      Response response;
+      if (imageFile == null) {
+        FormData formData = FormData.fromMap({
+          "fishClassEnum": "${fishRequestDTO.fishClassEnum}",
+          "name": "${fishRequestDTO.name ?? ""}",
+          "text": "${fishRequestDTO.text ?? ""}",
+          "quantity": "${fishRequestDTO.quantity ?? ""}",
+          "isMale": "${fishRequestDTO.isMale ?? ""}",
+          "photo": "${fishRequestDTO.photo ?? ""}",
+          "price": "${fishRequestDTO.price ?? ""}",
+          fishRequestDTO.bookId == null ? "" : "bookId": "${fishRequestDTO.bookId}",
+        });
+
+        response = await dioFormData.put("/fishes/${fishId}/${aquariumId}", data: formData, options: Options(headers: {"Authorization": "${jwt}"}));
+      } else {
+        String fileName = imageFile.path.split('/').last;
+        FormData formData = FormData.fromMap({
+          "fishClassEnum": "${fishRequestDTO.fishClassEnum}",
+          "name": "${fishRequestDTO.name ?? ""}",
+          "text": "${fishRequestDTO.text ?? ""}",
+          "quantity": "${fishRequestDTO.quantity ?? ""}",
+          "isMale": "${fishRequestDTO.isMale ?? ""}",
+          "photo": "${fishRequestDTO.photo ?? ""}",
+          "price": "${fishRequestDTO.price ?? ""}",
+          fishRequestDTO.bookId == null ? "" : "bookId": "${fishRequestDTO.bookId}",
+          "photoFile": await MultipartFile.fromFile(imageFile.path, filename: fileName),
+        });
+
+        response = await dioFormData.put("/fishes/${fishId}/${aquariumId}", data: formData, options: Options(headers: {"Authorization": "${jwt}"}));
+      }
 
       print("response: ${response}");
       ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
-      print("2${responseDTO.data}");
       responseDTO.data = new FishDTO.fromJson(responseDTO.data);
-      print("3");
 
       return responseDTO;
     } catch (e) {

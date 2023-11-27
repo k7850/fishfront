@@ -36,7 +36,7 @@ class AquariumFishItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                fishDTO.photo != null
+                fishDTO.photo != null && fishDTO.photo!.isNotEmpty
                     ? "${imageURL}${fishDTO.photo}"
                     : fishDTO.book == null || fishDTO.book!.photo == null
                         ? ""
@@ -111,7 +111,7 @@ class AquariumFishItem extends StatelessWidget {
                           text: "${fishDTO.name}",
                           style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
                           children: [
-                            TextSpan(text: " 이동시킬 어항", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
+                            TextSpan(text: " 소속시킬 어항", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
                           ],
                         ),
                       ),
@@ -133,30 +133,6 @@ class AquariumFishItem extends StatelessWidget {
                                       print("${aquariumDTO.title}");
                                       await ref.watch(mainProvider.notifier).notifyFishMove(fishDTO, aquariumDTO.id);
                                       Navigator.pop(context);
-                                      mySnackbar(
-                                        context,
-                                        3000,
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            RichText(
-                                              text: TextSpan(
-                                                text: "${fishDTO.name}",
-                                                style:
-                                                    TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
-                                                children: [
-                                                  TextSpan(text: "가 ", style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: "")),
-                                                  TextSpan(
-                                                      text: " ${aquariumDTO.title}",
-                                                      style: TextStyle(
-                                                          color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants")),
-                                                  TextSpan(text: "으로 이동하였습니다.", style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: "")),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
                                     },
                                     child: Row(
                                       children: [
@@ -205,18 +181,22 @@ class AquariumFishItem extends StatelessWidget {
                 print("생물복제");
                 ScaffoldMessenger.of(context).clearSnackBars();
                 mySnackbar(
-                  context,
                   3000,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      RichText(
-                        text: TextSpan(
-                          text: "${fishDTO.name}",
-                          style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
-                          children: [
-                            TextSpan(text: " 복제하시겠습니까?", style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: "")),
-                          ],
+                      Container(
+                        constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.5),
+                        child: RichText(
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          text: TextSpan(
+                            text: "${fishDTO.name}",
+                            style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
+                            children: [
+                              TextSpan(text: " 복제하시겠습니까?", style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: "")),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(width: sizeM10),
@@ -225,7 +205,7 @@ class AquariumFishItem extends StatelessWidget {
                         onTap: () async {
                           print("스낵바-복제누름");
                           ScaffoldMessenger.of(context).clearSnackBars();
-                          await ref.watch(mainProvider.notifier).notifyFishCreate(fishDTO.aquariumId, FishRequestDTO.fromFishDTO(fishDTO));
+                          await ref.watch(mainProvider.notifier).notifyFishCreate(fishDTO.aquariumId, FishRequestDTO.fromFishDTO(fishDTO), null);
                         },
                       ),
                       SizedBox(width: sizeM10),
@@ -246,18 +226,22 @@ class AquariumFishItem extends StatelessWidget {
                 print("생물삭제");
                 ScaffoldMessenger.of(context).clearSnackBars();
                 mySnackbar(
-                  context,
                   3000,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      RichText(
-                        text: TextSpan(
-                          text: "${fishDTO.name}",
-                          style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
-                          children: [
-                            TextSpan(text: " 삭제하시겠습니까?", style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: "")),
-                          ],
+                      Container(
+                        constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.5),
+                        child: RichText(
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          text: TextSpan(
+                            text: "${fishDTO.name}",
+                            style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
+                            children: [
+                              TextSpan(text: " 삭제하시겠습니까?", style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: "")),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(width: sizeM10),
