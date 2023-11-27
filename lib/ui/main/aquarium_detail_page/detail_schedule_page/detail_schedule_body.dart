@@ -92,7 +92,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
 
   @override
   Widget build(BuildContext context) {
-    print("빌드됨");
+    print("DetailScheduleBody빌드됨");
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -154,9 +154,9 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                       },
                     ),
                     calendarStyle: CalendarStyle(
-                      todayDecoration: BoxDecoration(color: Colors.red[200], shape: BoxShape.circle),
+                      todayDecoration: BoxDecoration(color: Colors.yellow[200], shape: BoxShape.circle),
                       todayTextStyle: TextStyle(fontSize: 20),
-                      selectedDecoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                      selectedDecoration: BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
                       selectedTextStyle: TextStyle(fontSize: 20),
                       // markerDecoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
                     ),

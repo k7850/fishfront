@@ -9,13 +9,13 @@ class FishDTO {
   String? name;
   String? text;
   int? quantity;
-  int? gender;
+  bool? isMale;
   String? photo;
   String? price;
   DateTime createdAt;
   DateTime updatedAt;
 
-  FishDTO(this.id, this.aquariumId, this.book, this.fishClassEnum, this.name, this.text, this.quantity, this.gender, this.photo, this.price,
+  FishDTO(this.id, this.aquariumId, this.book, this.fishClassEnum, this.name, this.text, this.quantity, this.isMale, this.photo, this.price,
       this.createdAt, this.updatedAt);
 
   FishDTO.fromJson(Map<String, dynamic> json)
@@ -26,7 +26,7 @@ class FishDTO {
         name = json["name"],
         text = json["text"],
         quantity = json["quantity"],
-        gender = json["gender"],
+        isMale = json["isMale"],
         photo = json["photo"],
         price = json["price"],
         createdAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["createdAt"]),
@@ -34,6 +34,6 @@ class FishDTO {
 
   @override
   String toString() {
-    return 'FishDTO{id: $id, aquariumId: $aquariumId, book: $book, fishClassEnum: $fishClassEnum, name: $name, text: $text, quantity: $quantity, gender: $gender, photo: $photo, price: $price, createdAt: $createdAt, updatedAt: $updatedAt}';
+    return 'FishDTO{id: $id, aquariumId: $aquariumId, book: $book, fishClassEnum: $fishClassEnum, name: $name, text: $text, quantity: $quantity, isMale: $isMale, photo: $photo, price: $price, createdAt: $createdAt, updatedAt: $updatedAt}';
   }
 }

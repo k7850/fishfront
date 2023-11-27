@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/data/DTO/user_request.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
+import 'package:fishfront/data/dto/fish_dto.dart';
+import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
 import 'package:fishfront/data/dto/schedule_request_dto.dart';
@@ -95,6 +97,93 @@ class AquariumRepository {
       ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
 
       responseDTO.data = new ScheduleDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchFishDelete(String jwt, int fishId) async {
+    try {
+      Response response = await dio.delete("/fishes/${fishId}", options: Options(headers: {"Authorization": "${jwt}"}));
+
+      // print("response.data: ${response.data}");
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new FishDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchFishCreate(String jwt, int aquariumId, FishRequestDTO fishRequestDTO) async {
+    print("fishRequestDTO : ${fishRequestDTO}");
+    print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
+    try {
+      Response response =
+          await dio.post("/fishes/${aquariumId}", data: fishRequestDTO.toJson(), options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response: ${response}");
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new FishDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchFishMove(String jwt, int fishId, int aquariumId) async {
+    try {
+      Response response = await dio.patch("/fishes/${fishId}/${aquariumId}", options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response: ${response}");
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new FishDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchFishUpdate(String jwt, int aquariumId, int fishId, FishRequestDTO fishRequestDTO) async {
+    print("fishRequestDTO : ${fishRequestDTO}");
+    print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
+    try {
+      Response response =
+          await dio.put("/fishes/${fishId}/${aquariumId}", data: fishRequestDTO.toJson(), options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response: ${response}");
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+      print("2${responseDTO.data}");
+      responseDTO.data = new FishDTO.fromJson(responseDTO.data);
+      print("3");
 
       return responseDTO;
     } catch (e) {

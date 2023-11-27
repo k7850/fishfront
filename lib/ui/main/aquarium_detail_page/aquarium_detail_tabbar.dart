@@ -26,7 +26,6 @@ class _AquariumDetailTabBarState extends State<AquariumDetailTabBar> with Single
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Divider(color: Colors.grey, height: 1, thickness: 1),
         TabBar(
           controller: _tabController,
           indicatorColor: Colors.green,

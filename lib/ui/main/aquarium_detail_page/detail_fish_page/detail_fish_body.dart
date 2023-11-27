@@ -4,6 +4,7 @@ import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
+import 'package:fishfront/ui/main/aquarium_detail_page/detail_fish_page/widgets/aquarium_fish_item.dart';
 import 'package:fishfront/ui/main/main_page/main_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class DetailFishBody extends ConsumerStatefulWidget {
 class _DetailFishBodyState extends ConsumerState<DetailFishBody> {
   @override
   Widget build(BuildContext context) {
-    print("빌드됨");
+    print("DetailFishBody빌드됨");
 
     MainModel? model = ref.watch(mainProvider);
     if (model == null) {
@@ -58,7 +59,7 @@ class _DetailFishBodyState extends ConsumerState<DetailFishBody> {
               children: [
                 Text("물고기", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
                 SizedBox(height: 10),
-                for (FishDTO fishDTO in onlyFishList) AquariumFishItem(fishDTO: fishDTO),
+                for (FishDTO fishDTO in onlyFishList) AquariumFishItem(fishDTO: fishDTO, ref: ref),
                 SizedBox(height: 5),
               ],
             ),
@@ -71,7 +72,7 @@ class _DetailFishBodyState extends ConsumerState<DetailFishBody> {
               children: [
                 Text("기타 생물", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
                 SizedBox(height: 10),
-                for (FishDTO fishDTO in onlyOtherList) AquariumFishItem(fishDTO: fishDTO),
+                for (FishDTO fishDTO in onlyOtherList) AquariumFishItem(fishDTO: fishDTO, ref: ref),
                 SizedBox(height: 5),
               ],
             ),
@@ -84,7 +85,7 @@ class _DetailFishBodyState extends ConsumerState<DetailFishBody> {
               children: [
                 Text("수초", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
                 SizedBox(height: 10),
-                for (FishDTO fishDTO in onlyPlantList) AquariumFishItem(fishDTO: fishDTO),
+                for (FishDTO fishDTO in onlyPlantList) AquariumFishItem(fishDTO: fishDTO, ref: ref),
                 SizedBox(height: 5),
               ],
             ),
@@ -98,87 +99,6 @@ class _DetailFishBodyState extends ConsumerState<DetailFishBody> {
           ),
           SizedBox(height: 10),
         ],
-      ),
-    );
-  }
-}
-
-class AquariumFishItem extends StatelessWidget {
-  const AquariumFishItem({
-    super.key,
-    required this.fishDTO,
-  });
-
-  final FishDTO fishDTO;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        padding: EdgeInsets.only(bottom: 10),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                "${imageURL}${fishDTO.photo}",
-                width: sizeGetScreenWidth(context) * 0.2,
-                height: sizeGetScreenWidth(context) * 0.2,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 5),
-                  constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.45),
-                  child: RichText(
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: "Giants"),
-                      text: "${fishDTO.name} ",
-                      children: [
-                        TextSpan(
-                          text: "(${fishDTO.book?.normalName ?? "불명"}",
-                          style: TextStyle(fontSize: 13, fontFamily: "JamsilRegular"),
-                        ),
-                        TextSpan(
-                          text: "${fishDTO.quantity != null ? ", x${fishDTO.quantity}" : ""})",
-                          style: TextStyle(fontSize: 13, fontFamily: "JamsilRegular"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                fishDTO.text == null
-                    ? SizedBox()
-                    : Container(
-                        constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.4),
-                        child: Text(
-                          "${fishDTO.text}",
-                          style: TextStyle(fontSize: 13, color: Colors.grey[700]),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
-                        ),
-                      ),
-              ],
-            ),
-            SizedBox(width: 5),
-            Spacer(),
-            InkWell(
-              onTap: () {},
-              child: Icon(Icons.copy_sharp, size: 25),
-            ),
-            InkWell(
-              onTap: () {},
-              child: Icon(Icons.delete_outline, size: 30, color: Colors.red),
-            ),
-          ],
-        ),
       ),
     );
   }

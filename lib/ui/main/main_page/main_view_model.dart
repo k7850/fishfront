@@ -1,4 +1,6 @@
 import 'package:fishfront/data/dto/aquarium_dto.dart';
+import 'package:fishfront/data/dto/fish_dto.dart';
+import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
 import 'package:fishfront/data/dto/schedule_request_dto.dart';
@@ -13,28 +15,8 @@ class MainModel {
   List<AquariumDTO> aquariumDTOList;
 
   MainModel({required this.aquariumDTOList});
-
-  // MainModel interestCountUpdate({required int updateInterestCount, required bool nowIsInterest}) {
-  //   DetailPageWebtoonDTO updateWebtoonDTO = this.webtoonDTO!;
-  //   updateWebtoonDTO.interestCount = updateInterestCount;
-  //   updateWebtoonDTO.isInterest = nowIsInterest;
-  //   if (nowIsInterest == true) {
-  //     updateWebtoonDTO.isAlarm = true;
-  //   }
-  //   if (nowIsInterest == false) {
-  //     updateWebtoonDTO.isAlarm = true;
-  //   }
-  //   return MainModel(webtoonDTO: updateWebtoonDTO);
-  // }
-
-  // MainModel interestAlarmUpdate({required bool isAlarm}) {
-  //   DetailPageWebtoonDTO updateWebtoonDTO = this.webtoonDTO!;
-  //   updateWebtoonDTO.isAlarm = isAlarm;
-  //   return MainModel(webtoonDTO: updateWebtoonDTO);
-  // }
 }
 
-// 2. 창고
 class MainViewModel extends StateNotifier<MainModel?> {
   Ref ref;
 
@@ -42,7 +24,6 @@ class MainViewModel extends StateNotifier<MainModel?> {
 
   MainViewModel(this.ref, super._state);
 
-  // notify 구독자들에게 알려줌
   Future<void> notifyInit() async {
     print("메인아쿠아리움노티파이어인잇");
     SessionUser sessionUser = ref.read(sessionProvider);
@@ -124,98 +105,111 @@ class MainViewModel extends StateNotifier<MainModel?> {
     state = MainModel(aquariumDTOList: aquariumDTOList);
   }
 
-// Future<void> notifyEpisodeViewUpdate(int epId) async {
-  //   if (state == null) {
-  //     print("웹툰 디테일 거쳐서 접근하지 않음");
-  //     // 어짜피 디테일 거쳐서 안왔으면 디테일로 접근할때 새로고침되니까 반영됨
-  //     return;
-  //   }
-  //   DetailPageWebtoonDTO detailDTO = state!.webtoonDTO!;
-  //
-  //   detailDTO.episodeList.map((e) => e.isLastView = false).toList();
-  //
-  //   DetailPageEpisodeDTO ep = detailDTO.episodeList.firstWhere((element) => element.episodeId == epId);
-  //   ep.isLastView = true;
-  //   ep.isView = true;
-  //
-  //   state = WebtoonDetailModel(webtoonDTO: detailDTO);
-  //   print("에피소드 본거 디테일에 반영됨");
-  // }
+  Future<void> notifyFishDelete(int fishId) async {
+    SessionUser sessionUser = ref.read(sessionProvider);
 
-  // Future<void> notifyInterestAlarmOn() async {
-  //   SessionUser sessionUser = ref.read(sessionProvider);
-  //
-  //   int webtoonId = state!.webtoonDTO!.id;
-  //   ResponseDTO responseDTO = await WebtoonRepository().fetchInterestAlarmOn(sessionUser.jwt!, webtoonId);
-  //
-  //   if (responseDTO.success == false) {
-  //     print("if로감On");
-  //     return;
-  //   }
-  //
-  //   state = state!.interestAlarmUpdate(isAlarm: (responseDTO.data as InterestWebtoonDTO).isAlarm);
-  // }
+    ResponseDTO responseDTO = await AquariumRepository().fetchFishDelete(sessionUser.jwt!, fishId);
 
-  // Future<void> notifyInterestAlarmOff() async {
-  //   SessionUser sessionUser = ref.read(sessionProvider);
-  //
-  //   int webtoonId = state!.webtoonDTO!.id;
-  //   ResponseDTO responseDTO = await WebtoonRepository().fetchInterestAlarmOff(sessionUser.jwt!, webtoonId);
-  //
-  //   if (responseDTO.success == false) {
-  //     print("if로감Off");
-  //     return;
-  //   }
-  //
-  //   state = state!.interestAlarmUpdate(isAlarm: (responseDTO.data as InterestWebtoonDTO).isAlarm);
-  // }
+    if (responseDTO.success == false) {
+      print("삭제실패 : ${responseDTO}");
+      notifyInit();
+      return;
+    }
 
-  // Future<void> notifyInterestCreate() async {
-  //   SessionUser sessionUser = ref.read(sessionProvider);
-  //
-  //   int webtoonId = state!.webtoonDTO!.id;
-  //   ResponseDTO responseDTO = await WebtoonRepository().fetchInterestCreate(sessionUser.jwt!, webtoonId);
-  //
-  //   if (responseDTO.success == false) {
-  //     // notifyInterestDelete();
-  //     return;
-  //   }
-  //   state = state!.interestCountUpdate(
-  //     updateInterestCount: (responseDTO.data as InterestDTO).webtoonTotalInterest,
-  //     nowIsInterest: true,
-  //   );
-  //   // state!.webtoonDTO!.interestCount = (responseDTO.data as InterestDTO).webtoonTotalInterest; // TODO 이거론 왜 안되지
-  // }
+    FishDTO fishDTO = responseDTO.data;
 
-  // Future<void> notifyInterestDelete() async {
-  //   SessionUser sessionUser = ref.read(sessionProvider);
-  //
-  //   int webtoonId = state!.webtoonDTO!.id;
-  //   ResponseDTO responseDTO = await WebtoonRepository().fetchInterestDelete(sessionUser.jwt!, webtoonId);
-  //
-  //   if (responseDTO.success == false) {
-  //     // notifyInterestCreate();
-  //     return;
-  //   }
-  //   state = state!.interestCountUpdate(
-  //     updateInterestCount: (responseDTO.data as InterestDTO).webtoonTotalInterest,
-  //     nowIsInterest: false,
-  //   );
-  //   // state!.webtoonDTO!.interestCount = (responseDTO.data as InterestDTO).webtoonTotalInterest; // TODO 이거론 왜 안되지
-  // }
+    List<AquariumDTO> aquariumDTOList = state!.aquariumDTOList;
 
-  // Future<void> notifyRandom() async {
-  //   SessionUser sessionUser = ref.read(sessionProvider);
-  //   ResponseDTO responseDTO = await WebtoonRepository().fetchRandom(sessionUser.jwt!);
-  //
-  //   ParamStore paramStore = ref.read(paramProvider);
-  //   paramStore.webtoonDetailId = responseDTO.data.id;
-  // }
+    aquariumDTOList
+        .firstWhere((e) => e.id == fishDTO.aquariumId) //
+        .fishDTOList //
+        .removeWhere((e) => e.id == fishDTO.id);
+
+    state = MainModel(aquariumDTOList: aquariumDTOList);
+  }
+
+  Future<void> notifyFishCreate(int aquariumId, FishRequestDTO fishRequestDTO) async {
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ResponseDTO responseDTO = await AquariumRepository().fetchFishCreate(sessionUser.jwt!, aquariumId, fishRequestDTO);
+
+    if (responseDTO.success == false) {
+      print("생성실패 : ${responseDTO}");
+      notifyInit();
+      return;
+    }
+
+    FishDTO fishDTO = responseDTO.data;
+
+    List<AquariumDTO> aquariumDTOList = state!.aquariumDTOList;
+
+    aquariumDTOList
+        .firstWhere((e) => e.id == fishDTO.aquariumId) //
+        .fishDTOList //
+        .add(fishDTO);
+
+    state = MainModel(aquariumDTOList: aquariumDTOList);
+  }
+
+  Future<void> notifyFishMove(FishDTO oldFishDTO, int aquariumId) async {
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ResponseDTO responseDTO = await AquariumRepository().fetchFishMove(sessionUser.jwt!, oldFishDTO.id, aquariumId);
+
+    if (responseDTO.success == false) {
+      print("이동실패 : ${responseDTO}");
+      notifyInit();
+      return;
+    }
+
+    FishDTO NewFishDTO = responseDTO.data;
+
+    List<AquariumDTO> aquariumDTOList = state!.aquariumDTOList;
+
+    aquariumDTOList
+        .firstWhere((e) => e.id == oldFishDTO.aquariumId) //
+        .fishDTOList //
+        .removeWhere((e) => e.id == oldFishDTO.id);
+
+    aquariumDTOList
+        .firstWhere((e) => e.id == NewFishDTO.aquariumId) //
+        .fishDTOList //
+        .add(NewFishDTO);
+
+    state = MainModel(aquariumDTOList: aquariumDTOList);
+  }
+
+  Future<void> notifyFishUpdate(int aquariumId, int fishId, FishRequestDTO fishRequestDTO) async {
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ResponseDTO responseDTO = await AquariumRepository().fetchFishUpdate(sessionUser.jwt!, aquariumId, fishId, fishRequestDTO);
+
+    if (responseDTO.success == false) {
+      print("업데이트실패 : ${responseDTO}");
+      notifyInit();
+      return;
+    }
+
+    FishDTO fishDTO = responseDTO.data;
+
+    List<AquariumDTO> aquariumDTOList = state!.aquariumDTOList;
+
+    aquariumDTOList
+        .firstWhere((e) => e.id == aquariumId) //
+        .fishDTOList //
+        .removeWhere((e) => e.id == fishId);
+
+    aquariumDTOList
+        .firstWhere((e) => e.id == aquariumId) //
+        .fishDTOList //
+        .add(fishDTO);
+
+    state = MainModel(aquariumDTOList: aquariumDTOList);
+  }
 
 //
 }
 
-// 3. 창고 관리자 (View가 빌드되기 직전에 생성됨)
 final mainProvider = StateNotifierProvider.autoDispose<MainViewModel, MainModel?>((ref) {
   // Logger().d("Main 뷰모델");
   // return new MainViewModel(ref, null)..notifyInit();

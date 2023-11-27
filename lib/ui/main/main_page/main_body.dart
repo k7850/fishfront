@@ -22,7 +22,6 @@ class MainBody extends ConsumerWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(color: Colors.grey, height: 1, thickness: 1),
             SizedBox(height: 20),
             Expanded(
               child: SingleChildScrollView(

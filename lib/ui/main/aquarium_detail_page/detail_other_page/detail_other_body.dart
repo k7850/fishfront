@@ -12,6 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
+import '../../../_common_widgets/aquarium_textformfield.dart';
+
 class DetailOtherBody extends ConsumerStatefulWidget {
   final _formKey = GlobalKey<FormState>();
   @override
@@ -21,8 +23,8 @@ class DetailOtherBody extends ConsumerStatefulWidget {
 class _DetailOtherBodyState extends ConsumerState<DetailOtherBody> {
   late AquariumDTO aquariumDTO;
 
-  late final _title = TextEditingController(text: "${aquariumDTO.title}");
-  late final _intro = TextEditingController(text: "${aquariumDTO.intro}");
+  late final _title = TextEditingController(text: "${aquariumDTO.title ?? ""}");
+  late final _intro = TextEditingController(text: "${aquariumDTO.intro ?? ""}");
   late final _size1 = TextEditingController(text: "${aquariumDTO.size?.split("/")[0] ?? "0"}");
   late final _size2 = TextEditingController(text: "${aquariumDTO.size?.split("/")[1] ?? "0"}");
   late final _size3 = TextEditingController(text: "${aquariumDTO.size?.split("/")[2] ?? "0"}");
@@ -34,13 +36,13 @@ class _DetailOtherBodyState extends ConsumerState<DetailOtherBody> {
 
   @override
   void initState() {
-    print("인잇스테이트");
+    print("DetailOtherBody인잇스테이트");
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("빌드됨");
+    print("DetailOtherBody빌드됨");
 
     MainModel? model = ref.watch(mainProvider);
     if (model == null) {
@@ -60,27 +62,40 @@ class _DetailOtherBodyState extends ConsumerState<DetailOtherBody> {
         child: ListView(
           children: [
             SizedBox(height: 15),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                "${imageURL}${aquariumDTO.photo}",
-                fit: BoxFit.cover,
-              ),
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    "${imageURL}${aquariumDTO.photo}",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 5, right: 10),
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 0, horizontal: 10))),
+                    child: Text("사진 변경"),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {},
-              child: Text("사진 변경"),
-            ),
-            SizedBox(height: 10),
+            SizedBox(height: 15),
             Container(
               padding: EdgeInsets.only(top: 5, left: 10, right: 10),
               decoration: BoxDecoration(color: Colors.blue.withOpacity(0.4), borderRadius: BorderRadius.circular(10)),
               child: Column(
                 children: [
-                  Text("주요 정보", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
+                  Text("어항 정보", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
                   AquariumTextFormField("어항 이름", _title, validateNormal()),
                   AquariumTextFormField("메모하기", _intro, validateLong()),
+                  Container(
+                    alignment: Alignment(-1, 0),
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Text("어항 종류", style: TextStyle(color: Colors.grey[600])),
+                  ),
                   Row(
                     children: [
                       InkWell(
@@ -207,9 +222,12 @@ class _DetailOtherBodyState extends ConsumerState<DetailOtherBody> {
                         ],
                       ),
                       Spacer(),
-                      Text(int.tryParse(_size1.text) != null && int.tryParse(_size2.text) != null && int.tryParse(_size3.text) != null
-                          ? "부피 : ${int.parse(_size1.text) * int.parse(_size2.text) * int.parse(_size3.text) / 1000} 리터"
-                          : "부피 오류"),
+                      Text(
+                        int.tryParse(_size1.text) != null && int.tryParse(_size2.text) != null && int.tryParse(_size3.text) != null
+                            ? "부피 : ${int.parse(_size1.text) * int.parse(_size2.text) * int.parse(_size3.text) / 1000} 리터"
+                            : "부피 오류",
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
                       SizedBox(width: 10),
                     ],
                   ),
@@ -224,11 +242,11 @@ class _DetailOtherBodyState extends ConsumerState<DetailOtherBody> {
               child: Column(
                 children: [
                   Text("어항 장비", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
-                  AquariumTextFormField("${aquariumDTO.s1?.split(":")[0] ?? ""}", _s1, validateNormal()),
-                  AquariumTextFormField("${aquariumDTO.s2?.split(":")[0] ?? ""}", _s2, validateNormal()),
-                  AquariumTextFormField("${aquariumDTO.s3?.split(":")[0] ?? ""}", _s3, validateNormal()),
-                  AquariumTextFormField("${aquariumDTO.s4?.split(":")[0] ?? ""}", _s4, validateNormal()),
-                  AquariumTextFormField("${aquariumDTO.s5?.split(":")[0] ?? ""}", _s5, validateNormal()),
+                  AquariumTextFormField("${aquariumDTO.s1?.split(":")[0] ?? ""}", _s1, validateOkEmpty()),
+                  AquariumTextFormField("${aquariumDTO.s2?.split(":")[0] ?? ""}", _s2, validateOkEmpty()),
+                  AquariumTextFormField("${aquariumDTO.s3?.split(":")[0] ?? ""}", _s3, validateOkEmpty()),
+                  AquariumTextFormField("${aquariumDTO.s4?.split(":")[0] ?? ""}", _s4, validateOkEmpty()),
+                  AquariumTextFormField("${aquariumDTO.s5?.split(":")[0] ?? ""}", _s5, validateOkEmpty()),
                 ],
               ),
             ),
@@ -237,7 +255,7 @@ class _DetailOtherBodyState extends ConsumerState<DetailOtherBody> {
               onPressed: () {
                 print("aaaaa");
                 if (widget._formKey.currentState!.validate()) {
-                  print("asd");
+                  print("a3sd");
                 }
               },
               child: Text("제출하기"),
@@ -246,38 +264,6 @@ class _DetailOtherBodyState extends ConsumerState<DetailOtherBody> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class AquariumTextFormField extends StatelessWidget {
-  AquariumTextFormField(this.textString, this._title, this.validate);
-
-  String textString;
-  TextEditingController _title;
-  var validate;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment(-1, 0),
-          child: Text("${textString}", style: TextStyle(color: Colors.grey[600])),
-        ),
-        Container(
-          height: 45,
-          child: TextFormField(
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-            ),
-            controller: _title,
-            validator: validate,
-          ),
-        ),
-        SizedBox(height: 10),
-      ],
     );
   }
 }

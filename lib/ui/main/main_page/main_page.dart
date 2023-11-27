@@ -29,6 +29,7 @@ class _MainPageState extends ConsumerState<MainPage> {
 
     return Scaffold(
       appBar: AppBar(
+        shape: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text("어항 관리", style: TextStyle(fontSize: 25, color: Colors.black)),

@@ -1,23 +1,24 @@
 import 'package:fishfront/data/dto/aquarium_dto.dart';
+import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/main.dart';
 import 'package:fishfront/ui/_common_widgets/app_bottom.dart';
 import 'package:fishfront/ui/_common_widgets/my_snackbar.dart';
 import 'package:fishfront/ui/main/aquarium_detail_page/aquarium_detail_tabbar.dart';
+import 'package:fishfront/ui/main/aquarium_detail_page/fish_update_page/fish_update_body.dart';
 import 'package:fishfront/ui/main/main_page/main_body.dart';
 import 'package:fishfront/ui/main/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AquariumDetailPage extends ConsumerStatefulWidget {
-  AquariumDetailPage({Key? key}) : super(key: key);
+class FishUpdatePage extends ConsumerStatefulWidget {
+  FishUpdatePage({Key? key}) : super(key: key);
 
   @override
-  _AquariumDetailPageState createState() => _AquariumDetailPageState();
+  _FishUpdatePageState createState() => _FishUpdatePageState();
 }
 
-class _AquariumDetailPageState extends ConsumerState<AquariumDetailPage> {
-  // final scaffoldKey = GlobalKey<ScaffoldState>();
+class _FishUpdatePageState extends ConsumerState<FishUpdatePage> {
   final refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
@@ -33,6 +34,9 @@ class _AquariumDetailPageState extends ConsumerState<AquariumDetailPage> {
     AquariumDTO aquariumDTO = model.aquariumDTOList //
         .firstWhere((element) => element.id == paramStore.aquariumDetailId);
 
+    FishDTO fishDTO = aquariumDTO.fishDTOList //
+        .firstWhere((element) => element.id == paramStore.fishDetailId);
+
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -44,13 +48,13 @@ class _AquariumDetailPageState extends ConsumerState<AquariumDetailPage> {
         shape: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text("${aquariumDTO.title}", style: TextStyle(fontSize: 25, color: Colors.black)),
+        title: Text("${fishDTO.name}", style: TextStyle(fontSize: 25, color: Colors.black)),
         actions: [
           InkWell(
             onTap: () async {
               print("새로고침");
               await ref.read(mainProvider.notifier).notifyInit();
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AquariumDetailPage()));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FishUpdatePage()));
             },
             child: Icon(Icons.menu, size: 30, color: Colors.black),
           ),
@@ -60,7 +64,7 @@ class _AquariumDetailPageState extends ConsumerState<AquariumDetailPage> {
       ),
       bottomNavigationBar: AppBottom(),
 
-      body: AquariumDetailTabBar(aquariumDTO),
+      body: FishUpdateBody(),
 
       // body: RefreshIndicator(
       //   key: refreshKey,

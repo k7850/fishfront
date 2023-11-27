@@ -13,7 +13,7 @@ class JoinBody extends StatelessWidget {
       child: ListView(
         children: [
           SizedBox(height: sizeL20),
-          SizedBox(width: 40, height: 40, child: Image.asset("assets/main.png")),
+          SizedBox(width: 100, height: 100, child: Image.asset("assets/fish.png")),
           SizedBox(height: sizeL20),
           JoinForm(),
           Row(

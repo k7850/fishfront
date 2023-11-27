@@ -18,7 +18,7 @@ class LoginBody extends ConsumerWidget {
       child: ListView(
         children: [
           const SizedBox(height: sizeL20),
-          SizedBox(width: 40, height: 40, child: Image.asset("assets/main.png")),
+          SizedBox(width: 100, height: 100, child: Image.asset("assets/fish.png")),
           const SizedBox(height: sizeL20),
           LoginForm(),
           const SizedBox(height: sizeL20),

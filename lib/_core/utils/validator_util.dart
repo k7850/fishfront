@@ -66,6 +66,18 @@ Function validateNormal() {
   };
 }
 
+Function validateOkEmpty() {
+  return (String? value) {
+    if (value == null) {
+      return "null입니다.";
+    } else if (value.length > 20) {
+      return "길이제한을 초과하였습니다.";
+    } else {
+      return null;
+    }
+  };
+}
+
 Function validateLong() {
   return (String? value) {
     if (value!.isEmpty) {

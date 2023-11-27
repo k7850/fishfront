@@ -44,7 +44,7 @@ class _AppBottomState extends ConsumerState<AppBottom> {
               Icons.menu_book,
               color: ps.bottomNavigationBarIndex == 2 ? Colors.black : Colors.grey,
             ),
-            label: '생물도감',
+            label: '생물 도감',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.groups, color: ps.bottomNavigationBarIndex == 3 ? Colors.black : Colors.grey),

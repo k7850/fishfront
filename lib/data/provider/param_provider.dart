@@ -7,6 +7,7 @@ class RequestParam {
   bool? isAutoLogin = false;
   bool? isLoginMove = false;
   int? aquariumDetailId;
+  int? fishDetailId;
 
   RequestParam();
 }
@@ -15,14 +16,19 @@ class RequestParam {
 class ParamStore extends RequestParam {
   final mContext = navigatorKey.currentContext;
 
-  void addBottomNavigationBarIndex(int id) {
-    print("파람addBottomNavigationBarIndex : ${id}");
-    this.bottomNavigationBarIndex = id;
+  void addBottomNavigationBarIndex(int bottomNavigationBarIndex) {
+    print("bottomNavigationBarIndex : ${bottomNavigationBarIndex}");
+    this.bottomNavigationBarIndex = bottomNavigationBarIndex;
   }
 
   void addAquariumDetailId(int aquariumId) {
-    print("파람프로바이더webtoonDetailId : ${aquariumId}");
+    print("aquariumId : ${aquariumId}");
     this.aquariumDetailId = aquariumId;
+  }
+
+  void addFishDetailId(int fishDetailId) {
+    print("fishDetailId : ${fishDetailId}");
+    this.fishDetailId = fishDetailId;
   }
 }
 
