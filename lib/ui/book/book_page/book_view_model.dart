@@ -21,7 +21,10 @@ import 'package:logger/logger.dart';
 class BookModel {
   List<Book> bookList;
 
-  BookModel({required this.bookList});
+  bool? isFreshWater;
+  String fishClassEnum;
+
+  BookModel({required this.bookList, this.isFreshWater, this.fishClassEnum = ""});
 }
 
 class BookViewModel extends StateNotifier<BookModel?> {
@@ -47,6 +50,20 @@ class BookViewModel extends StateNotifier<BookModel?> {
     state = BookModel(bookList: responseDTO.data);
   }
 
+  Future<void> notifyIsFreshWater(bool? isFreshWater) async {
+    print("notifyIsFreshWater : ${isFreshWater}");
+
+    // state!.isFreshWater = isFreshWater;
+    state = BookModel(bookList: state!.bookList, isFreshWater: isFreshWater, fishClassEnum: state!.fishClassEnum);
+  }
+
+  Future<void> notifyFishClassEnum(String fishClassEnum) async {
+    print("notifyFishClassEnum : ${fishClassEnum}");
+
+    // state!.fishClassEnum = fishClassEnum;
+    state = BookModel(bookList: state!.bookList, isFreshWater: state!.isFreshWater, fishClassEnum: fishClassEnum);
+  }
+
   // Future<List<Book>?> notifyBookList() async {
   //   SessionUser sessionUser = ref.read(sessionProvider);
   //
@@ -64,10 +81,16 @@ class BookViewModel extends StateNotifier<BookModel?> {
   //   return bookList;
   // }
 
+  @override
+  void dispose() {
+    print("북 디스포즈됨");
+    super.dispose();
+  }
 //
 }
 
-final bookProvider = StateNotifierProvider.autoDispose<BookViewModel, BookModel?>((ref) {
+final bookProvider = StateNotifierProvider<BookViewModel, BookModel?>((ref) {
+// final bookProvider = StateNotifierProvider.autoDispose<BookViewModel, BookModel?>((ref) {
   // Logger().d("Book 뷰모델");
   // return new BookViewModel(ref, null)..notifyInit();
   return new BookViewModel(ref, null);

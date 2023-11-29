@@ -7,7 +7,6 @@ import 'package:fishfront/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// 1. 창고 데이터
 class SessionUser {
   // 화면 context에 접근하는 법. 글로벌키
   final mContext = navigatorKey.currentContext;
@@ -99,7 +98,6 @@ class SessionUser {
   }
 }
 
-// 3. 창고 관리자
 final sessionProvider = Provider<SessionUser>((ref) {
   return SessionUser();
 });

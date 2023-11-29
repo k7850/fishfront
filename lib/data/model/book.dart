@@ -9,10 +9,12 @@ class Book {
   String? photo;
   String? text;
   String? fishClassEnum;
+  bool? isFreshWater;
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  Book(this.id, this.normalName, this.biologyName, this.difficulty, this.photo, this.text, this.fishClassEnum, this.createdAt, this.updatedAt);
+  Book(this.id, this.normalName, this.biologyName, this.difficulty, this.photo, this.text, this.fishClassEnum, this.isFreshWater, this.createdAt,
+      this.updatedAt);
 
   // 1. Dart 객체를 통신을 위한 Map 형태로 변환합니다.
   Map<String, dynamic> toJson() => {
@@ -23,6 +25,7 @@ class Book {
         "photo": photo,
         "text": text,
         "fishClassEnum": fishClassEnum,
+        "isFreshWater": isFreshWater,
         "createdAt": createdAt,
         "updatedAt": updatedAt,
       };
@@ -38,11 +41,12 @@ class Book {
         photo = json["photo"],
         text = json["text"],
         fishClassEnum = json["fishClassEnum"],
+        isFreshWater = json["isFreshWater"],
         createdAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["createdAt"]),
         updatedAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["updatedAt"]);
 
   @override
   String toString() {
-    return 'Book{id: $id, normalName: $normalName, biologyName: $biologyName, difficulty: $difficulty, photo: $photo, text: $text, fishClassEnum: $fishClassEnum, createdAt: $createdAt, updatedAt: $updatedAt}';
+    return 'Book{id: $id, normalName: $normalName, biologyName: $biologyName, difficulty: $difficulty, photo: $photo, text: $text, fishClassEnum: $fishClassEnum, isFreshWater: $isFreshWater, createdAt: $createdAt, updatedAt: $updatedAt}';
   }
 }

@@ -29,7 +29,6 @@ class _BookPageState extends ConsumerState<BookPage> {
       ref.read(bookProvider.notifier).notifyInit();
       return Center(child: CircularProgressIndicator());
     }
-    List<Book> bookList = model.bookList;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +61,7 @@ class _BookPageState extends ConsumerState<BookPage> {
             print("리플래시됨");
             await ref.read(mainProvider.notifier).notifyInit();
           },
-          child: BookBody(bookList),
+          child: BookBody(),
         ),
       ),
     );
