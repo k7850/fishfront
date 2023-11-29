@@ -131,13 +131,13 @@ class AquariumRepository {
   }
 
   Future<ResponseDTO> fetchFishCreate(String jwt, int aquariumId, FishRequestDTO fishRequestDTO, File? imageFile) async {
-    // print("fishRequestDTO : ${fishRequestDTO}");
-    // print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
+    print("fishRequestDTO : ${fishRequestDTO}");
+    print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
     try {
       Response response;
       if (imageFile == null) {
         FormData formData = FormData.fromMap({
-          "fishClassEnum": "${fishRequestDTO.fishClassEnum}",
+          "fishClassEnum": "${fishRequestDTO.fishClassEnum.toString().split(".")[1]}",
           "name": "${fishRequestDTO.name ?? ""}",
           "text": "${fishRequestDTO.text ?? ""}",
           "quantity": "${fishRequestDTO.quantity ?? ""}",
@@ -150,7 +150,7 @@ class AquariumRepository {
       } else {
         String fileName = imageFile.path.split('/').last;
         FormData formData = FormData.fromMap({
-          "fishClassEnum": "${fishRequestDTO.fishClassEnum}",
+          "fishClassEnum": "${fishRequestDTO.fishClassEnum.toString().split(".")[1]}",
           "name": "${fishRequestDTO.name ?? ""}",
           "text": "${fishRequestDTO.text ?? ""}",
           "quantity": "${fishRequestDTO.quantity ?? ""}",
@@ -202,14 +202,14 @@ class AquariumRepository {
   }
 
   Future<ResponseDTO> fetchFishUpdate(String jwt, int aquariumId, int fishId, FishRequestDTO fishRequestDTO, File? imageFile) async {
-    // print("fishRequestDTO : ${fishRequestDTO}");
-    // print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
+    print("fishRequestDTO : ${fishRequestDTO}");
+    print("fishRequestDTO.toJson() : ${fishRequestDTO.toJson()}");
 
     try {
       Response response;
       if (imageFile == null) {
         FormData formData = FormData.fromMap({
-          "fishClassEnum": "${fishRequestDTO.fishClassEnum}",
+          "fishClassEnum": "${fishRequestDTO.fishClassEnum.toString().split(".")[1]}",
           "name": "${fishRequestDTO.name ?? ""}",
           "text": "${fishRequestDTO.text ?? ""}",
           "quantity": "${fishRequestDTO.quantity ?? ""}",
@@ -223,7 +223,7 @@ class AquariumRepository {
       } else {
         String fileName = imageFile.path.split('/').last;
         FormData formData = FormData.fromMap({
-          "fishClassEnum": "${fishRequestDTO.fishClassEnum}",
+          "fishClassEnum": "${fishRequestDTO.fishClassEnum.toString().split(".")[1]}",
           "name": "${fishRequestDTO.name ?? ""}",
           "text": "${fishRequestDTO.text ?? ""}",
           "quantity": "${fishRequestDTO.quantity ?? ""}",

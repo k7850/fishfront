@@ -9,7 +9,7 @@ class JoinBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(sizePaddingLR17),
+      padding: const EdgeInsets.all(sizePadding20),
       child: ListView(
         children: [
           SizedBox(height: sizeL20),

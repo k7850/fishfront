@@ -1,3 +1,4 @@
+import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
@@ -38,9 +39,9 @@ class _DetailFishBodyState extends ConsumerState<DetailFishBody> {
     List<FishDTO> onlyOtherList = [];
 
     aquariumDTO.fishDTOList.forEach((fishDTO) {
-      if (fishDTO.fishClassEnum == "OTHER") {
+      if (fishDTO.fishClassEnum == FishClassEnum.OTHER) {
         onlyOtherList.add(fishDTO);
-      } else if (fishDTO.fishClassEnum == "PLANT") {
+      } else if (fishDTO.fishClassEnum == FishClassEnum.PLANT) {
         onlyPlantList.add(fishDTO);
       } else {
         onlyFishList.add(fishDTO);

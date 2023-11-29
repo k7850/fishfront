@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 const double sizeS5 = 5.0;
 const double sizeM10 = 10.0;
-const double sizeM17 = 17.0;
 const double sizeL20 = 20.0;
 const double sizeML20 = 30.0;
 const double sizeXL50 = 50.0;
@@ -10,7 +9,7 @@ const double sizeXML80 = 80.0;
 const double sizeXXL100 = 100.0;
 
 // 기본 좌우 패딩
-const double sizePaddingLR17 = 17.0;
+const double sizePadding20 = 20.0;
 
 const double sizeBorder5 = 5.0;
 

@@ -33,25 +33,28 @@ class AquariumFishItem extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 10),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                fishDTO.photo != null && fishDTO.photo!.isNotEmpty
-                    ? "${imageURL}${fishDTO.photo}"
-                    : fishDTO.book == null || fishDTO.book!.photo == null
-                        ? ""
-                        : "${imageURL}${fishDTO.book!.photo}",
-                width: sizeGetScreenWidth(context) * 0.2,
-                height: sizeGetScreenWidth(context) * 0.2,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    "assets/fish.png",
-                    width: sizeGetScreenWidth(context) * 0.2,
-                    height: sizeGetScreenWidth(context) * 0.2,
-                    fit: BoxFit.cover,
-                  );
-                },
+            Hero(
+              tag: "fishphotohero${fishDTO.id}",
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  fishDTO.photo != null && fishDTO.photo!.isNotEmpty
+                      ? "${imageURL}${fishDTO.photo}"
+                      : fishDTO.book == null || fishDTO.book!.photo == null
+                          ? ""
+                          : "${imageURL}${fishDTO.book!.photo}",
+                  width: sizeGetScreenWidth(context) * 0.2,
+                  height: sizeGetScreenWidth(context) * 0.2,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      "assets/fish.png",
+                      width: sizeGetScreenWidth(context) * 0.2,
+                      height: sizeGetScreenWidth(context) * 0.2,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
               ),
             ),
             SizedBox(width: 10),
@@ -73,7 +76,7 @@ class AquariumFishItem extends StatelessWidget {
                           style: TextStyle(fontSize: 13, fontFamily: "JamsilRegular"),
                         ),
                         TextSpan(
-                          text: "${fishDTO.quantity != null ? ", x${fishDTO.quantity}" : ""})",
+                          text: "${fishDTO.quantity != null && fishDTO.quantity != 0 ? ", x${fishDTO.quantity}" : ""})",
                           style: TextStyle(fontSize: 13, fontFamily: "JamsilRegular"),
                         ),
                       ],

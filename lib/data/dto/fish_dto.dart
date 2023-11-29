@@ -1,3 +1,4 @@
+import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/data/model/book.dart';
 import 'package:intl/intl.dart';
 
@@ -5,7 +6,7 @@ class FishDTO {
   int id;
   int aquariumId;
   Book? book;
-  String fishClassEnum;
+  FishClassEnum fishClassEnum;
   String? name;
   String? text;
   int? quantity;
@@ -22,7 +23,13 @@ class FishDTO {
       : id = json["id"],
         aquariumId = json["aquariumId"],
         book = json["book"] == null ? null : Book.fromJson(json["book"]),
-        fishClassEnum = json["fishClassEnum"],
+        fishClassEnum = json["fishClassEnum"] == "FISH"
+            ? FishClassEnum.FISH
+            : json["fishClassEnum"] == "OTHER"
+                ? FishClassEnum.OTHER
+                : json["fishClassEnum"] == "PLANT"
+                    ? FishClassEnum.PLANT
+                    : FishClassEnum.ALL,
         name = json["name"],
         text = json["text"],
         quantity = json["quantity"],

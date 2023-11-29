@@ -1,3 +1,4 @@
+import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/data/model/user.dart';
 import 'package:intl/intl.dart';
 
@@ -8,7 +9,7 @@ class Book {
   int? difficulty;
   String? photo;
   String? text;
-  String? fishClassEnum;
+  FishClassEnum? fishClassEnum;
   bool? isFreshWater;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -40,7 +41,13 @@ class Book {
         difficulty = json["difficulty"],
         photo = json["photo"],
         text = json["text"],
-        fishClassEnum = json["fishClassEnum"],
+        fishClassEnum = json["fishClassEnum"] == "FISH"
+            ? FishClassEnum.FISH
+            : json["fishClassEnum"] == "OTHER"
+                ? FishClassEnum.OTHER
+                : json["fishClassEnum"] == "PLANT"
+                    ? FishClassEnum.PLANT
+                    : FishClassEnum.ALL,
         isFreshWater = json["isFreshWater"],
         createdAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["createdAt"]),
         updatedAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["updatedAt"]);

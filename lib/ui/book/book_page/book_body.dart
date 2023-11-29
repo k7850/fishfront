@@ -1,22 +1,16 @@
-import 'package:fishfront/_core/constants/http.dart';
-import 'package:fishfront/_core/constants/size.dart';
-import 'package:fishfront/data/dto/aquarium_dto.dart';
-import 'package:fishfront/data/dto/schedule_dto.dart';
+import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/data/model/book.dart';
-import 'package:fishfront/data/provider/param_provider.dart';
+import 'package:fishfront/ui/_common_widgets/my_sliver_persistent_header_delegate.dart';
 import 'package:fishfront/ui/book/book_page/book_view_model.dart';
 import 'package:fishfront/ui/book/book_page/widgets/book_page_fishclassenum.dart';
 import 'package:fishfront/ui/book/book_page/widgets/book_page_isfreshwater.dart';
-import 'package:fishfront/ui/main/aquarium_detail_page/aquarium_detail_page.dart';
-import 'package:fishfront/ui/main/main_page/widgets/aquarium_card.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fishfront/ui/book/book_page/widgets/book_page_item.dart';
+import 'package:fishfront/ui/book/book_page/widgets/book_page_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 
 class BookBody extends ConsumerStatefulWidget {
-  BookBody();
+  const BookBody({super.key});
 
   @override
   _BookBodyState createState() => _BookBodyState();
@@ -24,100 +18,85 @@ class BookBody extends ConsumerStatefulWidget {
 
 class _BookBodyState extends ConsumerState<BookBody> {
   @override
+  void didChangeDependencies() {
+    ref.read(bookProvider.notifier).notifySearch("");
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     print("_BookBodyState 빌드");
 
-    List<Book> bookList = ref.watch(bookProvider)!.bookList;
+    BookModel model = ref.watch(bookProvider)!;
 
-    bool? isFreshWater = ref.watch(bookProvider)!.isFreshWater;
-    String fishClassEnum = ref.watch(bookProvider)!.fishClassEnum;
+    bool? isFreshWater = model.isFreshWater;
+    FishClassEnum fishClassEnum = model.fishClassEnum;
+    String? newSearchTerm = model.newSearchTerm;
 
-    List<Book> selectBookList = bookList;
+    List<Book> selectBookList = model.bookList;
 
-    if (fishClassEnum.isNotEmpty) {
+    if (fishClassEnum != FishClassEnum.ALL) {
       selectBookList = selectBookList.where((element) => element.fishClassEnum == fishClassEnum).toList();
     }
-
     if (isFreshWater != null) {
       selectBookList = selectBookList.where((element) => element.isFreshWater == isFreshWater).toList();
     }
+    if (newSearchTerm != null) {
+      selectBookList = selectBookList
+          .where((element) =>
+              element.normalName.toLowerCase().contains(newSearchTerm.toLowerCase()) ||
+              (element.biologyName != null && element.biologyName!.toLowerCase().contains(newSearchTerm.toLowerCase())))
+          .toList();
+    }
 
-    return Column(
-      children: [
-        const BookPageIsfreshwater(),
-        const BookPageFishclassenum(),
-        Text("검색"),
-        Divider(color: Colors.grey, height: 1, thickness: 1),
-        SizedBox(height: 15),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: ListView(
-              children: [
-                for (Book book in selectBookList)
-                  Container(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            "${imageURL}${book.photo}",
-                            width: sizeGetScreenWidth(context) * 0.2,
-                            height: sizeGetScreenWidth(context) * 0.2,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                "assets/fish.png",
-                                width: sizeGetScreenWidth(context) * 0.2,
-                                height: sizeGetScreenWidth(context) * 0.2,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.7),
-                              child: RichText(
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(
-                                  style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: "Giants"),
-                                  text: "${book.normalName} ",
-                                  children: [
-                                    TextSpan(
-                                      text: "${book.biologyName}",
-                                      style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold, fontFamily: "JamsilRegular"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.65),
-                              child: Text(
-                                "${book.text}",
-                                style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 5),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
+    return CustomScrollView(
+      slivers: [
+        SliverPersistentHeader(
+          pinned: false,
+          floating: true,
+          delegate: MySliverPersistentHeaderDelegate(
+              minHeight: 127,
+              maxHeight: 127,
+              child: Container(
+                color: Colors.white,
+                child: const Column(
+                  children: [
+                    SizedBox(height: 10),
+                    BookPageIsfreshwater(),
+                    BookPageFishclassenum(),
+                    BookPageSearch(),
+                  ],
+                ),
+              )),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: 10)),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return BookPageItem(book: selectBookList[index]);
+            },
+            childCount: selectBookList.length,
           ),
         ),
       ],
     );
+
+    // return Column(
+    //   children: [
+    //     const SizedBox(height: 10),
+    //     const BookPageIsfreshwater(),
+    //     const SizedBox(height: 5),
+    //     const BookPageFishclassenum(),
+    //     const BookPageSearch(),
+    //     const Divider(color: Colors.grey, height: 30, thickness: 1),
+    //     Expanded(
+    //       child: ListView(
+    //         children: [
+    //           for (Book book in selectBookList) BookPageItem(book: book),
+    //         ],
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 }

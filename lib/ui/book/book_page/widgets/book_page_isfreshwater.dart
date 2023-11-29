@@ -11,7 +11,7 @@ class BookPageIsfreshwater extends ConsumerWidget {
     bool? isFreshWater = ref.watch(bookProvider)!.isFreshWater;
 
     return Container(
-      padding: EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.only(left: 20),
       child: Row(
         children: [
           InkWell(
@@ -25,20 +25,20 @@ class BookPageIsfreshwater extends ConsumerWidget {
             },
             child: Row(
               children: [
-                isFreshWater == true ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
-                SizedBox(width: 5),
-                Container(
-                  child: Text("담수 어항",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                        color: isFreshWater == true ? Colors.black : Colors.grey[600],
-                      )),
+                isFreshWater == true ? const Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
+                const SizedBox(width: 5),
+                Text(
+                  "담수 어항",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: isFreshWater == true ? Colors.black : Colors.grey[600],
+                  ),
                 ),
               ],
             ),
           ),
-          SizedBox(width: 30),
+          const SizedBox(width: 30),
           InkWell(
             onTap: () {
               if (isFreshWater == false) {
@@ -50,15 +50,15 @@ class BookPageIsfreshwater extends ConsumerWidget {
             },
             child: Row(
               children: [
-                isFreshWater == false ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
-                SizedBox(width: 5),
-                Container(
-                  child: Text("해수 어항",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                        color: isFreshWater == false ? Colors.black : Colors.grey[600],
-                      )),
+                isFreshWater == false ? const Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
+                const SizedBox(width: 5),
+                Text(
+                  "해수 어항",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: isFreshWater == false ? Colors.black : Colors.grey[600],
+                  ),
                 ),
               ],
             ),

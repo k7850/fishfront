@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/_core/utils/validator_util.dart';
@@ -32,7 +33,7 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
   late AquariumDTO aquariumDTO;
 
   late final _name = TextEditingController(text: "${fishDTO.name ?? ""}");
-  late String fishClassEnum = fishDTO.fishClassEnum;
+  late FishClassEnum fishClassEnum = fishDTO.fishClassEnum;
   late final _text = TextEditingController(text: "${fishDTO.text ?? ""}");
   late final _price = TextEditingController(text: "${fishDTO.price ?? ""}");
   late int quantity = fishDTO.quantity ?? 0;
@@ -76,6 +77,11 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
     super.didChangeDependencies();
   }
 
+  void parentSetState() {
+    print("parentSetState");
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     print("FishUpdateBody빌드됨");
@@ -90,6 +96,15 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
       ref.read(bookProvider.notifier).notifyInit();
     }
 
+    // String? newSearchTerm = ref.watch(bookProvider)!.newSearchTerm;
+    // if (newSearchTerm != null && newSearchTerm.isNotEmpty) {
+    //   bookList = bookList!
+    //       .where((element) =>
+    //           element.normalName.toLowerCase().contains(newSearchTerm.toLowerCase()) ||
+    //           (element.biologyName != null && element.biologyName!.toLowerCase().contains(newSearchTerm.toLowerCase())))
+    //       .toList();
+    // }
+
     return Form(
       key: widget._formKey,
       child: Padding(
@@ -100,16 +115,29 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
             Stack(
               alignment: Alignment.bottomRight,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: imageFile != null
-                      ? Image.file(imageFile!)
-                      : Image.network(
-                          fishDTO.photo != null && fishDTO.photo!.isNotEmpty ? "${imageURL}${fishDTO.photo}" : "${imageURL}${book?.photo}",
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset("assets/fish.png");
-                          },
-                        ),
+                Hero(
+                  tag: "fishphotohero${fishDTO.id}",
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: imageFile != null
+                        ? Image.file(
+                            imageFile!,
+                            width: sizeGetScreenWidth(context),
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            fishDTO.photo != null && fishDTO.photo!.isNotEmpty ? "${imageURL}${fishDTO.photo}" : "${imageURL}${book?.photo}",
+                            width: sizeGetScreenWidth(context),
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                "assets/fish.png",
+                                width: sizeGetScreenWidth(context),
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                  ),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5, right: 10),
@@ -143,7 +171,6 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                     onTap: () {
                       print("소속어항");
                       ScaffoldMessenger.of(context).clearSnackBars();
-
                       List<AquariumDTO> aquariumDTOList = ref.watch(mainProvider)!.aquariumDTOList;
 
                       showDialog(
@@ -239,21 +266,23 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                     children: [
                       InkWell(
                         onTap: () {
-                          if (fishClassEnum != "FISH") {
-                            fishClassEnum = "FISH";
+                          if (fishClassEnum != FishClassEnum.FISH) {
+                            fishClassEnum = FishClassEnum.FISH;
                             setState(() {});
                           }
                         },
                         child: Row(
                           children: [
-                            fishClassEnum == "FISH" ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
+                            fishClassEnum == FishClassEnum.FISH
+                                ? Icon(Icons.check_box)
+                                : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
                             SizedBox(width: 5),
                             Container(
                               child: Text("물고기",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: TextStyle(
-                                    color: fishClassEnum == "FISH" ? Colors.black : Colors.grey[600],
+                                    color: fishClassEnum == FishClassEnum.FISH ? Colors.black : Colors.grey[600],
                                   )),
                             ),
                           ],
@@ -262,21 +291,23 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                       SizedBox(width: 20),
                       InkWell(
                         onTap: () {
-                          if (fishClassEnum != "OTHER") {
-                            fishClassEnum = "OTHER";
+                          if (fishClassEnum != FishClassEnum.OTHER) {
+                            fishClassEnum = FishClassEnum.OTHER;
                             setState(() {});
                           }
                         },
                         child: Row(
                           children: [
-                            fishClassEnum == "OTHER" ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
+                            fishClassEnum == FishClassEnum.OTHER
+                                ? Icon(Icons.check_box)
+                                : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
                             SizedBox(width: 5),
                             Container(
                               child: Text("기타 생물",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: TextStyle(
-                                    color: fishClassEnum == "OTHER" ? Colors.black : Colors.grey[600],
+                                    color: fishClassEnum == FishClassEnum.OTHER ? Colors.black : Colors.grey[600],
                                   )),
                             ),
                           ],
@@ -285,21 +316,23 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                       SizedBox(width: 20),
                       InkWell(
                         onTap: () {
-                          if (fishClassEnum != "PLANT") {
-                            fishClassEnum = "PLANT";
+                          if (fishClassEnum != FishClassEnum.PLANT) {
+                            fishClassEnum = FishClassEnum.PLANT;
                             setState(() {});
                           }
                         },
                         child: Row(
                           children: [
-                            fishClassEnum == "PLANT" ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
+                            fishClassEnum == FishClassEnum.PLANT
+                                ? Icon(Icons.check_box)
+                                : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
                             SizedBox(width: 5),
                             Container(
                               child: Text("수초",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: TextStyle(
-                                    color: fishClassEnum == "PLANT" ? Colors.black : Colors.grey[600],
+                                    color: fishClassEnum == FishClassEnum.PLANT ? Colors.black : Colors.grey[600],
                                   )),
                             ),
                           ],
@@ -443,108 +476,133 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                   Text("생물도감", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
                   ElevatedButton(
                     onPressed: () async {
+                      ref.read(bookProvider.notifier).notifySearch("");
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                            title: RichText(
-                              text: TextSpan(
-                                text: "${fishDTO.name}",
-                                style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
-                                children: [
-                                  TextSpan(text: " 연동할 생물도감", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
-                                ],
-                              ),
-                            ),
-                            content: Container(
-                              height: 5 + (bookList!.length + 1) * 75,
-                              child: Column(
-                                children: [
-                                  Column(
+                          return StatefulBuilder(
+                            builder: (BuildContext context, StateSetter setState) {
+                              List<Book>? searchBookList = bookList;
+                              String? newSearchTerm = ref.watch(bookProvider)!.newSearchTerm;
+                              print("newSearchTerm : ${newSearchTerm}");
+                              if (newSearchTerm == null || newSearchTerm.isEmpty) {
+                                newSearchTerm = "임시";
+                              }
+                              searchBookList = searchBookList!
+                                  .where((element) =>
+                                      element.normalName.toLowerCase().contains(newSearchTerm!.toLowerCase()) ||
+                                      (element.biologyName != null && element.biologyName!.toLowerCase().contains(newSearchTerm.toLowerCase())))
+                                  .toList();
+                              return AlertDialog(
+                                title: RichText(
+                                  text: TextSpan(
+                                    text: "${fishDTO.name}",
+                                    style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
                                     children: [
-                                      Divider(color: Colors.grey, height: 1, thickness: 1),
-                                      SizedBox(height: sizeS5),
-                                      InkWell(
-                                        onTap: () async {
-                                          if (book == null) {
-                                            print("현재소속도감없음");
-                                            return;
-                                          }
-                                          print("소속도감연동해제");
-                                          book = null;
-                                          Navigator.pop(context);
-                                          setState(() {});
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Spacer(),
-                                            Container(
-                                              height: sizeGetScreenWidth(context) * 0.15,
-                                              child: Center(child: Text("생물도감 연동 해제", style: TextStyle(fontSize: 18, fontFamily: "Giants"))),
-                                            ),
-                                            Spacer(),
-                                            book == null
-                                                ? Text("X ",
-                                                    style: TextStyle(fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold, fontFamily: ""))
-                                                : Text("> ", style: TextStyle(fontSize: 20, color: Colors.grey)),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: sizeS5),
+                                      TextSpan(text: " 연동할 생물도감", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
                                     ],
                                   ),
-                                  for (Book e in bookList!)
-                                    Column(
-                                      children: [
-                                        Divider(color: Colors.grey, height: 1, thickness: 1),
-                                        SizedBox(height: sizeS5),
-                                        InkWell(
-                                          onTap: () async {
-                                            if (e.id == book?.id) {
-                                              print("현재소속도감임");
-                                              return;
-                                            }
-                                            print("${e.normalName}");
-                                            book = e;
-                                            Navigator.pop(context);
-                                            setState(() {});
-                                          },
-                                          child: Row(
+                                ),
+                                content: SingleChildScrollView(
+                                  child: book != null
+                                      ? Column(
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                if (book == null) {
+                                                  print("현재소속도감없음");
+                                                  return;
+                                                }
+                                                print("소속도감연동해제");
+                                                book = null;
+                                                parentSetState();
+                                                // setState(() {});
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("생물도감 연동 해제하기"),
+                                            ),
+                                          ],
+                                        )
+                                      : Container(
+                                          height: (50 + (searchBookList!.length) * 75) > 240 ? 50 + (searchBookList!.length) * 75 : 240,
+                                          child: Column(
                                             children: [
-                                              ClipRRect(
-                                                borderRadius: BorderRadius.circular(10),
-                                                child: Image.network(
-                                                  "${imageURL}${e.photo}",
-                                                  width: sizeGetScreenWidth(context) * 0.2,
-                                                  height: sizeGetScreenWidth(context) * 0.15,
-                                                  fit: BoxFit.cover,
+                                              TextFormField(
+                                                decoration: const InputDecoration(
+                                                  // isDense: true,
+                                                  contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                                  // labelText: "검색어를 입력하세요.",
+                                                  hintText: "검색어를 입력하세요.",
+                                                  border: InputBorder.none,
+                                                  // filled: true,
+                                                  // fillColor: Colors.grey,
+                                                  prefixIcon: Icon(Icons.search, size: 30),
                                                 ),
+                                                onChanged: (String? newSearchTerm) {
+                                                  if (newSearchTerm != null) {
+                                                    ref.read(bookProvider.notifier).notifySearch(newSearchTerm);
+                                                    setState(() {});
+                                                    print("newSearchTerm");
+                                                  }
+                                                },
                                               ),
-                                              SizedBox(width: sizeM10),
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text("${e.normalName}", style: TextStyle(fontSize: 18, fontFamily: "Giants")),
-                                                  e.id == book?.id
-                                                      ? Text("현재 소속 생물도감",
-                                                          style: TextStyle(fontSize: 13, color: Colors.grey[600], fontFamily: "Giants"))
-                                                      : SizedBox(),
-                                                ],
-                                              ),
-                                              Spacer(),
-                                              e.id == book?.id
-                                                  ? Text("X ",
-                                                      style: TextStyle(fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold, fontFamily: ""))
-                                                  : Text("> ", style: TextStyle(fontSize: 20, color: Colors.grey)),
+                                              for (Book e in searchBookList!)
+                                                Column(
+                                                  children: [
+                                                    Divider(color: Colors.grey, height: 1, thickness: 1),
+                                                    SizedBox(height: sizeS5),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        if (e.id == book?.id) {
+                                                          print("현재소속도감임");
+                                                          return;
+                                                        }
+                                                        print("${e.normalName}");
+                                                        book = e;
+                                                        parentSetState();
+                                                        // setState(() {});
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Row(
+                                                        children: [
+                                                          ClipRRect(
+                                                            borderRadius: BorderRadius.circular(10),
+                                                            child: Image.network(
+                                                              "${imageURL}${e.photo}",
+                                                              width: sizeGetScreenWidth(context) * 0.2,
+                                                              height: sizeGetScreenWidth(context) * 0.15,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: sizeM10),
+                                                          Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Text("${e.normalName}", style: TextStyle(fontSize: 18, fontFamily: "Giants")),
+                                                              e.id == book?.id
+                                                                  ? Text("현재 소속 생물도감",
+                                                                      style: TextStyle(fontSize: 13, color: Colors.grey[600], fontFamily: "Giants"))
+                                                                  : SizedBox(),
+                                                            ],
+                                                          ),
+                                                          Spacer(),
+                                                          e.id == book?.id
+                                                              ? Text("X ",
+                                                                  style: TextStyle(
+                                                                      fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold, fontFamily: ""))
+                                                              : Text("> ", style: TextStyle(fontSize: 20, color: Colors.grey)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: sizeS5),
+                                                  ],
+                                                ),
                                             ],
                                           ),
                                         ),
-                                        SizedBox(height: sizeS5),
-                                      ],
-                                    ),
-                                ],
-                              ),
-                            ),
+                                ),
+                              );
+                            },
                           );
                         },
                       );
@@ -561,6 +619,8 @@ class _FishUpdateBodyState extends ConsumerState<FishUpdateBody> {
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
                                 "${imageURL}${book!.photo}",
+                                width: sizeGetScreenWidth(context),
+                                fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset("assets/fish.png");
                                 },

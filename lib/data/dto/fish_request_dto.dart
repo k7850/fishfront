@@ -1,9 +1,10 @@
+import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/model/book.dart';
 import 'package:intl/intl.dart';
 
 class FishRequestDTO {
-  String fishClassEnum;
+  FishClassEnum fishClassEnum;
   String? name;
   String? text;
   int? quantity;
@@ -15,7 +16,7 @@ class FishRequestDTO {
   FishRequestDTO(this.fishClassEnum, this.name, this.text, this.quantity, this.isMale, this.photo, this.price, this.bookId);
 
   Map<String, dynamic> toJson() => {
-        "fishClassEnum": fishClassEnum,
+        "fishClassEnum": fishClassEnum.toString().split(".")[1],
         "name": name,
         "text": text,
         "quantity": quantity,

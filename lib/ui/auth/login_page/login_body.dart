@@ -14,7 +14,7 @@ class LoginBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.all(sizePaddingLR17),
+      padding: const EdgeInsets.all(sizePadding20),
       child: ListView(
         children: [
           const SizedBox(height: sizeL20),

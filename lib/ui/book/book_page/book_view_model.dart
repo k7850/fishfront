@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
@@ -22,9 +23,10 @@ class BookModel {
   List<Book> bookList;
 
   bool? isFreshWater;
-  String fishClassEnum;
+  FishClassEnum fishClassEnum;
+  String? newSearchTerm;
 
-  BookModel({required this.bookList, this.isFreshWater, this.fishClassEnum = ""});
+  BookModel({required this.bookList, this.isFreshWater, this.fishClassEnum = FishClassEnum.ALL, this.newSearchTerm});
 }
 
 class BookViewModel extends StateNotifier<BookModel?> {
@@ -54,14 +56,23 @@ class BookViewModel extends StateNotifier<BookModel?> {
     print("notifyIsFreshWater : ${isFreshWater}");
 
     // state!.isFreshWater = isFreshWater;
-    state = BookModel(bookList: state!.bookList, isFreshWater: isFreshWater, fishClassEnum: state!.fishClassEnum);
+    state =
+        BookModel(bookList: state!.bookList, isFreshWater: isFreshWater, fishClassEnum: state!.fishClassEnum, newSearchTerm: state!.newSearchTerm);
   }
 
-  Future<void> notifyFishClassEnum(String fishClassEnum) async {
+  Future<void> notifyFishClassEnum(FishClassEnum fishClassEnum) async {
     print("notifyFishClassEnum : ${fishClassEnum}");
 
     // state!.fishClassEnum = fishClassEnum;
-    state = BookModel(bookList: state!.bookList, isFreshWater: state!.isFreshWater, fishClassEnum: fishClassEnum);
+    state =
+        BookModel(bookList: state!.bookList, isFreshWater: state!.isFreshWater, fishClassEnum: fishClassEnum, newSearchTerm: state!.newSearchTerm);
+  }
+
+  Future<void> notifySearch(String newSearchTerm) async {
+    print("notifySearch : ${newSearchTerm}");
+
+    state =
+        BookModel(bookList: state!.bookList, isFreshWater: state!.isFreshWater, fishClassEnum: state!.fishClassEnum, newSearchTerm: newSearchTerm);
   }
 
   // Future<List<Book>?> notifyBookList() async {
@@ -86,6 +97,7 @@ class BookViewModel extends StateNotifier<BookModel?> {
     print("북 디스포즈됨");
     super.dispose();
   }
+
 //
 }
 
