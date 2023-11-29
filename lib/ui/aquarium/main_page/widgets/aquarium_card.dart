@@ -1,4 +1,4 @@
-import 'package:fishfront/ui/main/main_page/main_view_model.dart';
+import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

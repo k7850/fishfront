@@ -5,7 +5,7 @@ import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/ui/auth/login_page/widgets/custom_login_text_form_field.dart';
-import 'package:fishfront/ui/main/main_page/main_view_model.dart';
+import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,8 +89,8 @@ class _DetailOtherBodyState extends ConsumerState<DetailOtherBody> {
               child: Column(
                 children: [
                   Text("어항 정보", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
-                  AquariumTextFormField("어항 이름", _title, validateNormal()),
-                  AquariumTextFormField("메모하기", _intro, validateLong()),
+                  // AquariumTextFormField("어항 이름", _title, validateNormal()),
+                  // AquariumTextFormField("메모하기", _intro, validateLong()),
                   Container(
                     alignment: Alignment(-1, 0),
                     padding: EdgeInsets.only(bottom: 5),
@@ -242,11 +242,11 @@ class _DetailOtherBodyState extends ConsumerState<DetailOtherBody> {
               child: Column(
                 children: [
                   Text("어항 장비", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
-                  AquariumTextFormField("${aquariumDTO.s1?.split(":")[0] ?? ""}", _s1, validateOkEmpty()),
-                  AquariumTextFormField("${aquariumDTO.s2?.split(":")[0] ?? ""}", _s2, validateOkEmpty()),
-                  AquariumTextFormField("${aquariumDTO.s3?.split(":")[0] ?? ""}", _s3, validateOkEmpty()),
-                  AquariumTextFormField("${aquariumDTO.s4?.split(":")[0] ?? ""}", _s4, validateOkEmpty()),
-                  AquariumTextFormField("${aquariumDTO.s5?.split(":")[0] ?? ""}", _s5, validateOkEmpty()),
+                  AquariumTextFormField("${aquariumDTO.s1?.split(":")[0] ?? ""}", _s1, validateOkEmpty(), (value) => print("${value}")),
+                  AquariumTextFormField("${aquariumDTO.s2?.split(":")[0] ?? ""}", _s2, validateOkEmpty(), (value) => print("${value}")),
+                  AquariumTextFormField("${aquariumDTO.s3?.split(":")[0] ?? ""}", _s3, validateOkEmpty(), (value) => print("${value}")),
+                  AquariumTextFormField("${aquariumDTO.s4?.split(":")[0] ?? ""}", _s4, validateOkEmpty(), (value) => print("${value}")),
+                  AquariumTextFormField("${aquariumDTO.s5?.split(":")[0] ?? ""}", _s5, validateOkEmpty(), (value) => print("${value}")),
                 ],
               ),
             ),

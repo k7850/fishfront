@@ -1,7 +1,7 @@
 import 'package:fishfront/data/dto/aquarium_dto.dart';
-import 'package:fishfront/ui/main/aquarium_detail_page/detail_fish_page/detail_fish_body.dart';
-import 'package:fishfront/ui/main/aquarium_detail_page/detail_other_page/detail_other_body.dart';
-import 'package:fishfront/ui/main/aquarium_detail_page/detail_schedule_page/detail_schedule_body.dart';
+import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_fish_page/detail_fish_body.dart';
+import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/detail_other_body.dart';
+import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_schedule_page/detail_schedule_body.dart';
 import 'package:flutter/material.dart';
 
 class AquariumDetailTabBar extends StatefulWidget {

@@ -1,14 +1,17 @@
+import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/fish_update_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AquariumTextFormField extends StatelessWidget {
-  AquariumTextFormField(this.textString, this._title, this.validate);
+class AquariumTextFormField extends ConsumerWidget {
+  AquariumTextFormField(this.textString, this.textEditingController, this.validate, this.notifyFunction);
 
   String textString;
-  TextEditingController _title;
+  TextEditingController textEditingController;
   var validate;
+  Function(String) notifyFunction;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         Align(
@@ -17,13 +20,18 @@ class AquariumTextFormField extends StatelessWidget {
         ),
         Container(
           height: 45,
-          child: TextFormField(
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+          child: Focus(
+            onFocusChange: (hasFocus) {
+              if (!hasFocus) notifyFunction(textEditingController.text);
+            },
+            child: TextFormField(
+              decoration: InputDecoration(
+                isDense: true,
+                contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+              ),
+              controller: textEditingController,
+              validator: validate,
             ),
-            controller: _title,
-            validator: validate,
           ),
         ),
         SizedBox(height: 10),
