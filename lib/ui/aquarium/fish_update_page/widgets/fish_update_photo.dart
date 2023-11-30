@@ -35,7 +35,7 @@ class FishUpdatePhoto extends ConsumerWidget {
                     fit: BoxFit.cover,
                   )
                 : Image.network(
-                    fishDTO.photo != null && fishDTO.photo!.isNotEmpty ? "${imageURL}${fishDTO.photo}" : "${imageURL}${book?.photo}",
+                    fishDTO.photo != null && fishDTO.photo!.isNotEmpty ? "$imageURL${fishDTO.photo}" : "$imageURL${book?.photo}",
                     width: sizeGetScreenWidth(context),
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
@@ -49,7 +49,7 @@ class FishUpdatePhoto extends ConsumerWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 5, right: 10),
+          margin: const EdgeInsets.only(bottom: 5, right: 10),
           child: ElevatedButton(
             onPressed: () async {
               XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -58,8 +58,8 @@ class FishUpdatePhoto extends ConsumerWidget {
               // imageFile = File(image.path);
               // setState(() {});
             },
-            style: ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 0, horizontal: 10))),
-            child: Text("사진 변경"),
+            style: const ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 0, horizontal: 10))),
+            child: const Text("사진 변경"),
           ),
         ),
       ],

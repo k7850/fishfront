@@ -1,5 +1,5 @@
 import 'package:fishfront/data/provider/param_provider.dart';
-import 'package:fishfront/ui/_common_widgets/app_bottom.dart';
+import 'package:fishfront/ui/_common_widgets/my_bottom.dart';
 import 'package:fishfront/ui/_common_widgets/my_appbar.dart';
 import 'package:fishfront/ui/book/book_page/book_body.dart';
 import 'package:fishfront/ui/book/book_page/book_view_model.dart';
@@ -28,7 +28,7 @@ class _BookPageState extends ConsumerState<BookPage> {
 
     return Scaffold(
       appBar: MyAppbar(title: "생물도감", onTapFunction: () => ref.read(bookProvider.notifier).notifyInit()),
-      bottomNavigationBar: AppBottom(),
+      bottomNavigationBar: MyBottom(),
       body: WillPopScope(
         onWillPop: () {
           ParamStore ps = ref.read(paramProvider);

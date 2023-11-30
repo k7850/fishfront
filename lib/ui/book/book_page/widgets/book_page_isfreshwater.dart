@@ -1,3 +1,4 @@
+import 'package:fishfront/ui/_common_widgets/my_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,52 +17,22 @@ class BookPageIsfreshwater extends ConsumerWidget {
         children: [
           InkWell(
             onTap: () {
-              if (isFreshWater == true) {
-                ref.read(bookProvider.notifier).notifyIsFreshWater(null);
-              } else {
-                ref.read(bookProvider.notifier).notifyIsFreshWater(true);
-              }
+              isFreshWater == true
+                  ? ref.read(bookProvider.notifier).notifyIsFreshWater(null)
+                  : ref.read(bookProvider.notifier).notifyIsFreshWater(true);
               // setState(() {});
             },
-            child: Row(
-              children: [
-                isFreshWater == true ? const Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
-                const SizedBox(width: 5),
-                Text(
-                  "담수 어항",
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: isFreshWater == true ? Colors.black : Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
+            child: MyCheckbox(str: "담수 어항", isChecked: isFreshWater == true),
           ),
           const SizedBox(width: 30),
           InkWell(
             onTap: () {
-              if (isFreshWater == false) {
-                ref.read(bookProvider.notifier).notifyIsFreshWater(null);
-              } else {
-                ref.read(bookProvider.notifier).notifyIsFreshWater(false);
-              }
+              isFreshWater == false
+                  ? ref.read(bookProvider.notifier).notifyIsFreshWater(null)
+                  : ref.read(bookProvider.notifier).notifyIsFreshWater(false);
               // setState(() {});
             },
-            child: Row(
-              children: [
-                isFreshWater == false ? const Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank, color: Colors.grey[600]),
-                const SizedBox(width: 5),
-                Text(
-                  "해수 어항",
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: isFreshWater == false ? Colors.black : Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
+            child: MyCheckbox(str: "해수 어항", isChecked: isFreshWater == false),
           ),
         ],
       ),

@@ -1,8 +1,8 @@
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/widgets/fish_update_book.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/widgets/fish_update_important.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/widgets/fish_update_photo.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/widgets/fish_update_unimportant.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/widgets/flutter_update_button.dart';
+import 'package:fishfront/ui/aquarium/fish_update_page/widgets/fish_update_book.dart';
+import 'package:fishfront/ui/aquarium/fish_update_page/widgets/fish_update_important.dart';
+import 'package:fishfront/ui/aquarium/fish_update_page/widgets/fish_update_photo.dart';
+import 'package:fishfront/ui/aquarium/fish_update_page/widgets/fish_update_unimportant.dart';
+import 'package:fishfront/ui/aquarium/fish_update_page/widgets/fish_update_button.dart';
 import 'package:fishfront/ui/book/book_page/book_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

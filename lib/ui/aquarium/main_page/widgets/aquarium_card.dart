@@ -77,7 +77,7 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                "${imageURL}${widget.aquariumDTO.photo}",
+                "$imageURL${widget.aquariumDTO.photo}",
                 width: sizeGetScreenWidth(context) * 0.6,
                 height: sizeGetScreenWidth(context) * 0.6,
                 fit: BoxFit.cover,

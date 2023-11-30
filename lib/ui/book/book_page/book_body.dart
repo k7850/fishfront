@@ -49,36 +49,40 @@ class _BookBodyState extends ConsumerState<BookBody> {
           .toList();
     }
 
-    return CustomScrollView(
-      slivers: [
-        SliverPersistentHeader(
-          pinned: false,
-          floating: true,
-          delegate: MySliverPersistentHeaderDelegate(
-              minHeight: 127,
-              maxHeight: 127,
-              child: Container(
-                color: Colors.white,
-                child: const Column(
-                  children: [
-                    SizedBox(height: 10),
-                    BookPageIsfreshwater(),
-                    BookPageFishclassenum(),
-                    BookPageSearch(),
-                  ],
-                ),
-              )),
-        ),
-        SliverToBoxAdapter(child: SizedBox(height: 10)),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return BookPageItem(book: selectBookList[index]);
-            },
-            childCount: selectBookList.length,
+    return Container(
+      // color: Colors.green.withOpacity(0.4),
+      child: CustomScrollView(
+        slivers: [
+          SliverPersistentHeader(
+            pinned: false,
+            floating: true,
+            delegate: MySliverPersistentHeaderDelegate(
+                minHeight: 127,
+                maxHeight: 127,
+                child: Container(
+                  // color: Colors.blue.shade200,
+                  color: Colors.white,
+                  child: const Column(
+                    children: [
+                      SizedBox(height: 10),
+                      BookPageIsfreshwater(),
+                      BookPageFishclassenum(),
+                      BookPageSearch(),
+                    ],
+                  ),
+                )),
           ),
-        ),
-      ],
+          // SliverToBoxAdapter(child: SizedBox(height: 10)),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return BookPageItem(book: selectBookList[index]);
+              },
+              childCount: selectBookList.length,
+            ),
+          ),
+        ],
+      ),
     );
 
     // return Column(

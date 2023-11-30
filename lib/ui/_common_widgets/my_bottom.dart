@@ -2,16 +2,16 @@ import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AppBottom extends ConsumerStatefulWidget {
-  const AppBottom({
+class MyBottom extends ConsumerStatefulWidget {
+  const MyBottom({
     super.key,
   });
 
   @override
-  _AppBottomState createState() => _AppBottomState();
+  _MyBottomState createState() => _MyBottomState();
 }
 
-class _AppBottomState extends ConsumerState<AppBottom> {
+class _MyBottomState extends ConsumerState<MyBottom> {
   late ParamStore ps;
 
   @override
@@ -20,7 +20,7 @@ class _AppBottomState extends ConsumerState<AppBottom> {
 
     return Container(
       height: 55,
-      decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey, width: 1))),
+      decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.grey, width: 1))),
       child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         // 아이템 너비 고정

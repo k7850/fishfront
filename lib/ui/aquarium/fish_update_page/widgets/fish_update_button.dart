@@ -5,7 +5,7 @@ import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/model/book.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/fish_update_view_model.dart';
+import 'package:fishfront/ui/aquarium/fish_update_page/fish_update_view_model.dart';
 import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

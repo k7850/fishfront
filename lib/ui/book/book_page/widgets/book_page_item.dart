@@ -17,7 +17,7 @@ class BookPageItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10, left: 20),
+      padding: const EdgeInsets.only(top: 10, left: 20),
       child: InkWell(
         onTap: () {
           print("book.id : ${book.id}");

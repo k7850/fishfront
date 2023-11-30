@@ -1,10 +1,10 @@
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
-import 'package:fishfront/ui/_common_widgets/app_bottom.dart';
+import 'package:fishfront/ui/_common_widgets/my_bottom.dart';
 import 'package:fishfront/ui/_common_widgets/my_appbar.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/fish_update_body.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/fish_update_view_model.dart';
+import 'package:fishfront/ui/aquarium/fish_update_page/fish_update_body.dart';
+import 'package:fishfront/ui/aquarium/fish_update_page/fish_update_view_model.dart';
 import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,7 +42,7 @@ class _FishUpdatePageState extends ConsumerState<FishUpdatePage> {
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FishUpdatePage()));
             await ref.read(mainProvider.notifier).notifyInit();
           }),
-      bottomNavigationBar: const AppBottom(),
+      bottomNavigationBar: const MyBottom(),
       body: FishUpdateBody(),
     );
   }

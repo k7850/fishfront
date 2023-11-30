@@ -26,18 +26,21 @@ class _AquariumDetailTabBarState extends State<AquariumDetailTabBar> with Single
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.green,
-          labelColor: Colors.green,
-          unselectedLabelColor: Colors.black,
-          tabs: [
-            Tab(child: Text("일정 관리", style: TextStyle(fontWeight: FontWeight.bold))),
-            Tab(child: Text("생물 관리", style: TextStyle(fontWeight: FontWeight.bold))),
-            Tab(child: Text("정보 수정", style: TextStyle(fontWeight: FontWeight.bold))),
-          ],
+        SizedBox(
+          // height: 40,
+          child: TabBar(
+            controller: _tabController,
+            indicatorColor: Colors.green,
+            labelColor: Colors.green,
+            unselectedLabelColor: Colors.black,
+            tabs: const [
+              Tab(child: Text("일정 관리", style: TextStyle(fontWeight: FontWeight.bold))),
+              Tab(child: Text("생물 관리", style: TextStyle(fontWeight: FontWeight.bold))),
+              Tab(child: Text("정보 수정", style: TextStyle(fontWeight: FontWeight.bold))),
+            ],
+          ),
         ),
-        Divider(color: Colors.grey, height: 1, thickness: 1),
+        const Divider(color: Colors.grey, height: 1, thickness: 1),
         Expanded(
           child: TabBarView(
             controller: _tabController,

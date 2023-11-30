@@ -2,8 +2,7 @@ import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/ui/_common_widgets/my_snackbar.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/fish_update_body.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/fish_update_page/fish_update_page.dart';
+import 'package:fishfront/ui/aquarium/fish_update_page/fish_update_page.dart';
 import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,10 +38,10 @@ class AquariumFishItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
                   fishDTO.photo != null && fishDTO.photo!.isNotEmpty
-                      ? "${imageURL}${fishDTO.photo}"
+                      ? "$imageURL${fishDTO.photo}"
                       : fishDTO.book == null || fishDTO.book!.photo == null
                           ? ""
-                          : "${imageURL}${fishDTO.book!.photo}",
+                          : "$imageURL${fishDTO.book!.photo}",
                   width: sizeGetScreenWidth(context) * 0.2,
                   height: sizeGetScreenWidth(context) * 0.2,
                   fit: BoxFit.cover,
@@ -142,7 +141,7 @@ class AquariumFishItem extends StatelessWidget {
                                         ClipRRect(
                                           borderRadius: BorderRadius.circular(10),
                                           child: Image.network(
-                                            "${imageURL}${aquariumDTO.photo}",
+                                            "$imageURL${aquariumDTO.photo}",
                                             width: sizeGetScreenWidth(context) * 0.2,
                                             height: sizeGetScreenWidth(context) * 0.15,
                                             fit: BoxFit.cover,

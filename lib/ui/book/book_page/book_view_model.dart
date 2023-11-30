@@ -55,7 +55,7 @@ class BookViewModel extends StateNotifier<BookModel?> {
   Future<void> notifyIsFreshWater(bool? isFreshWater) async {
     print("notifyIsFreshWater : ${isFreshWater}");
 
-    // state!.isFreshWater = isFreshWater;
+    // state!.isFreshWater = await isFreshWater;
     state =
         BookModel(bookList: state!.bookList, isFreshWater: isFreshWater, fishClassEnum: state!.fishClassEnum, newSearchTerm: state!.newSearchTerm);
   }
