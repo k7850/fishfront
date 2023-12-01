@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/data/DTO/user_request.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
+import 'package:fishfront/data/dto/aquarium_request_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
@@ -240,6 +242,69 @@ class AquariumRepository {
       print("response: ${response}");
       ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
       responseDTO.data = new FishDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchAquariumUpdate(String jwt, int aquariumId, AquariumRequestDTO aquariumRequestDTO, File? imageFile) async {
+    if (imageFile != null) {
+      print("if문");
+      List<int> imageBytes = await imageFile.readAsBytes();
+      String base64Image = base64Encode(imageBytes);
+      print("base64Image : ${base64Image}");
+      aquariumRequestDTO.base64Image = base64Image;
+    }
+
+    print("aquariumRequestDTO : ${aquariumRequestDTO}");
+    // print("aquariumRequestDTO.toJson() : ${aquariumRequestDTO.toJson()}");
+
+    try {
+      Response response =
+          await dio.put("/aquariums/${aquariumId}", data: aquariumRequestDTO.toJson(), options: Options(headers: {"Authorization": "${jwt}"}));
+      print("response: ${response}");
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new AquariumDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchAquariumCreate(String jwt, AquariumRequestDTO aquariumRequestDTO, File? imageFile) async {
+    if (imageFile != null) {
+      print("if문");
+      List<int> imageBytes = await imageFile.readAsBytes();
+      String base64Image = base64Encode(imageBytes);
+      print("base64Image : ${base64Image}");
+      aquariumRequestDTO.base64Image = base64Image;
+    }
+
+    print("aquariumRequestDTO : ${aquariumRequestDTO}");
+    // print("aquariumRequestDTO.toJson() : ${aquariumRequestDTO.toJson()}");
+
+    try {
+      Response response = await dio.post("/aquariums", data: aquariumRequestDTO.toJson(), options: Options(headers: {"Authorization": "${jwt}"}));
+      print("response: ${response}");
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new AquariumDTO.fromJson(responseDTO.data);
 
       return responseDTO;
     } catch (e) {

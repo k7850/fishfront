@@ -39,11 +39,11 @@ class _FishUpdatePageState extends ConsumerState<FishUpdatePage> {
       appBar: MyAppbar(
           title: "${fishDTO.name}",
           onTapFunction: () async {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FishUpdatePage()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const FishUpdatePage()));
             await ref.read(mainProvider.notifier).notifyInit();
           }),
       bottomNavigationBar: const MyBottom(),
-      body: FishUpdateBody(),
+      body: const FishUpdateBody(),
     );
   }
 }

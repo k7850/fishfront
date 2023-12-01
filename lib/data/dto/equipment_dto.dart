@@ -7,8 +7,16 @@ class EquipmentDTO {
   int aquariumId;
   String category;
   String name;
-  DateTime createdAt;
-  DateTime updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+
+  EquipmentDTO.copy(EquipmentDTO CopyEquipmentDTO)
+      : id = CopyEquipmentDTO.id,
+        aquariumId = CopyEquipmentDTO.aquariumId,
+        category = CopyEquipmentDTO.category,
+        name = CopyEquipmentDTO.name,
+        createdAt = CopyEquipmentDTO.createdAt,
+        updatedAt = CopyEquipmentDTO.updatedAt;
 
   EquipmentDTO(this.id, this.aquariumId, this.category, this.name, this.createdAt, this.updatedAt);
 
@@ -18,8 +26,8 @@ class EquipmentDTO {
         "aquariumId": aquariumId,
         "category": category,
         "name": name,
-        "createdAt": createdAt,
-        "updatedAt": updatedAt,
+        // "createdAt": createdAt.toString(),
+        // "updatedAt": updatedAt.toString(),
       };
 
   // 2. Map 형태로 받아서 Dart 객체로 변환합니다.
@@ -30,8 +38,8 @@ class EquipmentDTO {
         aquariumId = json["aquariumId"],
         category = json["category"],
         name = json["name"],
-        createdAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["createdAt"]),
-        updatedAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["updatedAt"]);
+        createdAt = json["createdAt"] == null ? null : DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["createdAt"]),
+        updatedAt = json["updatedAt"] == null ? null : DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["updatedAt"]);
 
   @override
   String toString() {

@@ -5,17 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../data/dto/aquarium_dto.dart';
-import '../../../../../data/dto/fish_dto.dart';
-import '../fish_update_view_model.dart';
+import '../fish_create_view_model.dart';
 
-class FishUpdateAlertdialog extends ConsumerWidget {
-  const FishUpdateAlertdialog({super.key});
+class FishCreateAlertdialog extends ConsumerWidget {
+  const FishCreateAlertdialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    FishUpdateModel model = ref.watch(fishUpdateProvider)!;
+    FishCreateModel model = ref.watch(fishCreateProvider)!;
 
-    FishDTO fishDTO = model.fishDTO;
+    // FishDTO fishDTO = model.fishDTO;
     AquariumDTO aquariumDTO = model.aquariumDTO;
 
     List<AquariumDTO> aquariumDTOList = ref.watch(mainProvider)!.aquariumDTOList;
@@ -23,7 +22,7 @@ class FishUpdateAlertdialog extends ConsumerWidget {
     return AlertDialog(
       title: RichText(
         text: TextSpan(
-          text: "${fishDTO.name}",
+          text: model.name.text,
           style: const TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
           children: const [
             TextSpan(text: " 소속시킬 어항", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
@@ -47,7 +46,7 @@ class FishUpdateAlertdialog extends ConsumerWidget {
                       }
                       print("${listAquariumDTO.title}");
                       // aquariumDTO = listAquariumDTO;
-                      ref.read(fishUpdateProvider.notifier).notifyAquariumDTO(listAquariumDTO);
+                      ref.read(fishCreateProvider.notifier).notifyAquariumDTO(listAquariumDTO);
                       Navigator.pop(context);
                       // setState(() {});
                     },
@@ -70,24 +69,24 @@ class FishUpdateAlertdialog extends ConsumerWidget {
                             },
                           ),
                         ),
-                        SizedBox(width: sizeM10),
+                        const SizedBox(width: sizeM10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("${listAquariumDTO.title}", style: TextStyle(fontSize: 18, fontFamily: "Giants")),
+                            Text(listAquariumDTO.title, style: const TextStyle(fontSize: 18, fontFamily: "Giants")),
                             listAquariumDTO.id == aquariumDTO.id
                                 ? Text("현재 소속 어항", style: TextStyle(fontSize: 13, color: Colors.grey[600], fontFamily: "Giants"))
-                                : SizedBox(),
+                                : const SizedBox(),
                           ],
                         ),
-                        Spacer(),
-                        listAquariumDTO.id == fishDTO.aquariumId
-                            ? Text("X ", style: TextStyle(fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold, fontFamily: ""))
-                            : Text("> ", style: TextStyle(fontSize: 20, color: Colors.grey)),
+                        const Spacer(),
+                        listAquariumDTO.id == aquariumDTO.id
+                            ? const Text("X ", style: TextStyle(fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold, fontFamily: ""))
+                            : const Text("> ", style: TextStyle(fontSize: 20, color: Colors.grey)),
                       ],
                     ),
                   ),
-                  SizedBox(height: sizeS5),
+                  const SizedBox(height: sizeS5),
                 ],
               ),
           ],

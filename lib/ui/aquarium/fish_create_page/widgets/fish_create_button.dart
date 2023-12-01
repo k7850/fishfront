@@ -5,22 +5,21 @@ import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/model/book.dart';
-import 'package:fishfront/ui/aquarium/fish_update_page/fish_update_view_model.dart';
+import 'package:fishfront/ui/aquarium/fish_create_page/fish_create_view_model.dart';
 import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FishUpdateButton extends ConsumerWidget {
+class FishCreateButton extends ConsumerWidget {
   final _formKey;
 
-  const FishUpdateButton(this._formKey, {super.key});
+  const FishCreateButton(this._formKey, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    FishUpdateModel model = ref.watch(fishUpdateProvider)!;
+    FishCreateModel model = ref.watch(fishCreateProvider)!;
 
-    FishDTO fishDTO = model.fishDTO;
+    // FishDTO fishDTO = model.fishDTO;
     AquariumDTO aquariumDTO = model.aquariumDTO;
 
     TextEditingController _name = model.name;
@@ -40,9 +39,11 @@ class FishUpdateButton extends ConsumerWidget {
       onPressed: () async {
         print("fish업뎃 제출하기");
         if (_formKey.currentState!.validate()) {
+          print("fish업뎃 validate 통과");
           FishRequestDTO fishRequestDTO = FishRequestDTO(fishClassEnum, _name.text, _text.text, quantity, isMale, photo, _price.text, book?.id);
 
-          await ref.watch(mainProvider.notifier).notifyFishUpdate(aquariumDTO.id, fishDTO.id, fishRequestDTO, imageFile);
+          await ref.watch(mainProvider.notifier).notifyFishCreate(aquariumDTO.id, fishRequestDTO, imageFile);
+          Navigator.pop(context);
         }
       },
       child: const Text("제출하기"),

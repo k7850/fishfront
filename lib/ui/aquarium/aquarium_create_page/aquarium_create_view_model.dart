@@ -16,8 +16,8 @@ import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DetailOtherModel {
-  AquariumDTO aquariumDTO;
+class AquariumCreateModel {
+  // AquariumDTO aquariumDTO;
   TextEditingController title;
   TextEditingController intro;
   TextEditingController size1;
@@ -28,9 +28,9 @@ class DetailOtherModel {
   Map<int, TextEditingController> controllerMap;
   List<EquipmentDTO> equipmentDTOList;
 
-  DetailOtherModel.copy(DetailOtherModel copyState)
-      : aquariumDTO = copyState.aquariumDTO,
-        title = copyState.title,
+  AquariumCreateModel.copy(AquariumCreateModel copyState)
+      // : aquariumDTO = copyState.aquariumDTO,
+      : title = copyState.title,
         intro = copyState.intro,
         size1 = copyState.size1,
         size2 = copyState.size2,
@@ -40,8 +40,8 @@ class DetailOtherModel {
         controllerMap = copyState.controllerMap,
         equipmentDTOList = copyState.equipmentDTOList;
 
-  DetailOtherModel({
-    required this.aquariumDTO,
+  AquariumCreateModel({
+    // required this.aquariumDTO,
     required this.title,
     required this.intro,
     required this.size1,
@@ -54,51 +54,35 @@ class DetailOtherModel {
   });
 }
 
-class DetailOtherViewModel extends StateNotifier<DetailOtherModel?> {
+class AquariumCreateViewModel extends StateNotifier<AquariumCreateModel?> {
   Ref ref;
 
   final mContext = navigatorKey.currentContext;
 
-  DetailOtherViewModel(this.ref, super._state);
+  AquariumCreateViewModel(this.ref, super._state);
 
   Future<void> notifyInit() async {
-    print("피시업데이트노티파이어인잇");
+    print("피시크리에이트노티파이어인잇");
 
-    ParamStore paramStore = ref.read(paramProvider);
+    TextEditingController title = TextEditingController();
+    TextEditingController intro = TextEditingController();
+    TextEditingController size1 = TextEditingController();
+    TextEditingController size2 = TextEditingController();
+    TextEditingController size3 = TextEditingController();
 
-    AquariumDTO aquariumDTO = ref
-        .read(mainProvider)! //
-        .aquariumDTOList //
-        .firstWhere((element) => element.id == paramStore.aquariumDetailId);
-
-    TextEditingController title = TextEditingController(text: "${aquariumDTO.title ?? ""}");
-    TextEditingController intro = TextEditingController(text: "${aquariumDTO.intro ?? ""}");
-    TextEditingController size1 = TextEditingController(text: "${aquariumDTO.size?.split("/")[0] ?? "0"}");
-    TextEditingController size2 = TextEditingController(text: "${aquariumDTO.size?.split("/")[1] ?? "0"}");
-    TextEditingController size3 = TextEditingController(text: "${aquariumDTO.size?.split("/")[2] ?? "0"}");
-
-    // List<EquipmentDTO> equipmentDTOList = aquariumDTO.equipmentDTOList;
-    List<EquipmentDTO> equipmentDTOList = [for (var equipment in aquariumDTO.equipmentDTOList) EquipmentDTO.copy(equipment)];
-    // 깊은 복사
-    // print("${aquariumDTO.equipmentDTOList.hashCode}");
-    // print("${equipmentDTOList.hashCode}");
-    // print("${aquariumDTO.equipmentDTOList[0].name}, ${aquariumDTO.equipmentDTOList[0].hashCode}");
-    // print("${equipmentDTOList[0].name}, ${equipmentDTOList[0].hashCode}");
+    List<EquipmentDTO> equipmentDTOList = [];
 
     Map<int, TextEditingController> controllerMap = {};
-    for (EquipmentDTO equipment in equipmentDTOList) {
-      controllerMap.addAll({equipment.id: new TextEditingController(text: equipment.name)});
-    }
 
-    state = await DetailOtherModel(
-      aquariumDTO: aquariumDTO,
+    state = await AquariumCreateModel(
+      // aquariumDTO: aquariumDTO,
       title: title,
       intro: intro,
       size1: size1,
       size2: size2,
       size3: size3,
       imageFile: null,
-      isFreshWater: aquariumDTO.isFreshWater ?? true,
+      isFreshWater: true,
       controllerMap: controllerMap,
       equipmentDTOList: equipmentDTOList,
     );
@@ -107,88 +91,88 @@ class DetailOtherViewModel extends StateNotifier<DetailOtherModel?> {
   Future<void> notifyImageFile(File imageFile) async {
     print("notifyImageFile : ${imageFile}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
     copyState.imageFile = imageFile;
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   Future<void> notifyIsFreshWater(bool isFreshWater) async {
     print("notifyIsFreshWater : ${isFreshWater}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
     copyState.isFreshWater = isFreshWater;
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   Future<void> notifyTitle(String str) async {
     print("notify : ${str}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
     copyState.title.text = str;
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   Future<void> notifyIntro(String str) async {
     print("notify : ${str}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
     copyState.intro.text = str;
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   Future<void> notifySize1(String str) async {
     print("notify : ${str}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
     copyState.size1.text = str;
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   Future<void> notifySize2(String str) async {
     print("notify : ${str}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
     copyState.size2.text = str;
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   Future<void> notifySize3(String str) async {
     print("notify : ${str}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
     copyState.size3.text = str;
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   Future<void> notifyEquipmentUpdate(int id, String str) async {
     print("notifyEquipment : ${id}, ${str}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
 
     copyState.controllerMap[id]!.text = str;
 
     copyState.equipmentDTOList.firstWhere((element) => element.id == id).name = str;
 
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   Future<void> notifyEquipmentDelete(int id) async {
     print("notifyEquipmentDelete : ${id}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
 
     copyState.equipmentDTOList.removeWhere((element) => element.id == id);
 
     copyState.controllerMap[id]!.dispose();
     copyState.controllerMap.remove(id);
 
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   Future<void> notifyEquipmentCreate(String category) async {
     print("notifyEquipmentCreate : ${category}");
 
-    DetailOtherModel copyState = state!;
+    AquariumCreateModel copyState = state!;
 
     DateTime nowTime = DateTime.now();
     int tempId = -(int.parse(nowTime.millisecondsSinceEpoch.toString().substring(7)));
@@ -196,9 +180,9 @@ class DetailOtherViewModel extends StateNotifier<DetailOtherModel?> {
 
     copyState.controllerMap.addAll({tempId: new TextEditingController(text: "")});
 
-    copyState.equipmentDTOList.add(new EquipmentDTO(tempId, copyState.aquariumDTO.id, category, "", nowTime, nowTime));
+    copyState.equipmentDTOList.add(new EquipmentDTO(tempId, -1, category, "", nowTime, nowTime));
 
-    state = DetailOtherModel.copy(copyState);
+    state = AquariumCreateModel.copy(copyState);
   }
 
   @override
@@ -222,7 +206,7 @@ class DetailOtherViewModel extends StateNotifier<DetailOtherModel?> {
 //
 }
 
-final detailOtherProvider = StateNotifierProvider.autoDispose<DetailOtherViewModel, DetailOtherModel?>((ref) {
+final aquariumCreateProvider = StateNotifierProvider.autoDispose<AquariumCreateViewModel, AquariumCreateModel?>((ref) {
   // return new DetailOtherViewModel(ref, null)..notifyInit();
-  return new DetailOtherViewModel(ref, null);
+  return new AquariumCreateViewModel(ref, null);
 });

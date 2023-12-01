@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
+import 'package:fishfront/data/dto/aquarium_request_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
@@ -14,6 +15,7 @@ import 'package:fishfront/data/repository/board_repository.dart';
 import 'package:fishfront/data/repository/book_repository.dart';
 import 'package:fishfront/main.dart';
 import 'package:fishfront/ui/_common_widgets/my_snackbar.dart';
+import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/detail_other_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -142,6 +144,7 @@ class MainViewModel extends StateNotifier<MainModel?> {
         .removeWhere((e) => e.id == fishDTO.id);
 
     state = MainModel(aquariumDTOList: aquariumDTOList);
+    mySnackbar(2000, mySnackbarRow1("${fishDTO.name}", " 삭제 성공", "", ""));
   }
 
   Future<void> notifyFishCreate(int aquariumId, FishRequestDTO fishRequestDTO, File? imageFile) async {
@@ -167,6 +170,7 @@ class MainViewModel extends StateNotifier<MainModel?> {
         .add(fishDTO);
 
     state = MainModel(aquariumDTOList: aquariumDTOList);
+    mySnackbar(2000, mySnackbarRow1("${fishDTO.name}", " 추가 성공", "", ""));
   }
 
   Future<void> notifyFishMove(FishDTO oldFishDTO, int aquariumId) async {
@@ -230,6 +234,59 @@ class MainViewModel extends StateNotifier<MainModel?> {
     state = MainModel(aquariumDTOList: aquariumDTOList);
 
     mySnackbar(1000, mySnackbarRow1("${fishDTO.name}", " 수정하였습니다.", "", ""));
+  }
+
+  Future<void> notifyAquariumCreate(AquariumRequestDTO aquariumRequestDTO, File? imageFile) async {
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ResponseDTO responseDTO = await AquariumRepository().fetchAquariumCreate(sessionUser.jwt!, aquariumRequestDTO, imageFile);
+
+    if (responseDTO.success == false) {
+      print("업데이트실패 : ${responseDTO}");
+      mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
+      // notifyInit();
+      return;
+    }
+
+    AquariumDTO newAquariumDTO = responseDTO.data;
+
+    List<AquariumDTO> aquariumDTOList = state!.aquariumDTOList;
+
+    aquariumDTOList.add(newAquariumDTO);
+
+    state = MainModel(aquariumDTOList: aquariumDTOList);
+
+    ref.read(detailOtherProvider.notifier).notifyInit();
+
+    Navigator.pop(mContext!);
+
+    mySnackbar(1000, mySnackbarRow1("${newAquariumDTO.title}", " 생성하였습니다.", "", ""));
+  }
+
+  Future<void> notifyAquariumUpdate(int aquariumId, AquariumRequestDTO aquariumRequestDTO, File? imageFile) async {
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ResponseDTO responseDTO = await AquariumRepository().fetchAquariumUpdate(sessionUser.jwt!, aquariumId, aquariumRequestDTO, imageFile);
+
+    if (responseDTO.success == false) {
+      print("업데이트실패 : ${responseDTO}");
+      mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
+      // notifyInit();
+      return;
+    }
+
+    AquariumDTO newAquariumDTO = responseDTO.data;
+
+    List<AquariumDTO> aquariumDTOList = state!.aquariumDTOList;
+
+    int index = aquariumDTOList.indexWhere((element) => element.id == newAquariumDTO.id);
+    aquariumDTOList[index] = newAquariumDTO;
+
+    state = MainModel(aquariumDTOList: aquariumDTOList);
+
+    ref.read(detailOtherProvider.notifier).notifyInit();
+
+    mySnackbar(1000, mySnackbarRow1("${newAquariumDTO.title}", " 수정하였습니다.", "", ""));
   }
 
 //

@@ -21,6 +21,21 @@ class AquariumCard extends ConsumerStatefulWidget {
 }
 
 class _AquariumCardState extends ConsumerState<AquariumCard> {
+  Color idColorMage(int id) {
+    int colorChange(int colorInt) {
+      colorInt %= 255;
+      while (colorInt < 50) {
+        colorInt += 10;
+      }
+      while (colorInt > 200) {
+        colorInt -= 10;
+      }
+      return colorInt;
+    }
+
+    return Color.fromRGBO(colorChange(id * 55), colorChange(id * 155), colorChange(id * 222), 0.5);
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
@@ -65,7 +80,7 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
       // height: sizeGetScreenHeight(context) * 0.6,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Color.fromRGBO(widget.aquariumDTO.id * 50, widget.aquariumDTO.id * 100, widget.aquariumDTO.id * 150, 0.3),
+        color: idColorMage(widget.aquariumDTO.id),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,6 +96,14 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
                 width: sizeGetScreenWidth(context) * 0.6,
                 height: sizeGetScreenWidth(context) * 0.6,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    "assets/aquarium.png",
+                    width: sizeGetScreenWidth(context) * 0.6,
+                    height: sizeGetScreenWidth(context) * 0.6,
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
             ),
           ),

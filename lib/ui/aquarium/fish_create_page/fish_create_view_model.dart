@@ -15,8 +15,8 @@ import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FishUpdateModel {
-  FishDTO fishDTO;
+class FishCreateModel {
+  // FishDTO fishDTO;
   AquariumDTO aquariumDTO;
   TextEditingController name;
   TextEditingController text;
@@ -28,9 +28,9 @@ class FishUpdateModel {
   Book? book;
   File? imageFile;
 
-  FishUpdateModel.copy(FishUpdateModel copyState)
-      : fishDTO = copyState.fishDTO,
-        aquariumDTO = copyState.aquariumDTO,
+  FishCreateModel.copy(FishCreateModel copyState)
+      // : fishDTO = copyState.fishDTO,
+      : aquariumDTO = copyState.aquariumDTO,
         name = copyState.name,
         text = copyState.text,
         price = copyState.price,
@@ -41,8 +41,8 @@ class FishUpdateModel {
         book = copyState.book,
         imageFile = copyState.imageFile;
 
-  FishUpdateModel({
-    required this.fishDTO,
+  FishCreateModel({
+    // required this.fishDTO,
     required this.aquariumDTO,
     required this.name,
     required this.text,
@@ -56,49 +56,37 @@ class FishUpdateModel {
   });
 }
 
-class FishUpdateViewModel extends StateNotifier<FishUpdateModel?> {
+class FishCreateViewModel extends StateNotifier<FishCreateModel?> {
   Ref ref;
 
   final mContext = navigatorKey.currentContext;
 
-  FishUpdateViewModel(this.ref, super._state);
+  FishCreateViewModel(this.ref, super._state);
 
   Future<void> notifyInit() async {
     print("피시업데이트노티파이어인잇");
     ParamStore paramStore = ref.read(paramProvider);
 
-    FishDTO fishDTO = ref
-        .read(mainProvider)!
-        .aquariumDTOList
-        .expand((element) => element.fishDTOList)
-        .firstWhere((element) => element.id == paramStore.fishDetailId);
-
     AquariumDTO aquariumDTO = ref
         .read(mainProvider)!
         .aquariumDTOList //
-        .firstWhere((element) => element.id == fishDTO.aquariumId);
+        .firstWhere((element) => element.id == paramStore.aquariumDetailId);
 
-    TextEditingController name = TextEditingController(text: "${fishDTO.name ?? ""}");
-    TextEditingController text = TextEditingController(text: "${fishDTO.text ?? ""}");
-    TextEditingController price = TextEditingController(text: "${fishDTO.price ?? ""}");
+    TextEditingController name = TextEditingController();
+    TextEditingController text = TextEditingController();
+    TextEditingController price = TextEditingController();
 
-    FishClassEnum fishClassEnum = fishDTO.fishClassEnum;
-    int quantity = fishDTO.quantity ?? 0;
-    bool? isMale = fishDTO.isMale;
-    String? photo = fishDTO.photo;
-    Book? book = fishDTO.book;
-
-    state = await FishUpdateModel(
-      fishDTO: fishDTO,
+    state = await FishCreateModel(
+      // fishDTO: fishDTO,
       aquariumDTO: aquariumDTO,
       name: name,
       text: text,
       price: price,
-      fishClassEnum: fishClassEnum,
-      quantity: quantity,
-      isMale: isMale,
-      photo: photo,
-      book: book,
+      fishClassEnum: FishClassEnum.FISH,
+      quantity: 0,
+      isMale: null,
+      photo: null,
+      book: null,
       imageFile: null,
     );
   }
@@ -106,73 +94,73 @@ class FishUpdateViewModel extends StateNotifier<FishUpdateModel?> {
   Future<void> notifyImageFile(File imageFile) async {
     print("notifyImageFile : ${imageFile}");
 
-    FishUpdateModel copyState = state!;
+    FishCreateModel copyState = state!;
     copyState.imageFile = imageFile;
-    state = FishUpdateModel.copy(copyState);
+    state = FishCreateModel.copy(copyState);
   }
 
   Future<void> notifyName(String str) async {
     print("notifyName : ${str}");
 
-    FishUpdateModel copyState = state!;
+    FishCreateModel copyState = state!;
     copyState.name.text = str;
-    state = FishUpdateModel.copy(copyState);
+    state = FishCreateModel.copy(copyState);
   }
 
   Future<void> notifyText(String str) async {
     print("notifyText : ${str}");
 
-    FishUpdateModel copyState = state!;
+    FishCreateModel copyState = state!;
     copyState.text.text = str;
-    state = FishUpdateModel.copy(copyState);
+    state = FishCreateModel.copy(copyState);
   }
 
   Future<void> notifyPrice(String str) async {
     print("notifyPrice : ${str}");
 
-    FishUpdateModel copyState = state!;
+    FishCreateModel copyState = state!;
     copyState.price.text = str;
-    state = FishUpdateModel.copy(copyState);
+    state = FishCreateModel.copy(copyState);
   }
 
   Future<void> notifyAquariumDTO(AquariumDTO aquariumDTO) async {
     print("notifyAquariumDTO : ${aquariumDTO}");
 
-    FishUpdateModel copyState = state!;
+    FishCreateModel copyState = state!;
     copyState.aquariumDTO = aquariumDTO;
-    state = FishUpdateModel.copy(copyState);
+    state = FishCreateModel.copy(copyState);
   }
 
   Future<void> notifyFishClassEnum(FishClassEnum fishClassEnum) async {
     print("notifyFishClassEnum : ${fishClassEnum}");
 
-    FishUpdateModel copyState = state!;
+    FishCreateModel copyState = state!;
     copyState.fishClassEnum = fishClassEnum;
-    state = FishUpdateModel.copy(copyState);
+    state = FishCreateModel.copy(copyState);
   }
 
   Future<void> notifyQuantity(int quantity) async {
     print("notifyQuantity : ${quantity}");
 
-    FishUpdateModel copyState = state!;
+    FishCreateModel copyState = state!;
     copyState.quantity = quantity;
-    state = FishUpdateModel.copy(copyState);
+    state = FishCreateModel.copy(copyState);
   }
 
   Future<void> notifyIsMale(bool? isMale) async {
     print("notifyIsMale : ${isMale}");
 
-    FishUpdateModel copyState = state!;
+    FishCreateModel copyState = state!;
     copyState.isMale = isMale;
-    state = FishUpdateModel.copy(copyState);
+    state = FishCreateModel.copy(copyState);
   }
 
   Future<void> notifyBook(Book? book) async {
     print("notifyBook : ${book}");
 
-    FishUpdateModel copyState = state!;
+    FishCreateModel copyState = state!;
     copyState.book = book;
-    state = FishUpdateModel.copy(copyState);
+    state = FishCreateModel.copy(copyState);
   }
 
   @override
@@ -189,7 +177,7 @@ class FishUpdateViewModel extends StateNotifier<FishUpdateModel?> {
 //
 }
 
-final fishUpdateProvider = StateNotifierProvider.autoDispose<FishUpdateViewModel, FishUpdateModel?>((ref) {
+final fishCreateProvider = StateNotifierProvider.autoDispose<FishCreateViewModel, FishCreateModel?>((ref) {
   // return new FishUpdateViewModel(ref, null)..notifyInit();
-  return new FishUpdateViewModel(ref, null);
+  return new FishCreateViewModel(ref, null);
 });

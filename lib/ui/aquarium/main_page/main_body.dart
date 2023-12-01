@@ -1,5 +1,6 @@
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
+import 'package:fishfront/ui/aquarium/aquarium_create_page/aquarium_create_page.dart';
 import 'package:fishfront/ui/aquarium/aquarium_detail_page/aquarium_detail_page.dart';
 import 'package:fishfront/ui/aquarium/main_page/widgets/aquarium_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,7 +53,10 @@ class MainBody extends ConsumerWidget {
           padding: const EdgeInsets.only(right: 15, bottom: 10),
           alignment: const Alignment(1, 1),
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              print("어항추가버튼");
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AquariumCreatePage()));
+            },
             child: const Icon(Icons.add, size: 35),
           ),
         ),

@@ -252,7 +252,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                           return AlertDialog(
                             scrollable: true,
                             title: Text("${selectedDay.month}월 ${selectedDay.day}일 계획 추가"),
-                            content: TextField(controller: _eventController),
+                            content: TextField(autofocus: true, controller: _eventController),
                             actions: [
                               ElevatedButton(
                                 style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.green)),
@@ -296,7 +296,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                           return AlertDialog(
                             scrollable: true,
                             title: Text("요일 반복 계획 추가"),
-                            content: TextField(controller: _eventController),
+                            content: TextField(autofocus: true, controller: _eventController),
                             actions: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -327,7 +327,7 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
                           return AlertDialog(
                             scrollable: true,
                             title: Text("기간 반복 계획 추가"),
-                            content: TextField(controller: _eventController),
+                            content: TextField(autofocus: true, controller: _eventController),
                             actions: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

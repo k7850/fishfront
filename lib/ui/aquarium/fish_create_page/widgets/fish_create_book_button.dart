@@ -2,21 +2,21 @@ import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/model/book.dart';
-import 'package:fishfront/ui/aquarium/fish_update_page/fish_update_view_model.dart';
+import 'package:fishfront/ui/aquarium/fish_create_page/fish_create_view_model.dart';
 import 'package:fishfront/ui/book/book_page/book_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FishUpdateBookButton extends ConsumerWidget {
-  const FishUpdateBookButton({
+class FishCreateBookButton extends ConsumerWidget {
+  const FishCreateBookButton({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    FishUpdateModel model = ref.watch(fishUpdateProvider)!;
+    FishCreateModel model = ref.watch(fishCreateProvider)!;
 
-    FishDTO fishDTO = model.fishDTO;
+    // FishDTO fishDTO = model.fishDTO;
     Book? book = model.book;
 
     return ElevatedButton(
@@ -48,7 +48,7 @@ class FishUpdateBookButton extends ConsumerWidget {
                 return AlertDialog(
                   title: RichText(
                     text: TextSpan(
-                      text: "${fishDTO.name}",
+                      text: model.name.text,
                       style: const TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
                       children: const [
                         TextSpan(text: " 연동할 생물도감", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
@@ -62,7 +62,7 @@ class FishUpdateBookButton extends ConsumerWidget {
                               ElevatedButton(
                                 onPressed: () async {
                                   print("소속도감연동해제");
-                                  ref.read(fishUpdateProvider.notifier).notifyBook(null);
+                                  ref.read(fishCreateProvider.notifier).notifyBook(null);
                                   // parentSetState();
                                   // setState(() {});
                                   Navigator.pop(context);
@@ -108,7 +108,7 @@ class FishUpdateBookButton extends ConsumerWidget {
                                           }
                                           print("${e.normalName}");
 
-                                          ref.read(fishUpdateProvider.notifier).notifyBook(e);
+                                          ref.read(fishCreateProvider.notifier).notifyBook(e);
 
                                           // parentSetState();
                                           // setState(() {});

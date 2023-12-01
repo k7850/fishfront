@@ -1,16 +1,16 @@
 import 'package:fishfront/_core/utils/validator_util.dart';
 import 'package:fishfront/data/dto/equipment_dto.dart';
 import 'package:fishfront/ui/_common_widgets/aquarium_textformfield.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/detail_other_view_model.dart';
+import 'package:fishfront/ui/aquarium/aquarium_create_page/aquarium_create_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DetailOtherEquipment extends ConsumerWidget {
-  const DetailOtherEquipment({super.key});
+class AquariumCreateEquipment extends ConsumerWidget {
+  const AquariumCreateEquipment({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    DetailOtherModel model = ref.watch(detailOtherProvider)!;
+    AquariumCreateModel model = ref.watch(aquariumCreateProvider)!;
 
     List<EquipmentDTO> equipmentDTOList = model.equipmentDTOList;
 
@@ -46,7 +46,7 @@ class DetailOtherEquipment extends ConsumerWidget {
                           onPressed: () {
                             if (createEquipment.text.isNotEmpty) {
                               print("asd");
-                              ref.read(detailOtherProvider.notifier).notifyEquipmentCreate(createEquipment.text);
+                              ref.read(aquariumCreateProvider.notifier).notifyEquipmentCreate(createEquipment.text);
                               Navigator.pop(context);
                             }
                           },
@@ -66,13 +66,13 @@ class DetailOtherEquipment extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: AquariumTextFormField(equipment.category, entry.value, validateNormal(),
-                              (String value) => ref.read(detailOtherProvider.notifier).notifyEquipmentUpdate(equipment.id, value)),
+                              (String value) => ref.read(aquariumCreateProvider.notifier).notifyEquipmentUpdate(equipment.id, value)),
                         ),
                         const SizedBox(width: 10),
                         TextButton(
                           onPressed: () {
                             print("장비제거누름 ${equipment.id}, ${entry.key}, ${entry.value.text}");
-                            ref.read(detailOtherProvider.notifier).notifyEquipmentDelete(equipment.id);
+                            ref.read(aquariumCreateProvider.notifier).notifyEquipmentDelete(equipment.id);
                           },
                           style: const ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 0, horizontal: 5))),
                           child: Text("장비 제거", style: TextStyle(color: Colors.grey[600])),
