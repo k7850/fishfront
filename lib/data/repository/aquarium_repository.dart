@@ -6,6 +6,8 @@ import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/data/DTO/user_request.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/aquarium_request_dto.dart';
+import 'package:fishfront/data/dto/diary_dto.dart';
+import 'package:fishfront/data/dto/diary_request_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
@@ -25,6 +27,8 @@ class AquariumRepository {
 
       // 응답 받은 데이터 파싱
       ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      print("${responseDTO}");
 
       List<dynamic> mapList = responseDTO.data as List<dynamic>;
 
@@ -305,6 +309,29 @@ class AquariumRepository {
       ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
 
       responseDTO.data = new AquariumDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchDiaryCreate(String jwt, int aquariumId, DiaryRequestDTO diaryRequestDTO) async {
+    print("diaryRequestDTO : ${diaryRequestDTO}");
+
+    try {
+      Response response =
+          await dio.post("/aquariums/${aquariumId}/diary", data: diaryRequestDTO.toJson(), options: Options(headers: {"Authorization": "${jwt}"}));
+      print("response: ${response}");
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new DiaryDTO.fromJson(responseDTO.data);
 
       return responseDTO;
     } catch (e) {

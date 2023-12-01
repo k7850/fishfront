@@ -1,7 +1,7 @@
 import 'package:fishfront/_core/utils/validator_util.dart';
 import 'package:fishfront/data/dto/equipment_dto.dart';
 import 'package:fishfront/ui/_common_widgets/aquarium_textformfield.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/detail_other_view_model.dart';
+import 'package:fishfront/ui/aquarium/detail_other_page/detail_other_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

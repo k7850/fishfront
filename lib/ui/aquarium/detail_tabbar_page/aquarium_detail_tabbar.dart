@@ -1,13 +1,14 @@
 import 'package:fishfront/data/dto/aquarium_dto.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_fish_page/detail_fish_body.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/detail_other_body.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_schedule_page/detail_schedule_body.dart';
+import 'package:fishfront/ui/aquarium/detail_diary_page/detail_diary_body.dart';
+import 'package:fishfront/ui/aquarium/detail_fish_page/detail_fish_body.dart';
+import 'package:fishfront/ui/aquarium/detail_other_page/detail_other_body.dart';
+import 'package:fishfront/ui/aquarium/detail_schedule_page/detail_schedule_body.dart';
 import 'package:flutter/material.dart';
 
 class AquariumDetailTabBar extends StatefulWidget {
   AquariumDTO aquariumDTO;
 
-  AquariumDetailTabBar(this.aquariumDTO);
+  AquariumDetailTabBar(this.aquariumDTO, {super.key});
 
   @override
   _AquariumDetailTabBarState createState() => _AquariumDetailTabBarState();
@@ -19,7 +20,7 @@ class _AquariumDetailTabBarState extends State<AquariumDetailTabBar> with Single
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(length: 3, vsync: this);
+    _tabController = new TabController(length: 4, vsync: this);
   }
 
   @override
@@ -36,6 +37,7 @@ class _AquariumDetailTabBarState extends State<AquariumDetailTabBar> with Single
             tabs: const [
               Tab(child: Text("일정 관리", style: TextStyle(fontWeight: FontWeight.bold))),
               Tab(child: Text("생물 관리", style: TextStyle(fontWeight: FontWeight.bold))),
+              Tab(child: Text("기록 관리", style: TextStyle(fontWeight: FontWeight.bold))),
               Tab(child: Text("정보 수정", style: TextStyle(fontWeight: FontWeight.bold))),
             ],
           ),
@@ -44,9 +46,10 @@ class _AquariumDetailTabBarState extends State<AquariumDetailTabBar> with Single
         Expanded(
           child: TabBarView(
             controller: _tabController,
-            children: [
+            children: const [
               DetailScheduleBody(),
               DetailFishBody(),
+              DetailDiaryBody(),
               DetailOtherBody(),
             ],
           ),

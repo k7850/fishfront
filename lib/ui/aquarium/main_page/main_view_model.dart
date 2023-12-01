@@ -3,19 +3,22 @@ import 'dart:io';
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/aquarium_request_dto.dart';
+import 'package:fishfront/data/dto/diary_dto.dart';
+import 'package:fishfront/data/dto/diary_request_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
 import 'package:fishfront/data/dto/schedule_request_dto.dart';
 import 'package:fishfront/data/model/book.dart';
+import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/data/provider/session_provider.dart';
 import 'package:fishfront/data/repository/aquarium_repository.dart';
 import 'package:fishfront/data/repository/board_repository.dart';
 import 'package:fishfront/data/repository/book_repository.dart';
 import 'package:fishfront/main.dart';
 import 'package:fishfront/ui/_common_widgets/my_snackbar.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/detail_other_view_model.dart';
+import 'package:fishfront/ui/aquarium/detail_other_page/detail_other_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -34,7 +37,7 @@ class MainViewModel extends StateNotifier<MainModel?> {
   MainViewModel(this.ref, super._state);
 
   Future<void> notifyInit() async {
-    print("메인아쿠아리움노티파이어인잇");
+    print("메인노티파이어인잇");
     SessionUser sessionUser = ref.read(sessionProvider);
 
     ResponseDTO responseDTO = await AquariumRepository().fetchAquarium(sessionUser.jwt!);
@@ -287,6 +290,37 @@ class MainViewModel extends StateNotifier<MainModel?> {
     ref.read(detailOtherProvider.notifier).notifyInit();
 
     mySnackbar(1000, mySnackbarRow1("${newAquariumDTO.title}", " 수정하였습니다.", "", ""));
+  }
+
+  Future<void> notifyDiaryCreate(DiaryRequestDTO diaryRequestDTO) async {
+    print("${diaryRequestDTO}");
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ParamStore paramStore = ref.read(paramProvider);
+    int aquariumId = state!.aquariumDTOList //
+        .firstWhere((element) => element.id == paramStore.aquariumDetailId)
+        .id;
+
+    ResponseDTO responseDTO = await AquariumRepository().fetchDiaryCreate(sessionUser.jwt!, aquariumId, diaryRequestDTO);
+
+    if (responseDTO.success == false) {
+      print("생성실패 : ${responseDTO}");
+      mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
+      notifyInit();
+      return;
+    }
+
+    DiaryDTO diaryDTO = responseDTO.data;
+
+    List<AquariumDTO> aquariumDTOList = state!.aquariumDTOList;
+
+    aquariumDTOList
+        .firstWhere((e) => e.id == diaryDTO.aquariumId) //
+        .diaryDTOList //
+        .add(diaryDTO);
+
+    state = MainModel(aquariumDTOList: aquariumDTOList);
+    mySnackbar(2000, mySnackbarRow1("기록", " 작성 완료", "", ""));
   }
 
 //

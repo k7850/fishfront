@@ -1,3 +1,4 @@
+import 'package:fishfront/data/dto/diary_dto.dart';
 import 'package:fishfront/data/dto/equipment_dto.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
@@ -16,9 +17,10 @@ class AquariumDTO {
   List<FishDTO> fishDTOList;
   List<ScheduleDTO> scheduleDTOList;
   List<EquipmentDTO> equipmentDTOList;
+  List<DiaryDTO> diaryDTOList;
 
   AquariumDTO(this.id, this.title, this.intro, this.photo, this.isFreshWater, this.size, this.createdAt, this.updatedAt, this.fishDTOList,
-      this.scheduleDTOList, this.equipmentDTOList);
+      this.scheduleDTOList, this.equipmentDTOList, this.diaryDTOList);
 
   AquariumDTO.fromJson(Map<String, dynamic> json)
       : id = json["id"],
@@ -31,10 +33,11 @@ class AquariumDTO {
         updatedAt = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(json["updatedAt"]),
         fishDTOList = (json["fishDTOList"] as List).map((jsonFishDTO) => FishDTO.fromJson(jsonFishDTO)).toList(),
         scheduleDTOList = (json["scheduleDTOList"] as List).map((jsonScheduleDTO) => ScheduleDTO.fromJson(jsonScheduleDTO)).toList(),
-        equipmentDTOList = (json["equipmentDTOList"] as List).map((jsonEquipmentDTO) => EquipmentDTO.fromJson(jsonEquipmentDTO)).toList();
+        equipmentDTOList = (json["equipmentDTOList"] as List).map((jsonEquipmentDTO) => EquipmentDTO.fromJson(jsonEquipmentDTO)).toList(),
+        diaryDTOList = (json["diaryDTOList"] as List).map((jsonDiaryDTO) => DiaryDTO.fromJson(jsonDiaryDTO)).toList();
 
   @override
   String toString() {
-    return 'AquariumDTO{id: $id, title: $title, intro: $intro, photo: $photo, isFreshWater: $isFreshWater, size: $size, createdAt: $createdAt, updatedAt: $updatedAt, fishDTOList: $fishDTOList, scheduleDTOList: $scheduleDTOList, equipmentDTOList: $equipmentDTOList}';
+    return 'AquariumDTO{id: $id, title: $title, intro: $intro, photo: $photo, isFreshWater: $isFreshWater, size: $size, createdAt: $createdAt, updatedAt: $updatedAt, fishDTOList: $fishDTOList, scheduleDTOList: $scheduleDTOList, equipmentDTOList: $equipmentDTOList, diaryDTOList: $diaryDTOList}';
   }
 }

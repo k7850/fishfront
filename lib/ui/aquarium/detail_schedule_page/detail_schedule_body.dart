@@ -3,8 +3,8 @@ import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
 import 'package:fishfront/data/dto/schedule_request_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/aquarium_detail_page.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_schedule_page/widgets/event.dart';
+import 'package:fishfront/ui/aquarium/detail_tabbar_page/aquarium_detail_page.dart';
+import 'package:fishfront/ui/aquarium/detail_schedule_page/widgets/event.dart';
 import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DetailScheduleBody extends ConsumerStatefulWidget {
+  const DetailScheduleBody({super.key});
+
   @override
   _DetailScheduleBodyState createState() => _DetailScheduleBodyState();
 }
@@ -353,8 +355,6 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
       ),
     );
   }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
 
   Container buildOtherDayCheck(BuildContext context, Event event) {
     return Container(

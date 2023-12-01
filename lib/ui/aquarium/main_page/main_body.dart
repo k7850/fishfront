@@ -1,7 +1,7 @@
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/ui/aquarium/aquarium_create_page/aquarium_create_page.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/aquarium_detail_page.dart';
+import 'package:fishfront/ui/aquarium/detail_tabbar_page/aquarium_detail_page.dart';
 import 'package:fishfront/ui/aquarium/main_page/widgets/aquarium_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

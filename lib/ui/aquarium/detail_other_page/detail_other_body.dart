@@ -1,9 +1,9 @@
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/detail_other_view_model.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/widgets/detail_other_button.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/widgets/detail_other_equipment.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/widgets/detail_other_inform.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/widgets/detail_other_photo.dart';
-import 'package:fishfront/ui/aquarium/aquarium_detail_page/detail_other_page/widgets/detail_other_size.dart';
+import 'package:fishfront/ui/aquarium/detail_other_page/detail_other_view_model.dart';
+import 'package:fishfront/ui/aquarium/detail_other_page/widgets/detail_other_button.dart';
+import 'package:fishfront/ui/aquarium/detail_other_page/widgets/detail_other_equipment.dart';
+import 'package:fishfront/ui/aquarium/detail_other_page/widgets/detail_other_inform.dart';
+import 'package:fishfront/ui/aquarium/detail_other_page/widgets/detail_other_photo.dart';
+import 'package:fishfront/ui/aquarium/detail_other_page/widgets/detail_other_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

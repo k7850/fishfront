@@ -31,6 +31,8 @@ class AquariumTextFormField extends ConsumerWidget {
               decoration: isLong
                   ? const InputDecoration(
                       border: OutlineInputBorder(),
+                      // filled: true,
+                      // fillColor: Colors.grey,
                       isDense: true,
                       contentPadding: EdgeInsets.fromLTRB(5, 5, 0, 5),
                     )

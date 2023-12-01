@@ -7,9 +7,9 @@ import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../_core/constants/http.dart';
-import '../../../../../_core/constants/size.dart';
-import '../../../../../data/dto/fish_dto.dart';
+import '../../../_core/constants/http.dart';
+import '../../../_core/constants/size.dart';
+import '../../../data/dto/fish_dto.dart';
 
 class AquariumFishItem extends StatelessWidget {
   const AquariumFishItem({super.key, required this.fishDTO, required this.ref});

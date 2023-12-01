@@ -18,11 +18,11 @@ class BookPageSearch extends ConsumerWidget {
         decoration: const InputDecoration(
           // isDense: true,
           contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-          // labelText: "검색어를 입력하세요.",
+          // labelText: "",
           hintText: "검색어를 입력하세요.",
           border: OutlineInputBorder(),
-          // filled: true,
-          // fillColor: Colors.grey,
+          filled: true,
+          fillColor: Color.fromRGBO(200, 200, 200, 1),
           prefixIcon: Icon(Icons.search, size: 30),
         ),
         onChanged: (String? newSearchTerm) {

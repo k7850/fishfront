@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 ThemeData theme() {
   return ThemeData(
     fontFamily: "Giants",
-    // primarySwatch: Colors.green,
+    primarySwatch: Colors.blue,
     primaryColor: CommonColors.white,
+    // canvasColor: Colors.transparent,
+    // scaffoldBackgroundColor: Color.fromRGBO(200, 200, 200, 1),
     dividerColor: Colors.black26,
     brightness: Brightness.light, // 앱의 기본 밝기 설정
     textTheme: TextTheme(
@@ -15,14 +17,5 @@ ThemeData theme() {
         // displayMedium: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.black),
         ),
     appBarTheme: AppBarTheme(),
-  );
-}
-
-AppBarTheme appBarTheme() {
-  return const AppBarTheme(
-    titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
-    centerTitle: true,
-    backgroundColor: Colors.white,
-    elevation: 0,
   );
 }
