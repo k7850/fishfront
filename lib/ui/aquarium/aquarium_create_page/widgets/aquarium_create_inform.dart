@@ -29,7 +29,8 @@ class AquariumCreateInform extends ConsumerWidget {
         children: [
           Text("어항 정보", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
           AquariumTextFormField("어항 이름", _title, validateNormal(), (String value) => ref.read(aquariumCreateProvider.notifier).notifyTitle(value)),
-          AquariumTextFormField("메모하기", _intro, validateLong(), (String value) => ref.read(aquariumCreateProvider.notifier).notifyIntro(value)),
+          AquariumTextFormField(
+              isLong: true, "메모하기", _intro, validateLong(), (String value) => ref.read(aquariumCreateProvider.notifier).notifyIntro(value)),
           Container(
             alignment: const Alignment(-1, 0),
             padding: const EdgeInsets.only(bottom: 5),

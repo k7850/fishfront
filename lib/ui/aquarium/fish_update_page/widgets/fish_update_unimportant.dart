@@ -33,7 +33,8 @@ class _FishUpdateUnimportantState extends ConsumerState<FishUpdateUnimportant> {
         children: [
           Text("추가 정보", style: TextStyle(fontSize: 20, color: Colors.grey[600])),
           const SizedBox(height: 10),
-          AquariumTextFormField("메모하기", _text, validateLong(), (String value) => ref.read(fishUpdateProvider.notifier).notifyText(value)),
+          AquariumTextFormField(
+              isLong: true, "메모하기", _text, validateLong(), (String value) => ref.read(fishUpdateProvider.notifier).notifyText(value)),
           AquariumTextFormField("가격", _price, validateOkEmpty(), (String value) => ref.read(fishUpdateProvider.notifier).notifyPrice(value)),
           Container(
             alignment: const Alignment(-1, 0),
