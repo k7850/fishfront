@@ -1,7 +1,7 @@
 import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/diary_dto.dart';
-import 'package:fishfront/ui/aquarium/main_page/widgets/aquarium_card.dart';
+import 'package:fishfront/ui/_common_widgets/id_color_make.dart';
 import 'package:flutter/material.dart';
 
 class DiaryItem extends StatelessWidget {
@@ -17,7 +17,7 @@ class DiaryItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
       margin: const EdgeInsets.only(left: 20, right: 20, top: 15),
-      decoration: BoxDecoration(color: idColorMage(diaryDTO.id), borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: idColorMake(diaryDTO.id), borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: [
           Text(

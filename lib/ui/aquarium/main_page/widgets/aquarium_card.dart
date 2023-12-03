@@ -1,3 +1,4 @@
+import 'package:fishfront/ui/_common_widgets/id_color_make.dart';
 import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,68 +56,60 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
     if (scheduleColumn.children.length == 1) {
       scheduleColumn.children.removeAt(0);
       scheduleColumn.children.add(
-        Text("오늘의 계획 없음"),
+        const Text("오늘의 계획 없음"),
       );
     }
 
     return Container(
-      margin: EdgeInsets.only(left: 20),
+      margin: const EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       width: sizeGetScreenWidth(context) * 0.7,
       // height: sizeGetScreenHeight(context) * 0.6,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: idColorMage(widget.aquariumDTO.id),
+        color: idColorMake(widget.aquariumDTO.id),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Center(child: Text("${widget.aquariumDTO.title}", style: TextStyle(fontSize: 25), maxLines: 1)),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Center(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
                 "$imageURL${widget.aquariumDTO.photo}",
-                width: sizeGetScreenWidth(context) * 0.6,
-                height: sizeGetScreenWidth(context) * 0.6,
+                height: sizeGetScreenWidth(context) * 0.5,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Image.asset(
                     "assets/aquarium.png",
-                    width: sizeGetScreenWidth(context) * 0.6,
-                    height: sizeGetScreenWidth(context) * 0.6,
+                    height: sizeGetScreenWidth(context) * 0.5,
                     fit: BoxFit.cover,
                   );
                 },
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
-            child: Text(
-              "${widget.aquariumDTO.intro}",
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
+          const SizedBox(height: 10),
+          Text(
+            "${widget.aquariumDTO.intro}",
+            style: TextStyle(color: Colors.grey[700]),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Divider(color: Colors.black, height: 1, thickness: 1),
-          ),
+          const SizedBox(height: 10),
+          const Divider(color: Colors.black, height: 1, thickness: 1),
+          const SizedBox(height: 10),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: SingleChildScrollView(child: scheduleColumn),
-            ),
+            child: SingleChildScrollView(child: scheduleColumn),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
         ],
       ),
     );
   }
-
-  //
 
   Widget buildScheduleCheck(ScheduleDTO scheduleDTO) {
     return InkWell(
@@ -125,22 +118,28 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
         await ref.watch(mainProvider.notifier).notifyScheduleCheck(scheduleDTO.id, scheduleDTO.isCompleted);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
+        margin: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
         child: Row(
           children: [
-            scheduleDTO.isCompleted ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
-            SizedBox(width: 5),
-            Container(
+            scheduleDTO.isCompleted ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
+            const SizedBox(width: 5),
+            SizedBox(
               width: sizeGetScreenWidth(context) * 0.5,
               child: Text(
                 "${scheduleDTO.title}",
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: TextStyle(
-                    color: scheduleDTO.isCompleted ? Colors.grey[600] : Colors.black,
-                    decoration: scheduleDTO.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
-                    decorationThickness: 3),
+                  color: scheduleDTO.importantly == 3
+                      ? Colors.red[400]
+                      : scheduleDTO.importantly == 2
+                          ? Colors.green[600]
+                          : Colors.grey[600],
+                  decoration: scheduleDTO.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
+                  decorationThickness: 3,
+                  decorationColor: Colors.black,
+                ),
               ),
             ),
           ],
@@ -148,19 +147,4 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
       ),
     );
   }
-}
-
-Color idColorMage(int id) {
-  int colorChange(int colorInt) {
-    colorInt %= 255;
-    while (colorInt < 50) {
-      colorInt += 10;
-    }
-    while (colorInt > 200) {
-      colorInt -= 10;
-    }
-    return colorInt;
-  }
-
-  return Color.fromRGBO(colorChange(id * 55), colorChange(id * 155), colorChange(id * 222), 0.5);
 }

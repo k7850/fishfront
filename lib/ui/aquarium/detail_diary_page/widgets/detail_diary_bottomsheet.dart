@@ -8,6 +8,7 @@ import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class DetailDiaryBottomsheet extends ConsumerWidget {
   const DetailDiaryBottomsheet(this._formKey, {super.key});
@@ -36,7 +37,7 @@ class DetailDiaryBottomsheet extends ConsumerWidget {
           child: Column(
             children: [
               const SizedBox(height: 15),
-              const Text("기록 작성", style: TextStyle(fontSize: 20, color: Colors.black)),
+              Text("${DateFormat.yMMMMd("ko").format(DateTime.now())} 기록 작성", style: TextStyle(fontSize: 20, color: Colors.black)),
               const SizedBox(height: 10),
               SizedBox(
                 child: TextFormField(

@@ -5,10 +5,12 @@ class MyCheckbox extends StatelessWidget {
     super.key,
     required this.str,
     required this.isChecked,
+    this.color = Colors.black,
   });
 
   final String str;
   final bool isChecked;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class MyCheckbox extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
           style: TextStyle(
-            color: isChecked ? Colors.black : Colors.grey[600],
+            color: isChecked ? color : Colors.grey[600],
           ),
         ),
       ],

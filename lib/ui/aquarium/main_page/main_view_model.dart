@@ -109,7 +109,7 @@ class MainViewModel extends StateNotifier<MainModel?> {
     if (responseDTO.success == false) {
       print("생성실패 : ${responseDTO}");
       mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
-      notifyInit();
+      // notifyInit();
       return;
     }
 
@@ -317,7 +317,7 @@ class MainViewModel extends StateNotifier<MainModel?> {
     aquariumDTOList
         .firstWhere((e) => e.id == diaryDTO.aquariumId) //
         .diaryDTOList //
-        .add(diaryDTO);
+        .insert(0, diaryDTO);
 
     state = MainModel(aquariumDTOList: aquariumDTOList);
     mySnackbar(2000, mySnackbarRow1("기록", " 작성 완료", "", ""));
