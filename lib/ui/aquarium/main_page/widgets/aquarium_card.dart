@@ -118,7 +118,7 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
         await ref.watch(mainProvider.notifier).notifyScheduleCheck(scheduleDTO.id, scheduleDTO.isCompleted);
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
         child: Row(
           children: [

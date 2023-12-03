@@ -148,13 +148,13 @@ class DetailScheduleButton extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            DetailScheduleWeekInkwell("일", 7, importantly),
                             DetailScheduleWeekInkwell("월", 1, importantly),
                             DetailScheduleWeekInkwell("화", 2, importantly),
                             DetailScheduleWeekInkwell("수", 3, importantly),
                             DetailScheduleWeekInkwell("목", 4, importantly),
                             DetailScheduleWeekInkwell("금", 5, importantly),
                             DetailScheduleWeekInkwell("토", 6, importantly),
-                            DetailScheduleWeekInkwell("일", 7, importantly),
                           ],
                         ),
                       ],

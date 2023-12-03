@@ -79,7 +79,8 @@ class DetailScheduleViewModel extends StateNotifier<DetailScheduleModel?> {
 
     TextEditingController eventController = TextEditingController();
 
-    DateTime day0101 = DateTime.utc(DateTime.now().year - 1, 01, 01);
+    // DateTime day0101 = DateTime.utc(DateTime.now().year - 1, 01, 01);
+    DateTime day0101 = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime selectedDay = DateTime.now();
     int durationDay = 1095; // 3년
 
@@ -138,6 +139,22 @@ class DetailScheduleViewModel extends StateNotifier<DetailScheduleModel?> {
         calendarViewIf(scheduleDTO, 30);
       }
     }
+
+    for (var diary in aquariumDTO.diaryDTOList) {
+      print("diary.createdAt : ${diary.createdAt}");
+      String formattedDate = DateFormat('yyyy-MM-dd').format(diary.createdAt);
+      DateTime parsedDate = DateFormat('yyyy-MM-dd').parseUTC(formattedDate);
+      print("parsedDate : ${parsedDate}");
+
+      eventMap[parsedDate] ??= [];
+      print(eventMap[parsedDate]);
+      eventMap[parsedDate]!.add(
+        Event(title: diary.title == null || diary.title!.isEmpty ? "기록" : "${diary.title}", diaryId: diary.id),
+      );
+      print(eventMap[parsedDate]);
+    }
+
+    //
 
     String formattedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').format(selectedDay);
     DateTime parsedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').parseUTC(formattedDate);

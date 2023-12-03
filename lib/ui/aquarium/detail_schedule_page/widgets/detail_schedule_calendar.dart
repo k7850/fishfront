@@ -1,7 +1,9 @@
 import 'package:fishfront/ui/aquarium/detail_schedule_page/detail_schedule_view_model.dart';
 import 'package:fishfront/ui/aquarium/detail_schedule_page/widgets/event.dart';
+import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DetailScheduleCalendar extends ConsumerWidget {
@@ -28,7 +30,7 @@ class DetailScheduleCalendar extends ConsumerWidget {
     return TableCalendar(
       availableGestures: AvailableGestures.horizontalSwipe, // 달력 자체의 위-아래 스크롤 끄기
       locale: 'ko_KR',
-      firstDay: day0101,
+      firstDay: DateTime.utc(DateTime.now().year - 1, 01, 01),
       lastDay: day0101.add(Duration(days: durationDay)),
       focusedDay: selectedDay,
       rowHeight: 45,
@@ -54,23 +56,34 @@ class DetailScheduleCalendar extends ConsumerWidget {
                 return Container(
                   margin: const EdgeInsets.only(top: 25),
                   padding: const EdgeInsets.all(1),
-                  child: events[index].toString().contains("importantly: 1") && toggleFood
+                  child: events[index].toString().contains("importantly: 1") && toggleFood && events[index].toString().contains("diaryId: null")
                       ? const SizedBox()
                       : events[index].toString().contains("importantly: 2") && toggleWaterChange
                           ? const SizedBox()
                           : events[index].toString().contains("importantly: 3") && toggleImportant
                               ? const SizedBox()
-                              : Container(
-                                  width: 8,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: events[index].toString().contains("importantly: 1")
-                                        ? Colors.black38
-                                        : events[index].toString().contains("importantly: 2")
-                                            ? Colors.green[600]
-                                            : Colors.red[300],
-                                  ),
-                                ),
+                              : events[index].toString().contains("diaryId: null")
+                                  ? Icon(
+                                      Icons.circle,
+                                      size: 10,
+                                      color: events[index].toString().contains("importantly: 1")
+                                          ? Colors.black38
+                                          : events[index].toString().contains("importantly: 2")
+                                              ? Colors.green[600]
+                                              : Colors.red[300],
+                                    )
+                                  : const Icon(Icons.star, size: 13, color: Colors.indigoAccent),
+                  // Container(
+                  //     width: 8,
+                  //     decoration: BoxDecoration(
+                  //       shape: BoxShape.circle,
+                  //       color: events[index].toString().contains("importantly: 1")
+                  //           ? Colors.black38
+                  //           : events[index].toString().contains("importantly: 2")
+                  //               ? Colors.green[600]
+                  //               : Colors.red[300],
+                  //     ),
+                  //   ),
                 );
               });
         },
@@ -85,14 +98,16 @@ class DetailScheduleCalendar extends ConsumerWidget {
       onDaySelected: (selected, focusedDay) {
         selectedDay = selected;
         selectedEventList = eventMap[selectedDay] ?? [];
-        print("selectedEventList : ${selectedEventList}");
-        print("eventMap[selectedDay] : ${eventMap[selectedDay]}");
+        // print("selectedEventList : ${selectedEventList}");
+        // print("eventMap[selectedDay] : ${eventMap[selectedDay]}");
         ref.read(detailScheduleProvider.notifier).notifySelectedDay(selected);
         ref.read(detailScheduleProvider.notifier).notifySelectedEventList(eventMap[selectedDay] ?? []);
         // setState(() {});
       },
       selectedDayPredicate: (day) => isSameDay(day, selectedDay),
-      eventLoader: (day) => eventMap[day] ?? [],
+      eventLoader: (day) {
+        return eventMap[day] ?? [];
+      },
     );
   }
 }
