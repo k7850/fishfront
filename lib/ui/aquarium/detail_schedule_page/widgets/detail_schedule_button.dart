@@ -47,7 +47,7 @@ class DetailScheduleButton extends ConsumerWidget {
                       content: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("중요성"),
+                          const Text("중요도"),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -123,7 +123,7 @@ class DetailScheduleButton extends ConsumerWidget {
                       content: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("중요성"),
+                          const Text("중요도"),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -182,7 +182,7 @@ class DetailScheduleButton extends ConsumerWidget {
                       content: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("중요성"),
+                          const Text("중요도"),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

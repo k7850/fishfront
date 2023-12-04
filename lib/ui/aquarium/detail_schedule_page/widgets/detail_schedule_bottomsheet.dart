@@ -49,7 +49,7 @@ class DetailScheduleBottomsheet extends ConsumerWidget {
             diaryDTO.text != null && diaryDTO.text!.isEmpty
                 ? const SizedBox()
                 : Container(
-                    decoration: BoxDecoration(color: const Color.fromRGBO(200, 200, 200, 1), borderRadius: BorderRadius.circular(5)),
+                    decoration: BoxDecoration(color: const Color.fromRGBO(210, 210, 210, 1), borderRadius: BorderRadius.circular(5)),
                     padding: const EdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
                     alignment: const Alignment(-1, 0),
                     child: Text("${diaryDTO.text}", style: TextStyle(color: Colors.grey[600])),

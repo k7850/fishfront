@@ -7,7 +7,7 @@ class RequestParam {
   bool? isLoginMove = false;
   int? aquariumDetailId;
   int? fishDetailId;
-  int? bookDetailId;
+  int? boardDetailId;
 
   RequestParam();
 }
@@ -30,9 +30,9 @@ class ParamStore extends RequestParam {
     this.fishDetailId = fishDetailId;
   }
 
-  void addBookDetailId(int bookDetailId) {
-    print("fishDetailId : ${bookDetailId}");
-    this.bookDetailId = bookDetailId;
+  void addBoardDetailId(int boardDetailId) {
+    print("boardDetailId : ${boardDetailId}");
+    this.boardDetailId = boardDetailId;
   }
 }
 

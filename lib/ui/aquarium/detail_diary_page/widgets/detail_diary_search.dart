@@ -25,7 +25,7 @@ class DetailDiarySearch extends ConsumerWidget {
                 hintText: "검색어를 입력하세요.",
                 border: OutlineInputBorder(),
                 filled: true,
-                fillColor: Color.fromRGBO(200, 200, 200, 1),
+                fillColor: Color.fromRGBO(210, 210, 210, 1),
                 prefixIcon: Icon(Icons.search, size: 30),
               ),
               onChanged: (String? newSearchTerm) {

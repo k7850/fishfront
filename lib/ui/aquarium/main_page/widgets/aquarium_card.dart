@@ -37,6 +37,7 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
     );
 
     for (ScheduleDTO scheduleDTO in widget.aquariumDTO.scheduleDTOList) {
+      print(scheduleDTO);
       if (scheduleDTO.scheduleEnum == "지정") {
         // print(scheduleDTO.targetDay);
         DateFormat('yyyy-MM-dd').format(today) == DateFormat('yyyy-MM-dd').format(scheduleDTO.targetDay!)
@@ -49,7 +50,8 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
             : ();
       }
       if (scheduleDTO.scheduleEnum == "간격") {
-        if (scheduleDTO.betweenDay == 1) scheduleColumn.children.add(buildScheduleCheck(scheduleDTO));
+        // if (scheduleDTO.betweenDay == 1) scheduleColumn.children.add(buildScheduleCheck(scheduleDTO));
+        scheduleColumn.children.add(buildScheduleCheck(scheduleDTO));
       }
     }
 

@@ -32,7 +32,7 @@ class DetailScheduleOtherdayCheck extends ConsumerWidget {
             },
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 5),
-              child: Text(event.title, style: const TextStyle(color: Colors.indigoAccent)),
+              child: Text("${event.title} 보기", style: const TextStyle(color: Colors.indigoAccent)),
             ),
           )
         : Container(

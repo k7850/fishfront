@@ -7,7 +7,7 @@ ThemeData theme() {
     primarySwatch: Colors.blue,
     primaryColor: CommonColors.white,
     // canvasColor: Colors.transparent,
-    // scaffoldBackgroundColor: Color.fromRGBO(200, 200, 200, 1),
+    // scaffoldBackgroundColor: Color.fromRGBO(210, 210, 210, 1),
     dividerColor: Colors.black26,
     brightness: Brightness.light, // 앱의 기본 밝기 설정
     textTheme: TextTheme(

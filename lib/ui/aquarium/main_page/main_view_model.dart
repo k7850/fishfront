@@ -326,7 +326,8 @@ class MainViewModel extends StateNotifier<MainModel?> {
 //
 }
 
-final mainProvider = StateNotifierProvider.autoDispose<MainViewModel, MainModel?>((ref) {
+final mainProvider = StateNotifierProvider<MainViewModel, MainModel?>((ref) {
+// final mainProvider = StateNotifierProvider.autoDispose<MainViewModel, MainModel?>((ref) {
   // Logger().d("Main 뷰모델");
   // return new MainViewModel(ref, null)..notifyInit();
   return new MainViewModel(ref, null);

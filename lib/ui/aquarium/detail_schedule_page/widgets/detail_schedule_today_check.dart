@@ -40,7 +40,7 @@ class DetailScheduleTodayCheck extends ConsumerWidget {
               margin: const EdgeInsets.symmetric(vertical: 5),
               child: Row(
                 children: [
-                  Text(" ${event.title}", style: const TextStyle(color: Colors.indigoAccent)),
+                  Text(" ${event.title} 보기", style: const TextStyle(color: Colors.indigoAccent)),
                 ],
               ),
             ),

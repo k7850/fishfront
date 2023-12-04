@@ -40,7 +40,16 @@ class FishCreateButton extends ConsumerWidget {
         print("fish업뎃 제출하기");
         if (_formKey.currentState!.validate()) {
           print("fish업뎃 validate 통과");
-          FishRequestDTO fishRequestDTO = FishRequestDTO(fishClassEnum, _name.text, _text.text, quantity, isMale, photo, _price.text, book?.id);
+          FishRequestDTO fishRequestDTO = FishRequestDTO(
+            fishClassEnum: fishClassEnum,
+            name: _name.text,
+            text: _text.text,
+            quantity: quantity,
+            isMale: isMale,
+            photo: photo,
+            price: _price.text,
+            bookId: book?.id,
+          );
 
           await ref.watch(mainProvider.notifier).notifyFishCreate(aquariumDTO.id, fishRequestDTO, imageFile);
           Navigator.pop(context);

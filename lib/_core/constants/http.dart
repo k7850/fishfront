@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 const String serverURL = "http://172.30.1.18:8081"; // 집
 
 const String imageURL = "${serverURL}/image?route=";
+const String videoURL = "${serverURL}/video?route=";
 
 // http 통신
 final dio = Dio(

@@ -1,9 +1,9 @@
-import 'package:fishfront/ui/book/book_page/book_view_model.dart';
+import 'package:fishfront/ui/board/board_page/board_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BookPageSearch extends ConsumerWidget {
-  const BookPageSearch({
+class BoardPageSearch extends ConsumerWidget {
+  const BoardPageSearch({
     super.key,
   });
 
@@ -27,7 +27,7 @@ class BookPageSearch extends ConsumerWidget {
         ),
         onChanged: (String? newSearchTerm) {
           if (newSearchTerm != null) {
-            ref.read(bookProvider.notifier).notifySearch(newSearchTerm);
+            // ref.read(boardProvider.notifier).notifySearch(newSearchTerm);
           }
         },
       ),

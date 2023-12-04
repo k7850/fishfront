@@ -2,6 +2,7 @@ import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/ui/_common_widgets/my_snackbar.dart';
+import 'package:fishfront/ui/_common_widgets/select_aquarium.dart';
 import 'package:fishfront/ui/aquarium/fish_update_page/fish_update_page.dart';
 import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
@@ -149,83 +150,12 @@ class AquariumFishItem extends StatelessWidget {
         print("생물이동");
         ScaffoldMessenger.of(context).clearSnackBars();
 
-        List<AquariumDTO> aquariumDTOList = ref.watch(mainProvider)!.aquariumDTOList;
-
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              title: RichText(
-                text: TextSpan(
-                  text: "${fishDTO.name}",
-                  style: const TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
-                  children: const [
-                    TextSpan(text: " 소속시킬 어항", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
-                  ],
-                ),
-              ),
-              content: SizedBox(
-                height: 5 + aquariumDTOList.length * 75,
-                child: Column(
-                  children: [
-                    for (AquariumDTO aquariumDTO in aquariumDTOList)
-                      Column(
-                        children: [
-                          const Divider(color: Colors.grey, height: 1, thickness: 1),
-                          const SizedBox(height: sizeS5),
-                          InkWell(
-                            onTap: () async {
-                              if (aquariumDTO.id == fishDTO.aquariumId) {
-                                print("현재소속어항임");
-                                return;
-                              }
-                              print("${aquariumDTO.title}");
-                              Navigator.pop(context);
-                              await ref.watch(mainProvider.notifier).notifyFishMove(fishDTO, aquariumDTO.id);
-                            },
-                            child: Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    "$imageURL${aquariumDTO.photo}",
-                                    width: sizeGetScreenWidth(context) * 0.2,
-                                    height: sizeGetScreenWidth(context) * 0.15,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Image.asset(
-                                        "assets/aquarium.png",
-                                        width: sizeGetScreenWidth(context) * 0.2,
-                                        height: sizeGetScreenWidth(context) * 0.15,
-                                        fit: BoxFit.cover,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: sizeM10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(aquariumDTO.title, style: const TextStyle(fontSize: 18, fontFamily: "Giants")),
-                                    aquariumDTO.id == fishDTO.aquariumId
-                                        ? Text("현재 소속 어항", style: TextStyle(fontSize: 13, color: Colors.grey[600], fontFamily: "Giants"))
-                                        : const SizedBox(),
-                                  ],
-                                ),
-                                const Spacer(),
-                                aquariumDTO.id == fishDTO.aquariumId
-                                    ? const Text("X ",
-                                        style: TextStyle(fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold, fontFamily: ""))
-                                    : const Text("> ", style: TextStyle(fontSize: 20, color: Colors.grey)),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: sizeS5),
-                        ],
-                      ),
-                  ],
-                ),
-              ),
+            return SelectAquarium(
+              mainText: fishDTO.name ?? "",
+              fishDTO: fishDTO,
             );
           },
         );
@@ -245,7 +175,7 @@ class AquariumFishItem extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             text: TextSpan(
-              style: const TextStyle(fontSize: 18, color: Colors.black, fontFamily: "Giants"),
+              style: const TextStyle(fontSize: 17, color: Colors.black, fontFamily: "Giants"),
               text: "${fishDTO.name} ",
               children: [
                 TextSpan(

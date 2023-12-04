@@ -41,17 +41,23 @@ class _MyBottomState extends ConsumerState<MyBottom> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.menu_book,
+              Icons.menu_book_outlined,
               color: ps.bottomNavigationBarIndex == 2 ? Colors.black : Colors.grey,
             ),
             label: '생물도감',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.groups, color: ps.bottomNavigationBarIndex == 3 ? Colors.black : Colors.grey),
+            icon: Icon(
+              Icons.groups,
+              color: ps.bottomNavigationBarIndex == 3 ? Colors.black : Colors.grey,
+            ),
             label: '게시판',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: ps.bottomNavigationBarIndex == 4 ? Colors.black : Colors.grey),
+            icon: Icon(
+              Icons.person,
+              color: ps.bottomNavigationBarIndex == 4 ? Colors.black : Colors.grey,
+            ),
             label: '내 정보',
           ),
         ],
@@ -77,7 +83,7 @@ void onItemTapped(int index, BuildContext context, ParamStore ps) {
   } else if (index == 2 && ps.bottomNavigationBarIndex != index) {
     Navigator.pushNamedAndRemoveUntil(context, "/book", (route) => false);
   } else if (index == 3 && ps.bottomNavigationBarIndex != index) {
-    // Navigator.pushNamedAndRemoveUntil(context, Move.myPage, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, "/board", (route) => false);
   } else if (index == 4 && ps.bottomNavigationBarIndex != index) {
     // Navigator.pushNamedAndRemoveUntil(context, Move.seeMorePage, (route) => false);
   } else {

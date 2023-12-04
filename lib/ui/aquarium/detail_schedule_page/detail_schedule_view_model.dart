@@ -141,17 +141,15 @@ class DetailScheduleViewModel extends StateNotifier<DetailScheduleModel?> {
     }
 
     for (var diary in aquariumDTO.diaryDTOList) {
-      print("diary.createdAt : ${diary.createdAt}");
+      // print("diary.createdAt : ${diary.createdAt}");
       String formattedDate = DateFormat('yyyy-MM-dd').format(diary.createdAt);
       DateTime parsedDate = DateFormat('yyyy-MM-dd').parseUTC(formattedDate);
-      print("parsedDate : ${parsedDate}");
 
       eventMap[parsedDate] ??= [];
-      print(eventMap[parsedDate]);
       eventMap[parsedDate]!.add(
         Event(title: diary.title == null || diary.title!.isEmpty ? "기록" : "${diary.title}", diaryId: diary.id),
       );
-      print(eventMap[parsedDate]);
+      // print(eventMap[parsedDate]);
     }
 
     //

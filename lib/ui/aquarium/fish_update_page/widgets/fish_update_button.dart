@@ -40,7 +40,16 @@ class FishUpdateButton extends ConsumerWidget {
       onPressed: () async {
         print("fish업뎃 제출하기");
         if (_formKey.currentState!.validate()) {
-          FishRequestDTO fishRequestDTO = FishRequestDTO(fishClassEnum, _name.text, _text.text, quantity, isMale, photo, _price.text, book?.id);
+          FishRequestDTO fishRequestDTO = FishRequestDTO(
+            fishClassEnum: fishClassEnum,
+            name: _name.text,
+            text: _text.text,
+            quantity: quantity,
+            isMale: isMale,
+            photo: photo,
+            price: _price.text,
+            bookId: book?.id,
+          );
 
           await ref.watch(mainProvider.notifier).notifyFishUpdate(aquariumDTO.id, fishDTO.id, fishRequestDTO, imageFile);
         }

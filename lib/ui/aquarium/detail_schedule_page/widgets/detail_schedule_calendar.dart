@@ -51,8 +51,8 @@ class DetailScheduleCalendar extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               itemCount: events.length,
               itemBuilder: (context, index) {
-                print(events[0]);
-                print(events[0].toString());
+                // print(events[0]);
+                // print(events[0].toString());
                 return Container(
                   margin: const EdgeInsets.only(top: 25),
                   padding: const EdgeInsets.all(1),

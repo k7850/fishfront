@@ -44,7 +44,7 @@ class DetailDiaryBottomsheet extends ConsumerWidget {
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)), borderSide: BorderSide.none),
                     filled: true,
-                    fillColor: Color.fromRGBO(200, 200, 200, 1),
+                    fillColor: Color.fromRGBO(210, 210, 210, 1),
                     isDense: true,
                     contentPadding: EdgeInsets.fromLTRB(5, 5, 0, 5),
                   ),
@@ -60,7 +60,7 @@ class DetailDiaryBottomsheet extends ConsumerWidget {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)), borderSide: BorderSide.none),
                   filled: true,
-                  fillColor: Color.fromRGBO(200, 200, 200, 1),
+                  fillColor: Color.fromRGBO(210, 210, 210, 1),
                   isDense: true,
                   contentPadding: EdgeInsets.fromLTRB(5, 5, 0, 5),
                 ),
@@ -83,6 +83,7 @@ class DetailDiaryBottomsheet extends ConsumerWidget {
                   ElevatedButton(
                     child: const Text("사진 등록"),
                     onPressed: () async {
+                      // XFile? image = await ImagePicker().pickVideo(source: ImageSource.gallery);
                       XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
                       if (image == null) return;
                       ref.read(detailDiaryProvider.notifier).notifyImageFile(File(image.path));

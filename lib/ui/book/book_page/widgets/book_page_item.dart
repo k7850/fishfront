@@ -1,4 +1,5 @@
 import 'package:fishfront/data/provider/param_provider.dart';
+import 'package:fishfront/ui/book/book_detail_page/book_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,29 +21,32 @@ class BookPageItem extends ConsumerWidget {
       padding: const EdgeInsets.only(top: 10, left: 20),
       child: InkWell(
         onTap: () {
-          print("book.id : ${book.id}");
-          ParamStore paramStore = ref.read(paramProvider);
-          paramStore.addBookDetailId(book.id);
-          print("paramStore.addBookDetailId : ${paramStore.addBookDetailId}");
-          // Navigator.push(context, MaterialPageRoute(builder: (_) => BookDetailPage()));
+          // print("book.id : ${book.id}");
+          // ParamStore paramStore = ref.read(paramProvider);
+          // paramStore.addBookDetailId(book.id);
+          // print("paramStore.addBookDetailId : ${paramStore.addBookDetailId}");
+          Navigator.push(context, MaterialPageRoute(builder: (_) => BookDetailPage(book)));
         },
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                "$imageURL${book.photo}",
-                width: sizeGetScreenWidth(context) * 0.2,
-                height: sizeGetScreenWidth(context) * 0.2,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    "assets/fish.png",
-                    width: sizeGetScreenWidth(context) * 0.2,
-                    height: sizeGetScreenWidth(context) * 0.2,
-                    fit: BoxFit.cover,
-                  );
-                },
+            Hero(
+              tag: "bookphotohero${book.id}",
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  "$imageURL${book.photo}",
+                  width: sizeGetScreenWidth(context) * 0.2,
+                  height: sizeGetScreenWidth(context) * 0.2,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      "assets/fish.png",
+                      width: sizeGetScreenWidth(context) * 0.2,
+                      height: sizeGetScreenWidth(context) * 0.2,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(width: 10),

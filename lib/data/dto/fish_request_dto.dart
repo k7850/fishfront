@@ -13,7 +13,16 @@ class FishRequestDTO {
   String? price;
   int? bookId;
 
-  FishRequestDTO(this.fishClassEnum, this.name, this.text, this.quantity, this.isMale, this.photo, this.price, this.bookId);
+  FishRequestDTO({
+    required this.fishClassEnum,
+    this.name,
+    this.text,
+    this.quantity,
+    this.isMale,
+    this.photo,
+    this.price,
+    this.bookId,
+  });
 
   Map<String, dynamic> toJson() => {
         "fishClassEnum": fishClassEnum.toString().split(".")[1],
