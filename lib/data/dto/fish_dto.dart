@@ -7,7 +7,7 @@ class FishDTO {
   int aquariumId;
   Book? book;
   FishClassEnum fishClassEnum;
-  String? name;
+  String name;
   String? text;
   int? quantity;
   bool? isMale;

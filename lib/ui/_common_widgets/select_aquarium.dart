@@ -1,6 +1,7 @@
 import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/data/dto/fish_request_dto.dart';
 import 'package:fishfront/data/model/book.dart';
+import 'package:fishfront/ui/board/board_create_page/board_create_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,10 +30,10 @@ class SelectAquarium extends ConsumerWidget {
     return AlertDialog(
       title: RichText(
         text: TextSpan(
-          text: mainText,
+          text: "$mainText ",
           style: const TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
           children: const [
-            TextSpan(text: " 소속시킬 어항", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "")),
+            TextSpan(text: "어항 선택", style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: "JamsilRegular")),
           ],
         ),
       ),
@@ -53,13 +54,21 @@ class SelectAquarium extends ConsumerWidget {
                       }
                       print("${aquariumDTO.title}");
                       Navigator.pop(context);
+
+                      if (book == null && fishDTO == null) {
+                        await ref.read(boardCreateProvider.notifier).notifySelectAquariumDTO(aquariumDTO);
+                        return;
+                      }
+
                       if (book != null) {
                         FishRequestDTO fishRequestDTO =
                             FishRequestDTO(fishClassEnum: book!.fishClassEnum ?? FishClassEnum.FISH, name: book!.normalName, bookId: book!.id);
                         await ref.read(mainProvider.notifier).notifyFishCreate(aquariumDTO.id, fishRequestDTO, null);
+                        return;
                       }
                       if (fishDTO != null) {
                         await ref.read(mainProvider.notifier).notifyFishMove(fishDTO!, aquariumDTO.id);
+                        return;
                       }
                     },
                     child: Row(

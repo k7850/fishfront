@@ -89,24 +89,36 @@ class BoardPageItem extends ConsumerWidget {
                           },
                         )
                       : boardMainDTO.video != null && boardMainDTO.video!.isNotEmpty
-                          ? Image.asset(
-                              "assets/diary.png",
+                          ? Image.network(
+                              "$imageURL/videos/${boardMainDTO.video}.png",
                               width: sizeGetScreenWidth(context) * 0.16,
                               height: sizeGetScreenWidth(context) * 0.16,
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return SizedBox(
+                                  width: sizeGetScreenWidth(context) * 0.16,
+                                  height: sizeGetScreenWidth(context) * 0.16,
+                                );
+                              },
                             )
                           : const SizedBox(),
                 ),
-                boardMainDTO.photoList.length <= 1
-                    ? const SizedBox()
-                    : Container(
+                boardMainDTO.photoList.length > 1
+                    ? Container(
                         decoration: const BoxDecoration(color: Colors.black, borderRadius: BorderRadius.all(Radius.circular(5))),
                         padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
                         child: Text(
                           "+${boardMainDTO.photoList.length - 1}",
                           style: const TextStyle(fontSize: 12, color: Colors.white, fontFamily: "JamsilRegular"),
                         ),
-                      ),
+                      )
+                    : boardMainDTO.video != null && boardMainDTO.video!.isNotEmpty
+                        ? Container(
+                            decoration: const BoxDecoration(color: Colors.black, borderRadius: BorderRadius.all(Radius.circular(5))),
+                            padding: const EdgeInsets.fromLTRB(3, 1, 3, 1),
+                            child: Icon(Icons.skip_next_outlined, size: 15, color: Colors.white),
+                          )
+                        : const SizedBox(),
               ],
             ),
             const SizedBox(width: 8),

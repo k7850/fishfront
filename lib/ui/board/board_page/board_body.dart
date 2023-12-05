@@ -1,7 +1,7 @@
 import 'package:fishfront/data/dto/board_main_dto.dart';
 import 'package:fishfront/ui/_common_widgets/my_sliver_persistent_header_delegate.dart';
+import 'package:fishfront/ui/board/board_create_page/board_create_page.dart';
 import 'package:fishfront/ui/board/board_page/board_view_model.dart';
-import 'package:fishfront/ui/board/board_page/widgets/board_page_isaquarium.dart';
 import 'package:fishfront/ui/board/board_page/widgets/board_page_isphoto.dart';
 import 'package:fishfront/ui/board/board_page/widgets/board_page_item.dart';
 import 'package:fishfront/ui/board/board_page/widgets/board_page_search.dart';
@@ -26,11 +26,14 @@ class _BoardBodyState extends ConsumerState<BoardBody> {
 
     List<BoardMainDTO> boardMainDTOList = model.boardMainDTOList;
 
-    bool? isAquarium = model.isAquarium;
+    bool? isPhoto = model.isPhoto;
 
     List<BoardMainDTO> selectBoardList = boardMainDTOList;
-    if (isAquarium != null) {
-      selectBoardList = selectBoardList.where((element) => element.isAquarium == isAquarium).toList();
+    if (isPhoto == true) {
+      selectBoardList = selectBoardList.where((element) => element.photoList.isNotEmpty).toList();
+    }
+    if (isPhoto == false) {
+      selectBoardList = selectBoardList.where((element) => element.video != null && element.video!.isNotEmpty).toList();
     }
 
     // if (newSearchTerm != null) {
@@ -57,7 +60,7 @@ class _BoardBodyState extends ConsumerState<BoardBody> {
                   child: const Column(
                     children: [
                       SizedBox(height: 13),
-                      BoardPageIsAquarium(),
+                      BoardPageIsPhoto(),
                       SizedBox(height: 2),
                       BoardPageSearch(),
                     ],
@@ -69,9 +72,12 @@ class _BoardBodyState extends ConsumerState<BoardBody> {
                   child: ElevatedButton(
                     style: const ButtonStyle(
                       minimumSize: MaterialStatePropertyAll(Size.zero),
-                      padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 5, horizontal: 10)),
+                      padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 5, horizontal: 15)),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      print("글작성버튼");
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const BoardCreatePage()));
+                    },
                     child: Text("글 작성"),
                   ),
                 ),

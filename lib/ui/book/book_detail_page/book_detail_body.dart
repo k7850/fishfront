@@ -40,7 +40,7 @@ class BookDetailBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 5),
+                padding: const EdgeInsets.only(bottom: 6),
                 child: DifficultyString(difficulty: book.difficulty ?? 1),
               ),
               ElevatedButton(
@@ -57,12 +57,12 @@ class BookDetailBody extends StatelessWidget {
                 },
                 style: const ButtonStyle(
                     minimumSize: MaterialStatePropertyAll(Size.zero),
-                    padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 5, horizontal: 10))),
+                    padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 5, horizontal: 15))),
                 child: const Text("어항에 추가"),
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 7),
           Text("${book.text}", style: TextStyle(fontSize: 15, color: Colors.grey[600])),
           const SizedBox(height: 15),
         ],

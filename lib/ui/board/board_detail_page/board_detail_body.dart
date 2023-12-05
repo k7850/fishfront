@@ -59,19 +59,19 @@ class _BoardDetailBodyState extends ConsumerState<BoardDetailBody> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: FlickVideoPlayer(flickManager: flickManager!),
           ),
-        if (boardDTO.photoList.length == 1)
-          Container(
-            height: 300,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                "$imageURL${boardDTO.photoList[0]}",
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        if (boardDTO.photoList.length > 1)
+        // if (boardDTO.photoList.length == 1)
+        //   Container(
+        //     height: 300,
+        //     padding: const EdgeInsets.symmetric(horizontal: 20),
+        //     child: ClipRRect(
+        //       borderRadius: BorderRadius.circular(10),
+        //       child: Image.network(
+        //         "$imageURL${boardDTO.photoList[0]}",
+        //         fit: BoxFit.cover,
+        //       ),
+        //     ),
+        //   ),
+        if (boardDTO.photoList.isNotEmpty)
           SizedBox(
             height: 300,
             child: PageView.builder(
@@ -89,6 +89,7 @@ class _BoardDetailBodyState extends ConsumerState<BoardDetailBody> {
                         child: Image.network(
                           "$imageURL${boardDTO.photoList[index]}",
                           height: 300,
+                          width: sizeGetScreenWidth(context),
                           fit: BoxFit.cover,
                         ),
                       ),

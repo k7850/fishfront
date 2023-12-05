@@ -37,9 +37,9 @@ class FishCreateButton extends ConsumerWidget {
 
     return ElevatedButton(
       onPressed: () async {
-        print("fish업뎃 제출하기");
+        print("fish추가 제출하기");
         if (_formKey.currentState!.validate()) {
-          print("fish업뎃 validate 통과");
+          print("fish추가 validate 통과");
           FishRequestDTO fishRequestDTO = FishRequestDTO(
             fishClassEnum: fishClassEnum,
             name: _name.text,

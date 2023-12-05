@@ -52,7 +52,7 @@ class _FishUpdateImportantState extends ConsumerState<FishUpdateImportant> {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return FishUpdateAlertdialog();
+                  return const FishUpdateAlertdialog();
                 },
               );
             },
@@ -60,7 +60,7 @@ class _FishUpdateImportantState extends ConsumerState<FishUpdateImportant> {
               alignment: Alignment.bottomLeft,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 4),
+                  padding: const EdgeInsets.only(bottom: 4),
                   child: Text("${aquariumDTO.title}", style: TextStyle(fontSize: 17)),
                 ),
                 const Divider(color: Colors.black38, height: 1, thickness: 1),
@@ -83,7 +83,7 @@ class _FishUpdateImportantState extends ConsumerState<FishUpdateImportant> {
                 },
                 child: MyCheckbox(str: "물고기", isChecked: fishClassEnum == FishClassEnum.FISH),
               ),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               InkWell(
                 onTap: () {
                   if (fishClassEnum != FishClassEnum.OTHER) {
@@ -93,7 +93,7 @@ class _FishUpdateImportantState extends ConsumerState<FishUpdateImportant> {
                 },
                 child: MyCheckbox(str: "기타 생물", isChecked: fishClassEnum == FishClassEnum.OTHER),
               ),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               InkWell(
                 onTap: () {
                   if (fishClassEnum != FishClassEnum.PLANT) {

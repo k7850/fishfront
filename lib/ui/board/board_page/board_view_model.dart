@@ -1,18 +1,24 @@
+import 'dart:io';
+
 import 'package:fishfront/data/dto/board_dto.dart';
 import 'package:fishfront/data/dto/board_main_dto.dart';
+import 'package:fishfront/data/dto/board_request_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
+import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/data/provider/session_provider.dart';
 import 'package:fishfront/data/repository/board_repository.dart';
 import 'package:fishfront/main.dart';
 import 'package:fishfront/ui/_common_widgets/my_snackbar.dart';
+import 'package:fishfront/ui/board/board_detail_page/board_detail_page.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BoardModel {
   List<BoardMainDTO> boardMainDTOList;
 
-  bool? isAquarium;
+  bool? isPhoto;
 
-  BoardModel({required this.boardMainDTOList, this.isAquarium});
+  BoardModel({required this.boardMainDTOList, this.isPhoto});
 }
 
 class BoardViewModel extends StateNotifier<BoardModel?> {
@@ -50,13 +56,38 @@ class BoardViewModel extends StateNotifier<BoardModel?> {
       }
     }
 
-    state = BoardModel(boardMainDTOList: boardMainDTOList, isAquarium: state!.isAquarium);
+    state = BoardModel(boardMainDTOList: boardMainDTOList, isPhoto: state!.isPhoto);
   }
 
-  Future<void> notifyIsAquarium(bool? isAquarium) async {
-    print("notifyIsAquarium : ${isAquarium}");
+  Future<void> notifyIsPhoto(bool? isPhoto) async {
+    print("notifyIsPhoto : ${isPhoto}");
 
-    state = BoardModel(boardMainDTOList: state!.boardMainDTOList, isAquarium: isAquarium);
+    state = BoardModel(boardMainDTOList: state!.boardMainDTOList, isPhoto: isPhoto);
+  }
+
+  Future<void> notifyBoardCreate(BoardRequestDTO boardRequestDTO, List<File>? imageFileList, File? videoFile) async {
+    print("notifyBoardCreate : ${boardRequestDTO}");
+
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ResponseDTO responseDTO = await BoardRepository().fetchBoardCreate(sessionUser.jwt!, boardRequestDTO, imageFileList, videoFile);
+
+    if (responseDTO.success == false) {
+      print("notifyBoardCreate실패 : ${responseDTO}");
+      mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
+      // notifyInit();
+      return;
+    }
+    BoardDTO boardDTO = responseDTO.data;
+
+    mySnackbar(1000, mySnackbarRow1("${boardDTO.title}", " 작성 완료", "", ""));
+
+    ParamStore paramStore = ref.read(paramProvider);
+    paramStore.addBoardDetailId(boardDTO.id);
+    Navigator.pushReplacement(mContext!, MaterialPageRoute(builder: (_) => const BoardDetailPage()));
+
+    notifyInit();
+    // state = BoardModel(boardMainDTOList: state!.boardMainDTOList, isPhoto: state!.isPhoto);
   }
 
   // Future<void> notifyFishClassEnum(FishClassEnum fishClassEnum) async {
