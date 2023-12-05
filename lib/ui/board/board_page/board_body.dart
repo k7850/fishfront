@@ -92,7 +92,6 @@ class _BoardBodyState extends ConsumerState<BoardBody> {
           itemCount: selectBoardList.length,
           separatorBuilder: (context, index) => const Divider(color: Colors.grey, height: 1, thickness: 1),
         ),
-        const SliverToBoxAdapter(child: SizedBox(height: 515)),
       ],
     );
   }

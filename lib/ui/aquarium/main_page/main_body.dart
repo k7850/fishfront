@@ -15,6 +15,24 @@ class MainBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     print("메인페이지 빌드됨");
 
+    if (aquariumDTOList.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("등록된 어항이 없어요.", style: TextStyle(fontSize: 20)),
+            ElevatedButton(
+              onPressed: () {
+                print("어항추가버튼");
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const AquariumCreatePage()));
+              },
+              child: Text("어항 등록"),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Stack(
       children: [
         Column(

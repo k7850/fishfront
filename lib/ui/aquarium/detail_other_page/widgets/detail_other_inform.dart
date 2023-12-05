@@ -5,6 +5,7 @@ import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
 import 'package:fishfront/ui/_common_widgets/aquarium_textformfield.dart';
 import 'package:fishfront/ui/_common_widgets/my_checkbox.dart';
+import 'package:fishfront/ui/_common_widgets/subTitle.dart';
 import 'package:fishfront/ui/aquarium/detail_other_page/detail_other_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,11 +32,7 @@ class DetailOtherInform extends ConsumerWidget {
           AquariumTextFormField("어항 이름", _title, validateNormal(), (String value) => ref.read(detailOtherProvider.notifier).notifyTitle(value)),
           AquariumTextFormField(
               isLong: true, "메모하기", _intro, validateLong(), (String value) => ref.read(detailOtherProvider.notifier).notifyIntro(value)),
-          Container(
-            alignment: const Alignment(-1, 0),
-            padding: const EdgeInsets.only(bottom: 5),
-            child: Text("어항 종류", style: TextStyle(color: Colors.grey[600])),
-          ),
+          const SubTitle(subTitle: "어항 종류"),
           Row(
             children: [
               InkWell(

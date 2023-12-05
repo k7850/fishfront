@@ -64,27 +64,34 @@ class SelectFish extends ConsumerWidget {
                                         fit: BoxFit.cover,
                                         errorBuilder: (context, error, stackTrace) {
                                           return Image.asset(
-                                            "assets/aquarium.png",
+                                            "assets/fish.png",
                                             width: sizeGetScreenWidth(context) * 0.14,
                                             height: sizeGetScreenWidth(context) * 0.1,
                                             fit: BoxFit.cover,
                                           );
                                         },
                                       )
-                                    : Image.network(
-                                        "$imageURL${fishDTO.book!.photo}",
-                                        width: sizeGetScreenWidth(context) * 0.14,
-                                        height: sizeGetScreenWidth(context) * 0.1,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Image.asset(
-                                            "assets/aquarium.png",
+                                    : fishDTO.book != null
+                                        ? Image.network(
+                                            "$imageURL${fishDTO.book!.photo}",
                                             width: sizeGetScreenWidth(context) * 0.14,
                                             height: sizeGetScreenWidth(context) * 0.1,
                                             fit: BoxFit.cover,
-                                          );
-                                        },
-                                      ),
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Image.asset(
+                                                "assets/fish.png",
+                                                width: sizeGetScreenWidth(context) * 0.14,
+                                                height: sizeGetScreenWidth(context) * 0.1,
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                          )
+                                        : Image.asset(
+                                            "assets/fish.png",
+                                            width: sizeGetScreenWidth(context) * 0.14,
+                                            height: sizeGetScreenWidth(context) * 0.1,
+                                            fit: BoxFit.cover,
+                                          ),
                               ),
                               const SizedBox(width: sizeM10),
                               Text("${fishDTO.name} ", style: const TextStyle(fontSize: 15)),

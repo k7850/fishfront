@@ -56,11 +56,11 @@ class BoardPageItem extends ConsumerWidget {
                       text: buildTime(boardMainDTO.createdAt),
                       children: [
                         TextSpan(
-                          text: " ㅣ ",
+                          text: "ㅣ",
                           style: TextStyle(fontSize: 13, color: Colors.grey[400], fontFamily: "Giants"),
                         ),
                         TextSpan(
-                          text: "조회 ${boardMainDTO.viewCount}",
+                          text: " 조회 ${boardMainDTO.viewCount}",
                           style: TextStyle(fontSize: 13, color: Colors.grey[600], fontFamily: "Giants"),
                         ),
                       ],

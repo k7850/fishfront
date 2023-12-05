@@ -41,7 +41,7 @@ class _MyBottomState extends ConsumerState<MyBottom> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.menu_book_outlined,
+              Icons.menu_book,
               color: ps.bottomNavigationBarIndex == 2 ? Colors.black : Colors.grey,
             ),
             label: '생물도감',
@@ -80,9 +80,11 @@ void onItemTapped(int index, BuildContext context, ParamStore ps) {
     Navigator.pushNamedAndRemoveUntil(context, "/main", (route) => false);
   } else if (index == 1 && ps.bottomNavigationBarIndex != index) {
     // Navigator.pushNamedAndRemoveUntil(context, Move.recommendPage, (route) => false);
-  } else if (index == 2 && ps.bottomNavigationBarIndex != index) {
+  } else if (index == 2) {
+    // } else if (index == 2 && ps.bottomNavigationBarIndex != index) {
     Navigator.pushNamedAndRemoveUntil(context, "/book", (route) => false);
-  } else if (index == 3 && ps.bottomNavigationBarIndex != index) {
+  } else if (index == 3) {
+    // } else if (index == 3 && ps.bottomNavigationBarIndex != index) {
     Navigator.pushNamedAndRemoveUntil(context, "/board", (route) => false);
   } else if (index == 4 && ps.bottomNavigationBarIndex != index) {
     // Navigator.pushNamedAndRemoveUntil(context, Move.seeMorePage, (route) => false);

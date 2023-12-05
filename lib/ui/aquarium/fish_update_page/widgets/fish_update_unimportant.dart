@@ -1,4 +1,5 @@
 import 'package:fishfront/ui/_common_widgets/my_checkbox.dart';
+import 'package:fishfront/ui/_common_widgets/subTitle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,11 +37,7 @@ class _FishUpdateUnimportantState extends ConsumerState<FishUpdateUnimportant> {
           AquariumTextFormField(
               isLong: true, "메모하기", _text, validateLong(), (String value) => ref.read(fishUpdateProvider.notifier).notifyText(value)),
           AquariumTextFormField("가격", _price, validateOkEmpty(), (String value) => ref.read(fishUpdateProvider.notifier).notifyPrice(value)),
-          Container(
-            alignment: const Alignment(-1, 0),
-            padding: const EdgeInsets.only(bottom: 5),
-            child: Text("수량", style: TextStyle(color: Colors.grey[600])),
-          ),
+          const SubTitle(subTitle: "수량", top: 0),
           Row(
             children: [
               InkWell(
@@ -62,11 +59,7 @@ class _FishUpdateUnimportantState extends ConsumerState<FishUpdateUnimportant> {
               ),
             ],
           ),
-          Container(
-            alignment: const Alignment(-1, 0),
-            padding: const EdgeInsets.only(top: 15, bottom: 5),
-            child: Text("성별", style: TextStyle(color: Colors.grey[600])),
-          ),
+          const SubTitle(subTitle: "성별"),
           Row(
             children: [
               InkWell(

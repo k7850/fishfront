@@ -1,3 +1,4 @@
+import 'package:fishfront/ui/_common_widgets/subTitle.dart';
 import 'package:fishfront/ui/aquarium/fish_update_page/widgets/fish_update_alertdialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,11 +68,7 @@ class _FishUpdateImportantState extends ConsumerState<FishUpdateImportant> {
               ],
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(top: 20, bottom: 5),
-            alignment: const Alignment(-1, 0),
-            child: Text("생물 종류", style: TextStyle(color: Colors.grey[600])),
-          ),
+          const SubTitle(subTitle: "생물 종류", top: 20),
           Row(
             children: [
               InkWell(

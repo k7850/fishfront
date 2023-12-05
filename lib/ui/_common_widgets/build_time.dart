@@ -13,5 +13,7 @@ String buildTime(DateTime? time) {
                   ? "${now.difference(time).inHours}시간 전 "
                   : now.difference(time).inMinutes >= 1
                       ? "${now.difference(time).inMinutes}분 전 "
-                      : "${now.difference(time).inSeconds}초 전 ";
+                      : now.difference(time).inSeconds >= 10
+                          ? "${now.difference(time).inSeconds}초 전 "
+                          : "지금";
 }
