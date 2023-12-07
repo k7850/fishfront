@@ -1,3 +1,4 @@
+import 'package:fishfront/ui/_common_widgets/format_day.dart';
 import 'package:fishfront/ui/_common_widgets/id_color_make.dart';
 import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
@@ -25,40 +26,68 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
-    Column scheduleColumn = Column(
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "${today.month}월 ${today.day}일 오늘의 어항 관리",
-          ),
-        )
-      ],
-    );
+
+    Column scheduleColumn = Column(children: []);
 
     for (ScheduleDTO scheduleDTO in widget.aquariumDTO.scheduleDTOList) {
-      print(scheduleDTO);
+      // print(scheduleDTO);
       if (scheduleDTO.scheduleEnum == "지정") {
-        // print(scheduleDTO.targetDay);
-        DateFormat('yyyy-MM-dd').format(today) == DateFormat('yyyy-MM-dd').format(scheduleDTO.targetDay!)
-            ? scheduleColumn.children.add(buildScheduleCheck(scheduleDTO))
-            : ();
+        if (DateFormat('yyyy-MM-dd').format(today) == DateFormat('yyyy-MM-dd').format(scheduleDTO.targetDay!)) {
+          scheduleColumn.children.add(buildScheduleCheck(scheduleDTO));
+        }
       }
       if (scheduleDTO.scheduleEnum == "요일") {
-        today.weekday == scheduleDTO.betweenDay //
-            ? scheduleColumn.children.add(buildScheduleCheck(scheduleDTO))
-            : ();
+        if (today.weekday == scheduleDTO.betweenDay) {
+          scheduleColumn.children.add(buildScheduleCheck(scheduleDTO));
+        }
       }
       if (scheduleDTO.scheduleEnum == "간격") {
-        // if (scheduleDTO.betweenDay == 1) scheduleColumn.children.add(buildScheduleCheck(scheduleDTO));
-        scheduleColumn.children.add(buildScheduleCheck(scheduleDTO));
+        DateTime startDay = formatDay(scheduleDTO.targetDay!);
+
+        print("실행시작 : ${scheduleDTO}");
+
+        int i = 0;
+        bool check = false;
+
+        while (!check) {
+          DateTime currentDate = startDay.add(Duration(days: i));
+          i = i + scheduleDTO.betweenDay!;
+
+          if (currentDate.isBefore(DateTime.now().add(Duration(days: -1)))) {
+            print("이전 계속진행");
+            continue;
+          }
+
+          print("currentDate : ${currentDate}");
+          print("DateTime.now() : ${DateTime.now()}");
+          if (currentDate.year == DateTime.now().year && currentDate.month == DateTime.now().month && currentDate.day == DateTime.now().day) {
+            scheduleColumn.children.add(buildScheduleCheck(scheduleDTO));
+            check = true;
+            print("맞음");
+            break;
+          }
+
+          if (currentDate.isAfter(DateTime.now())) {
+            check = true;
+            print("지남");
+            break;
+          }
+          print("계속반복");
+        }
       }
     }
 
-    if (scheduleColumn.children.length == 1) {
-      scheduleColumn.children.removeAt(0);
+    if (scheduleColumn.children.isEmpty) {
       scheduleColumn.children.add(
         const Text("오늘의 계획 없음"),
+      );
+    } else {
+      scheduleColumn.children.insert(
+        0,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text("${today.month}월 ${today.day}일 오늘의 어항 관리"),
+        ),
       );
     }
 
@@ -75,7 +104,7 @@ class _AquariumCardState extends ConsumerState<AquariumCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 10),
-          Center(child: Text("${widget.aquariumDTO.title}", style: TextStyle(fontSize: 25), maxLines: 1)),
+          Center(child: Text("${widget.aquariumDTO.title}", style: const TextStyle(fontSize: 25), maxLines: 1)),
           const SizedBox(height: 5),
           Center(
             child: ClipRRect(

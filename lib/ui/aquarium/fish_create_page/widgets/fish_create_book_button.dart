@@ -2,6 +2,7 @@ import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/fish_dto.dart';
 import 'package:fishfront/data/model/book.dart';
+import 'package:fishfront/ui/_common_widgets/get_matchword_spans.dart';
 import 'package:fishfront/ui/aquarium/fish_create_page/fish_create_view_model.dart';
 import 'package:fishfront/ui/book/book_page/book_view_model.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +130,17 @@ class FishCreateBookButton extends ConsumerWidget {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text(e.normalName, style: const TextStyle(fontSize: 18, fontFamily: "Giants")),
+                                                newSearchTerm.isEmpty
+                                                    ? Text(e.normalName, style: const TextStyle(fontSize: 18, fontFamily: "Giants"))
+                                                    : RichText(
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        text: TextSpan(
+                                                          style: const TextStyle(fontSize: 18, color: Colors.black, fontFamily: "Giants"),
+                                                          children:
+                                                              getMatchWordSpans(e.normalName, newSearchTerm, const TextStyle(color: Colors.red)),
+                                                        ),
+                                                      ),
                                                 e.id == book?.id
                                                     ? Text("현재 소속 생물도감",
                                                         style: TextStyle(fontSize: 13, color: Colors.grey[600], fontFamily: "Giants"))

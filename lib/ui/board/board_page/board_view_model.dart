@@ -17,8 +17,13 @@ class BoardModel {
   List<BoardMainDTO> boardMainDTOList;
 
   bool? isPhoto;
+  int page;
+  bool isLastPage;
+  TextEditingController controller;
+  bool isSearch;
 
-  BoardModel({required this.boardMainDTOList, this.isPhoto});
+  BoardModel(
+      {required this.boardMainDTOList, this.isPhoto, required this.page, required this.isLastPage, required this.controller, required this.isSearch});
 }
 
 class BoardViewModel extends StateNotifier<BoardModel?> {
@@ -32,7 +37,7 @@ class BoardViewModel extends StateNotifier<BoardModel?> {
     print("메인보드노티파이어인잇");
     SessionUser sessionUser = ref.read(sessionProvider);
 
-    ResponseDTO responseDTO = await BoardRepository().fetchBoardMainList(sessionUser.jwt!);
+    ResponseDTO responseDTO = await BoardRepository().fetchBoardMainList(sessionUser.jwt!, 0, "");
 
     if (responseDTO.success == false) {
       print("notifyInit실패 : ${responseDTO}");
@@ -41,7 +46,92 @@ class BoardViewModel extends StateNotifier<BoardModel?> {
       return;
     }
 
-    state = BoardModel(boardMainDTOList: responseDTO.data);
+    TextEditingController controller = new TextEditingController();
+
+    state = BoardModel(boardMainDTOList: responseDTO.data, isPhoto: null, page: 0, isLastPage: false, controller: controller, isSearch: false);
+  }
+
+  Future<void> notifyInitSearch() async {
+    print("notifyInitSearch");
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    String keyword = state!.controller.text;
+
+    ResponseDTO responseDTO = await BoardRepository().fetchBoardMainList(sessionUser.jwt!, 0, keyword);
+
+    if (responseDTO.success == false) {
+      print("notifyInitSearch 실패 : ${responseDTO}");
+      mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
+      // notifyInit();
+      return;
+    }
+    List<BoardMainDTO> boardMainDTOList = responseDTO.data;
+    bool isLastPage = false;
+    if (boardMainDTOList.length < 10) isLastPage = true;
+
+    state = BoardModel(
+        boardMainDTOList: boardMainDTOList, isPhoto: state!.isPhoto, page: 0, isLastPage: isLastPage, controller: state!.controller, isSearch: true);
+  }
+
+  Future<void> notifyInitAdd() async {
+    print("notifyInitAdd");
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    int page = state!.page + 1;
+    print("page : $page");
+
+    String keyword = state!.isSearch ? state!.controller.text : "";
+
+    ResponseDTO responseDTO = await BoardRepository().fetchBoardMainList(sessionUser.jwt!, page, keyword);
+    // ResponseDTO responseDTO = await BoardRepository().fetchBoardMainList(sessionUser.jwt!, page);
+
+    if (responseDTO.success == false) {
+      print("notifyInit실패 : ${responseDTO}");
+      mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
+      // notifyInit();
+      return;
+    }
+    List<BoardMainDTO> newBoardMainDTOList = responseDTO.data;
+    List<BoardMainDTO> boardMainDTOList = state!.boardMainDTOList;
+
+    if (newBoardMainDTOList.isEmpty) {
+      print("더 없음");
+      state = BoardModel(
+        boardMainDTOList: state!.boardMainDTOList,
+        isPhoto: state!.isPhoto,
+        page: state!.page,
+        isLastPage: true,
+        controller: state!.controller,
+        isSearch: state!.isSearch,
+      );
+      return;
+    }
+
+    print("기존마지막${boardMainDTOList.last.id} / 추가처음${newBoardMainDTOList.first.id}");
+
+    if (boardMainDTOList.last.id == 1 + newBoardMainDTOList.first.id) {
+      print("정상적");
+      boardMainDTOList.addAll(newBoardMainDTOList);
+    } else if (boardMainDTOList.last.id <= newBoardMainDTOList.first.id) {
+      print("도중에 글 추가됨");
+      for (BoardMainDTO newBoardMainDTO in newBoardMainDTOList) {
+        if (newBoardMainDTO.id < boardMainDTOList.last.id) boardMainDTOList.add(newBoardMainDTO);
+      }
+    } else {
+      print("도중에 글 삭제됨");
+      // TODO
+      boardMainDTOList.addAll(newBoardMainDTOList);
+    }
+
+    print("끝");
+    state = BoardModel(
+      boardMainDTOList: boardMainDTOList,
+      isPhoto: state!.isPhoto,
+      page: page,
+      isLastPage: state!.isLastPage,
+      controller: state!.controller,
+      isSearch: state!.isSearch,
+    );
   }
 
   Future<void> notifyView(BoardDTO boardDTO) async {
@@ -56,13 +146,27 @@ class BoardViewModel extends StateNotifier<BoardModel?> {
       }
     }
 
-    state = BoardModel(boardMainDTOList: boardMainDTOList, isPhoto: state!.isPhoto);
+    state = BoardModel(
+      boardMainDTOList: boardMainDTOList,
+      isPhoto: state!.isPhoto,
+      page: state!.page,
+      isLastPage: state!.isLastPage,
+      controller: state!.controller,
+      isSearch: state!.isSearch,
+    );
   }
 
   Future<void> notifyIsPhoto(bool? isPhoto) async {
     print("notifyIsPhoto : ${isPhoto}");
 
-    state = BoardModel(boardMainDTOList: state!.boardMainDTOList, isPhoto: isPhoto);
+    state = BoardModel(
+      boardMainDTOList: state!.boardMainDTOList,
+      isPhoto: isPhoto,
+      page: state!.page,
+      isLastPage: state!.isLastPage,
+      controller: state!.controller,
+      isSearch: state!.isSearch,
+    );
   }
 
   Future<void> notifyBoardCreate(BoardRequestDTO boardRequestDTO, List<File>? imageFileList, File? videoFile) async {
@@ -87,44 +191,66 @@ class BoardViewModel extends StateNotifier<BoardModel?> {
     Navigator.pushReplacement(mContext!, MaterialPageRoute(builder: (_) => const BoardDetailPage()));
 
     notifyInit();
-    // state = BoardModel(boardMainDTOList: state!.boardMainDTOList, isPhoto: state!.isPhoto);
   }
 
-  // Future<void> notifyFishClassEnum(FishClassEnum fishClassEnum) async {
-  //   print("notifyFishClassEnum : ${fishClassEnum}");
-  //
-  //   // state!.fishClassEnum = fishClassEnum;
-  //   state =
-  //       BoardModel(bookList: state!.bookList, isFreshWater: state!.isFreshWater, fishClassEnum: fishClassEnum, newSearchTerm: state!.newSearchTerm);
-  // }
-  //
-  // Future<void> notifySearch(String newSearchTerm) async {
-  //   print("notifySearch : ${newSearchTerm}");
-  //
-  //   state =
-  //       BoardModel(bookList: state!.bookList, isFreshWater: state!.isFreshWater, fishClassEnum: state!.fishClassEnum, newSearchTerm: newSearchTerm);
-  // }
+  Future<void> notifyBoardDelete(int boardId) async {
+    print("notifyBoardDelete : ${boardId}");
 
-  // Future<List<Book>?> notifyBookList() async {
-  //   SessionUser sessionUser = ref.read(sessionProvider);
-  //
-  //   ResponseDTO responseDTO = await BookRepository().fetchBookList(sessionUser.jwt!);
-  //
-  //   if (responseDTO.success == false) {
-  //     print("notifyBookList실패 : ${responseDTO}");
-  //     mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
-  //     notifyInit();
-  //     return null;
-  //   }
-  //
-  //   List<Book> bookList = responseDTO.data;
-  //
-  //   return bookList;
-  // }
+    SessionUser sessionUser = ref.read(sessionProvider);
+
+    ResponseDTO responseDTO = await BoardRepository().fetchBoardDelete(sessionUser.jwt!, boardId);
+
+    if (responseDTO.success == false) {
+      print("notifyBoardDelete 실패 : ${responseDTO}");
+      mySnackbar(1000, mySnackbarRow1("", "${responseDTO.errorType}", "", ""));
+      // notifyInit();
+      return;
+    }
+    BoardMainDTO deleteBoardMainDTO = responseDTO.data;
+
+    Navigator.pop(mContext!);
+
+    mySnackbar(1000, mySnackbarRow1("${deleteBoardMainDTO.title}", " 삭제 완료", "", ""));
+
+    List<BoardMainDTO> boardMainDTOList = state!.boardMainDTOList //
+        .where((boardMainDTO) => boardMainDTO.id != deleteBoardMainDTO.id)
+        .toList();
+
+    state = BoardModel(
+      boardMainDTOList: boardMainDTOList,
+      isPhoto: state!.isPhoto,
+      page: state!.page,
+      isLastPage: state!.isLastPage,
+      controller: state!.controller,
+      isSearch: state!.isSearch,
+    );
+  }
+
+  Future<void> notifyDeleteUpdate(int boardId) async {
+    print("notifyDeleteUpdate : ${boardId}");
+
+    mySnackbar(1000, mySnackbarRow1("", "삭제된 글입니다.", "", ""));
+
+    Navigator.pop(mContext!);
+
+    List<BoardMainDTO> boardMainDTOList = state!.boardMainDTOList //
+        .where((boardMainDTO) => boardMainDTO.id != boardId)
+        .toList();
+
+    state = BoardModel(
+      boardMainDTOList: boardMainDTOList,
+      isPhoto: state!.isPhoto,
+      page: state!.page,
+      isLastPage: state!.isLastPage,
+      controller: state!.controller,
+      isSearch: state!.isSearch,
+    );
+  }
 
   @override
   void dispose() {
     print("보드메인 디스포즈됨");
+    state!.controller.dispose();
     super.dispose();
   }
 

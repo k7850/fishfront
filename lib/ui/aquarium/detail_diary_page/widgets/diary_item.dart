@@ -3,6 +3,7 @@ import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/diary_dto.dart';
 import 'package:fishfront/ui/_common_widgets/id_color_make.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DiaryItem extends StatelessWidget {
   DiaryDTO diaryDTO;
@@ -21,7 +22,7 @@ class DiaryItem extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "${diaryDTO.createdAt.year}년 ${diaryDTO.createdAt.month}월 ${diaryDTO.createdAt.day}일",
+            DateFormat.yMMMMd("ko").format(diaryDTO.createdAt),
             style: TextStyle(fontSize: 20, color: Colors.grey[600]),
           ),
           diaryDTO.title != null && diaryDTO.title!.isEmpty

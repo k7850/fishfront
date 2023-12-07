@@ -1,18 +1,21 @@
 import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/data/dto/board_dto.dart';
+import 'package:fishfront/ui/board/board_detail_page/board_detail_view_model.dart';
 import 'package:fishfront/ui/board/board_detail_page/widgets/board_detail_emoticon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BoardDetailMiddle extends StatelessWidget {
+class BoardDetailMiddle extends ConsumerWidget {
   const BoardDetailMiddle({
     super.key,
-    required this.boardDTO,
   });
 
-  final BoardDTO boardDTO;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    BoardDetailModel model = ref.watch(boardDetailProvider)!;
+
+    BoardDTO boardDTO = model.boardDTO;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -20,33 +23,33 @@ class BoardDetailMiddle extends StatelessWidget {
         children: [
           const SizedBox(height: 15),
           Text("${boardDTO.text}", style: TextStyle(fontSize: 15, color: Colors.grey[700])),
-          const SizedBox(height: 30),
+          const SizedBox(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               BoardDetailEmoticon(
                 text: "❤️ ${boardDTO.emoticonCount.countHEART}",
-                isMyEmoticon: boardDTO.emoticonCount.myEmoticonEnum == EmoticonEnum.HEART,
+                emoticonEnum: EmoticonEnum.HEART,
               ),
               BoardDetailEmoticon(
                 text: "🎉 ${boardDTO.emoticonCount.countCONGRATATU}",
-                isMyEmoticon: boardDTO.emoticonCount.myEmoticonEnum == EmoticonEnum.CONGRATATU,
+                emoticonEnum: EmoticonEnum.CONGRATATU,
               ),
               BoardDetailEmoticon(
                 text: "👍🏼 ${boardDTO.emoticonCount.countTHUMB}",
-                isMyEmoticon: boardDTO.emoticonCount.myEmoticonEnum == EmoticonEnum.THUMB,
+                emoticonEnum: EmoticonEnum.THUMB,
               ),
               BoardDetailEmoticon(
                 text: "😄 ${boardDTO.emoticonCount.countSMILE}",
-                isMyEmoticon: boardDTO.emoticonCount.myEmoticonEnum == EmoticonEnum.SMILE,
+                emoticonEnum: EmoticonEnum.SMILE,
               ),
               BoardDetailEmoticon(
                 text: "😭 ${boardDTO.emoticonCount.countCRY}",
-                isMyEmoticon: boardDTO.emoticonCount.myEmoticonEnum == EmoticonEnum.CRY,
+                emoticonEnum: EmoticonEnum.CRY,
               ),
               BoardDetailEmoticon(
                 text: "😡 ${boardDTO.emoticonCount.countANGRY}",
-                isMyEmoticon: boardDTO.emoticonCount.myEmoticonEnum == EmoticonEnum.ANGRY,
+                emoticonEnum: EmoticonEnum.ANGRY,
               ),
               const Spacer(),
             ],

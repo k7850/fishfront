@@ -54,43 +54,7 @@ class AquariumFishItem extends StatelessWidget {
         print("생물삭제");
         ScaffoldMessenger.of(context).clearSnackBars();
         mySnackbar(
-          3000,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.5),
-                child: RichText(
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  text: TextSpan(
-                    text: "${fishDTO.name}",
-                    style: const TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
-                    children: const [
-                      TextSpan(text: " 삭제하시겠습니까?", style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: "")),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: sizeM10),
-              InkWell(
-                child: const Icon(Icons.check, color: Colors.red),
-                onTap: () async {
-                  print("스낵바-삭제누름");
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  await ref.watch(mainProvider.notifier).notifyFishDelete(fishDTO.id);
-                },
-              ),
-              const SizedBox(width: sizeM10),
-              InkWell(
-                child: const Icon(Icons.clear, color: Colors.white),
-                onTap: () {
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                },
-              ),
-            ],
-          ),
-        );
+            3000, mySnackbarRowAlert("${fishDTO.name}", "삭제하시겠습니까?", context, () => ref.read(mainProvider.notifier).notifyFishDelete(fishDTO.id)));
       },
       child: const Icon(Icons.delete_outline, size: 30, color: Colors.red),
     );
@@ -102,43 +66,9 @@ class AquariumFishItem extends StatelessWidget {
         print("생물복제");
         ScaffoldMessenger.of(context).clearSnackBars();
         mySnackbar(
-          3000,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.5),
-                child: RichText(
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  text: TextSpan(
-                    text: "${fishDTO.name}",
-                    style: const TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "Giants"),
-                    children: const [
-                      TextSpan(text: " 복제하시겠습니까?", style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: "")),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: sizeM10),
-              InkWell(
-                child: const Icon(Icons.check, color: Colors.red),
-                onTap: () async {
-                  print("스낵바-복제누름");
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  await ref.watch(mainProvider.notifier).notifyFishCreate(fishDTO.aquariumId, FishRequestDTO.fromFishDTO(fishDTO), null);
-                },
-              ),
-              const SizedBox(width: sizeM10),
-              InkWell(
-                child: const Icon(Icons.clear, color: Colors.white),
-                onTap: () {
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                },
-              ),
-            ],
-          ),
-        );
+            3000,
+            mySnackbarRowAlert("${fishDTO.name}", "복제하시겠습니까?", context,
+                () => ref.read(mainProvider.notifier).notifyFishCreate(fishDTO.aquariumId, FishRequestDTO.fromFishDTO(fishDTO), null)));
       },
       child: Icon(Icons.copy_sharp, size: 25, color: Colors.grey[300]),
     );

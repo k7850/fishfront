@@ -95,6 +95,14 @@ class BoardCreateViewModel extends StateNotifier<BoardCreateModel?> {
     state = BoardCreateModel.copy(copyState);
   }
 
+  @override
+  void dispose() {
+    print("보드생성 디스포즈됨");
+    state!.text.dispose();
+    state!.title.dispose();
+    super.dispose();
+  }
+
 //
 }
 

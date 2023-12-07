@@ -1,18 +1,8 @@
-import 'dart:io';
-
-import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/data/dto/aquarium_dto.dart';
-import 'package:fishfront/data/dto/aquarium_request_dto.dart';
-import 'package:fishfront/data/dto/equipment_dto.dart';
-import 'package:fishfront/data/dto/fish_dto.dart';
-import 'package:fishfront/data/dto/response_dto.dart';
 import 'package:fishfront/data/dto/schedule_dto.dart';
-import 'package:fishfront/data/model/book.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
-import 'package:fishfront/data/provider/session_provider.dart';
-import 'package:fishfront/data/repository/aquarium_repository.dart';
 import 'package:fishfront/main.dart';
-import 'package:fishfront/ui/_common_widgets/my_snackbar.dart';
+import 'package:fishfront/ui/_common_widgets/format_day.dart';
 import 'package:fishfront/ui/aquarium/detail_schedule_page/widgets/event.dart';
 import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
@@ -98,20 +88,27 @@ class DetailScheduleViewModel extends StateNotifier<DetailScheduleModel?> {
     List<ScheduleDTO> scheduleDTOList = aquariumDTO.scheduleDTOList;
 
     void calendarViewIf(ScheduleDTO scheduleDTO, int day) {
-      if (scheduleDTO.betweenDay == day) {
-        for (int i = 0; i < durationDay; i += day) {
-          eventMap[day0101.add(Duration(days: i))] ??= [];
-          eventMap[day0101.add(Duration(days: i))]!.add(
-            Event(title: scheduleDTO.title, isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id, importantly: scheduleDTO.importantly),
-          );
-        }
+      // DateTime startDay = DateTime.utc(DateTime.now().year, DateTime.now().month, 1);
+      // DateTime startDay = scheduleDTO.targetDay!;
+
+      DateTime startDay = formatDay(scheduleDTO.targetDay!);
+
+      // print("1: ${DateTime.utc(DateTime.now().year, DateTime.now().month, 1)}");
+      // print("2: ${scheduleDTO.targetDay!}");
+      // print("3: ${startDay}");
+
+      for (int i = 0; i < durationDay; i += day) {
+        if (startDay.add(Duration(days: i)).isBefore(day0101)) continue;
+        eventMap[startDay.add(Duration(days: i))] ??= [];
+        eventMap[startDay.add(Duration(days: i))]!.add(
+          Event(title: scheduleDTO.title, isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id, importantly: scheduleDTO.importantly),
+        );
       }
     }
 
     for (ScheduleDTO scheduleDTO in scheduleDTOList) {
       if (scheduleDTO.scheduleEnum == "지정") {
-        String formattedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').format(scheduleDTO.targetDay!);
-        DateTime parsedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').parseUTC(formattedDate);
+        DateTime parsedDate = formatDay(scheduleDTO.targetDay!);
         eventMap[parsedDate] ??= [];
         eventMap[parsedDate]!.add(
           Event(title: scheduleDTO.title, isCompleted: scheduleDTO.isCompleted, scheduleId: scheduleDTO.id, importantly: scheduleDTO.importantly),
@@ -132,21 +129,23 @@ class DetailScheduleViewModel extends StateNotifier<DetailScheduleModel?> {
       }
 
       if (scheduleDTO.scheduleEnum == "간격") {
-        calendarViewIf(scheduleDTO, 1);
-        calendarViewIf(scheduleDTO, 2);
-        calendarViewIf(scheduleDTO, 4);
-        calendarViewIf(scheduleDTO, 10);
-        calendarViewIf(scheduleDTO, 30);
+        if (scheduleDTO.betweenDay == 1) calendarViewIf(scheduleDTO, 1);
+        if (scheduleDTO.betweenDay == 2) calendarViewIf(scheduleDTO, 2);
+        if (scheduleDTO.betweenDay == 4) calendarViewIf(scheduleDTO, 4);
+        if (scheduleDTO.betweenDay == 10) calendarViewIf(scheduleDTO, 10);
+        if (scheduleDTO.betweenDay == 30) calendarViewIf(scheduleDTO, 30);
       }
     }
 
     for (var diary in aquariumDTO.diaryDTOList) {
       // print("diary.createdAt : ${diary.createdAt}");
-      String formattedDate = DateFormat('yyyy-MM-dd').format(diary.createdAt);
-      DateTime parsedDate = DateFormat('yyyy-MM-dd').parseUTC(formattedDate);
+      // String formattedDate = DateFormat('yyyy-MM-dd').format(diary.createdAt);
+      // DateTime parsedDate = DateFormat('yyyy-MM-dd').parseUTC(formattedDate);
 
-      eventMap[parsedDate] ??= [];
-      eventMap[parsedDate]!.add(
+      DateTime target = formatDay(diary.createdAt);
+
+      eventMap[target] ??= [];
+      eventMap[target]!.add(
         Event(title: diary.title == null || diary.title!.isEmpty ? "기록" : "${diary.title}", diaryId: diary.id),
       );
       // print(eventMap[parsedDate]);
@@ -154,10 +153,12 @@ class DetailScheduleViewModel extends StateNotifier<DetailScheduleModel?> {
 
     //
 
-    String formattedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').format(selectedDay);
-    DateTime parsedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').parseUTC(formattedDate);
+    // String formattedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').format(selectedDay);
+    // DateTime parsedDate = DateFormat('yyyy-MM-dd 00:00:00.000Z').parseUTC(formattedDate);
 
-    List<Event> selectedEventList = eventMap[parsedDate] ?? [];
+    DateTime target = formatDay(selectedDay);
+
+    List<Event> selectedEventList = eventMap[target] ?? [];
 
     state = await DetailScheduleModel(
       eventController: eventController,

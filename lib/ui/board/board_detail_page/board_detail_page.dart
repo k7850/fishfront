@@ -3,6 +3,7 @@ import 'package:fishfront/ui/_common_widgets/my_bottom.dart';
 import 'package:fishfront/ui/_common_widgets/my_appbar.dart';
 import 'package:fishfront/ui/board/board_detail_page/board_detail_body.dart';
 import 'package:fishfront/ui/board/board_detail_page/board_detail_view_model.dart';
+import 'package:fishfront/ui/board/board_detail_page/widgets/board_detail_write_comment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,8 +23,13 @@ class BoardDetailPage extends ConsumerWidget {
     BoardDTO boardDTO = model.boardDTO;
 
     return Scaffold(
-      appBar: MyAppbar(title: boardDTO.title, onTapFunction: () => ref.read(boardDetailProvider.notifier).notifyInit()),
-      bottomNavigationBar: const MyBottom(),
+      appBar: MyAppbar(
+          title: boardDTO.title,
+          onTapFunction: () {
+            ref.read(boardDetailProvider.notifier).notifyInit();
+          }),
+      // bottomNavigationBar: const MyBottom(),
+      bottomSheet: boardDetailWriteComment(),
       body: const BoardDetailBody(),
     );
   }

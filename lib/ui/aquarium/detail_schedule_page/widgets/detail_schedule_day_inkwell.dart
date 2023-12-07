@@ -48,8 +48,13 @@ class DetailScheduleDayInkwell extends ConsumerWidget {
 
         DateTime targetWeek = day0101;
 
-        ScheduleRequestDTO scheduleRequestDTO =
-            new ScheduleRequestDTO(title: _eventController.text, scheduleEnum: "간격", betweenDay: dayInt, importantly: importantly);
+        ScheduleRequestDTO scheduleRequestDTO = new ScheduleRequestDTO(
+          title: _eventController.text,
+          scheduleEnum: "간격",
+          betweenDay: dayInt,
+          importantly: importantly,
+          targetDay: selectedDay,
+        );
 
         await ref.watch(mainProvider.notifier).notifyScheduleCreate(aquariumDTO.id, scheduleRequestDTO);
 

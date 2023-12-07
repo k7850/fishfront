@@ -1,10 +1,14 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:fishfront/_core/constants/enum.dart';
 import 'package:fishfront/_core/constants/http.dart';
 import 'package:fishfront/data/dto/board_dto.dart';
 import 'package:fishfront/data/dto/board_main_dto.dart';
 import 'package:fishfront/data/dto/board_request_dto.dart';
+import 'package:fishfront/data/dto/comment_dto.dart';
+import 'package:fishfront/data/dto/comment_request_dto.dart';
+import 'package:fishfront/data/dto/emoticon_dto.dart';
 import 'package:fishfront/data/dto/response_dto.dart';
 import 'package:logger/logger.dart';
 
@@ -13,9 +17,16 @@ import 'package:logger/logger.dart';
 class BoardRepository {
 //
 
-  Future<ResponseDTO> fetchBoardMainList(String jwt) async {
+  Future<ResponseDTO> fetchBoardMainList(String jwt, int page, String keyword) async {
     try {
-      Response response = await dio.get("/boards", options: Options(headers: {"Authorization": "${jwt}"}));
+      Response response = await dio.get(
+        "/boards",
+        queryParameters: {
+          "page": page,
+          "keyword": keyword,
+        },
+        options: Options(headers: {"Authorization": "${jwt}"}),
+      );
 
       // 응답 받은 데이터 파싱
       ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
@@ -107,6 +118,175 @@ class BoardRepository {
       ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
 
       responseDTO.data = new BoardDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchBoardDelete(String jwt, int boardId) async {
+    print("boardId : ${boardId}");
+
+    try {
+      Response response = await dio.delete("/boards/${boardId}", options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response: ${response}");
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new BoardMainDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchCommentCreate(String jwt, CommentRequestDTO commentRequestDTO, int boardId) async {
+    print("commentRequestDTO : ${commentRequestDTO}");
+
+    try {
+      Response response =
+          await dio.post("/comments/${boardId}", data: commentRequestDTO.toJson(), options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response: ${response}");
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new CommentDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchCommentDelete(String jwt, int commentId) async {
+    print("commentId : ${commentId}");
+
+    try {
+      Response response = await dio.delete("/comments/${commentId}", options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response: ${response}");
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new CommentDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchLikeComment(String jwt, int commentId, bool isLike) async {
+    print("commentId : ${commentId}");
+
+    try {
+      Response response;
+      if (isLike) {
+        response = await dio.post("/comments/like/${commentId}", options: Options(headers: {"Authorization": "${jwt}"}));
+      } else {
+        response = await dio.post("/comments/dislike/${commentId}", options: Options(headers: {"Authorization": "${jwt}"}));
+      }
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new CommentDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchLikeCommentDelete(String jwt, int commentId) async {
+    print("commentId : ${commentId}");
+
+    try {
+      Response response = await dio.delete("/comments/likecancel/${commentId}", options: Options(headers: {"Authorization": "${jwt}"}));
+
+      // print("response: ${response}");
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new CommentDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchEmoticonDelete(String jwt, EmoticonEnum emoticonEnum, int boardId) async {
+    print("emoticonEnum : ${emoticonEnum}");
+    print("emoticonEnum : ${emoticonEnum.toString().split(".")[1]}");
+
+    try {
+      Response response = await dio.delete("/boards/${boardId}/emoticon/${emoticonEnum.toString().split(".")[1]}",
+          options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response: ${response}");
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new EmoticonDTO.fromJson(responseDTO.data);
+
+      return responseDTO;
+    } catch (e) {
+      if (e is DioError) {
+        print("e.response : ${e.response}");
+        return new ResponseDTO.fromJson(e.response!.data);
+      }
+      print("e : ${e}");
+      return new ResponseDTO(success: false, errorType: ErrorType(msg: "${e}"));
+    }
+  }
+
+  Future<ResponseDTO> fetchEmoticon(String jwt, EmoticonEnum emoticonEnum, int boardId) async {
+    print("emoticonEnum : ${emoticonEnum}");
+    print("emoticonEnum : ${emoticonEnum.toString().split(".")[1]}");
+
+    try {
+      Response response = await dio.post("/boards/${boardId}/emoticon/${emoticonEnum.toString().split(".")[1]}",
+          options: Options(headers: {"Authorization": "${jwt}"}));
+
+      print("response: ${response}");
+
+      ResponseDTO responseDTO = new ResponseDTO.fromJson(response.data);
+
+      responseDTO.data = new EmoticonDTO.fromJson(responseDTO.data);
 
       return responseDTO;
     } catch (e) {

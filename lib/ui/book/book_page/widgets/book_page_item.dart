@@ -1,5 +1,7 @@
 import 'package:fishfront/data/provider/param_provider.dart';
+import 'package:fishfront/ui/_common_widgets/get_matchword_spans.dart';
 import 'package:fishfront/ui/book/book_detail_page/book_detail_page.dart';
+import 'package:fishfront/ui/book/book_page/book_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,6 +19,10 @@ class BookPageItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    BookModel model = ref.watch(bookProvider)!;
+
+    String newSearchTerm = model.newSearchTerm ?? "";
+
     return Container(
       padding: const EdgeInsets.only(top: 10, left: 20),
       child: InkWell(
@@ -59,16 +65,27 @@ class BookPageItem extends ConsumerWidget {
                   child: RichText(
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      style: const TextStyle(fontSize: 18, color: Colors.black, fontFamily: "Giants"),
-                      text: "${book.normalName} ",
-                      children: [
-                        TextSpan(
-                          text: "${book.biologyName}",
-                          style: const TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold, fontFamily: "JamsilRegular"),
-                        ),
-                      ],
-                    ),
+                    text: newSearchTerm.isEmpty
+                        ? TextSpan(
+                            style: const TextStyle(fontSize: 18, color: Colors.black, fontFamily: "Giants"),
+                            children: [
+                              TextSpan(text: "${book.normalName} "),
+                              TextSpan(
+                                text: "${book.biologyName}",
+                                style: const TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold, fontFamily: "JamsilRegular"),
+                              ),
+                            ],
+                          )
+                        : TextSpan(
+                            style: const TextStyle(fontSize: 18, color: Colors.black, fontFamily: "Giants"),
+                            children: [
+                              ...getMatchWordSpans("${book.normalName} ", newSearchTerm, const TextStyle(color: Colors.red)),
+                              TextSpan(
+                                style: const TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold, fontFamily: "JamsilRegular"),
+                                children: [...getMatchWordSpans("${book.biologyName}", newSearchTerm, const TextStyle(color: Colors.red))],
+                              ),
+                            ],
+                          ),
                   ),
                 ),
                 Container(

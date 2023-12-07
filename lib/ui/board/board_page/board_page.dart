@@ -1,6 +1,7 @@
 import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/ui/_common_widgets/my_bottom.dart';
 import 'package:fishfront/ui/_common_widgets/my_appbar.dart';
+import 'package:fishfront/ui/board/board_create_page/board_create_page.dart';
 import 'package:fishfront/ui/board/board_page/board_body.dart';
 import 'package:fishfront/ui/board/board_page/board_view_model.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,10 @@ class _BoardPageState extends ConsumerState<BoardPage> {
     return Scaffold(
       appBar: MyAppbar(title: "게시판", onTapFunction: () => ref.read(boardProvider.notifier).notifyInit()),
       bottomNavigationBar: const MyBottom(),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BoardCreatePage())),
+      //   child: const Icon(Icons.add, size: 35),
+      // ),
       body: WillPopScope(
         onWillPop: () {
           ParamStore ps = ref.read(paramProvider);

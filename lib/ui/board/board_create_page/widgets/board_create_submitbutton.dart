@@ -25,8 +25,6 @@ class BoardCreateSubmitButton extends ConsumerWidget {
 
     List<File>? imageFileList = model.imageFileList;
 
-    print("바디 ${imageFileList}");
-
     AquariumDTO? aquariumDTO = model.aquariumDTO;
     FishDTO? fishDTO = model.fishDTO;
 

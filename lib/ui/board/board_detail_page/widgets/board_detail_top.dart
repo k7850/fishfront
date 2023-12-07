@@ -1,7 +1,10 @@
+import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/board_dto.dart';
 import 'package:fishfront/data/provider/session_provider.dart';
 import 'package:fishfront/ui/_common_widgets/build_time.dart';
+import 'package:fishfront/ui/_common_widgets/my_snackbar.dart';
 import 'package:fishfront/ui/board/board_detail_page/board_detail_view_model.dart';
+import 'package:fishfront/ui/board/board_page/board_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -49,7 +52,11 @@ class BoardDetailTop extends ConsumerWidget {
                             padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 0, horizontal: 5)),
                           ),
                           onPressed: () {
-                            // Navigator.push(context, MaterialPageRoute(builder: (_) => const BoardCreatePage()));
+                            ScaffoldMessenger.of(context).clearSnackBars();
+                            mySnackbar(
+                              3000,
+                              mySnackbarRowAlert("글", " 삭제하시겠습니까", context, () => ref.read(boardProvider.notifier).notifyBoardDelete(boardDTO.id)),
+                            );
                           },
                           child: const Text("글 삭제"),
                         ),

@@ -1,10 +1,15 @@
+import 'package:fishfront/data/dto/schedule_dto.dart';
+import 'package:fishfront/ui/_common_widgets/week_int_to_string.dart';
 import 'package:fishfront/ui/aquarium/detail_schedule_page/detail_schedule_view_model.dart';
+import 'package:fishfront/ui/aquarium/detail_schedule_page/widgets/detail_schedule_all_schedule.dart';
 import 'package:fishfront/ui/aquarium/detail_schedule_page/widgets/detail_schedule_button.dart';
 import 'package:fishfront/ui/aquarium/detail_schedule_page/widgets/detail_schedule_calendar.dart';
 import 'package:fishfront/ui/aquarium/detail_schedule_page/widgets/detail_schedule_show_schedule.dart';
 import 'package:fishfront/ui/aquarium/detail_schedule_page/widgets/detail_schedule_toggle.dart';
+import 'package:fishfront/ui/aquarium/main_page/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class DetailScheduleBody extends ConsumerStatefulWidget {
   const DetailScheduleBody({super.key});
@@ -47,7 +52,9 @@ class _DetailScheduleBodyState extends ConsumerState<DetailScheduleBody> {
           const DetailScheduleShowSchedule(), // 선택한 날짜의 일정
           const SizedBox(height: 10),
           const DetailScheduleButton(), // 스케줄 추가 버튼
-          const SizedBox(height: 5),
+          const SizedBox(height: 10),
+          AllSchedule(scheduleDTOList: model.scheduleDTOList),
+          const SizedBox(height: 15),
         ],
       ),
     );

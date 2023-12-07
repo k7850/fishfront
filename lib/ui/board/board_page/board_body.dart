@@ -1,3 +1,4 @@
+import 'package:fishfront/_core/constants/size.dart';
 import 'package:fishfront/data/dto/board_main_dto.dart';
 import 'package:fishfront/ui/_common_widgets/my_sliver_persistent_header_delegate.dart';
 import 'package:fishfront/ui/board/board_create_page/board_create_page.dart';
@@ -5,8 +6,6 @@ import 'package:fishfront/ui/board/board_page/board_view_model.dart';
 import 'package:fishfront/ui/board/board_page/widgets/board_page_isphoto.dart';
 import 'package:fishfront/ui/board/board_page/widgets/board_page_item.dart';
 import 'package:fishfront/ui/board/board_page/widgets/board_page_search.dart';
-import 'package:fishfront/ui/book/book_page/widgets/book_page_fishclassenum.dart';
-import 'package:fishfront/ui/book/book_page/widgets/book_page_isfreshwater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,6 +23,8 @@ class _BoardBodyState extends ConsumerState<BoardBody> {
 
     BoardModel model = ref.watch(boardProvider)!;
 
+    bool isLastPage = model.isLastPage;
+
     List<BoardMainDTO> boardMainDTOList = model.boardMainDTOList;
 
     bool? isPhoto = model.isPhoto;
@@ -36,63 +37,50 @@ class _BoardBodyState extends ConsumerState<BoardBody> {
       selectBoardList = selectBoardList.where((element) => element.video != null && element.video!.isNotEmpty).toList();
     }
 
-    // if (newSearchTerm != null) {
-    //   selectBookList = selectBookList
-    //       .where((element) =>
-    //           element.normalName.toLowerCase().contains(newSearchTerm.toLowerCase()) ||
-    //           (element.biologyName != null && element.biologyName!.toLowerCase().contains(newSearchTerm.toLowerCase())))
-    //       .toList();
-    // }
-
-    return CustomScrollView(
-      slivers: [
-        SliverPersistentHeader(
-          pinned: false,
-          floating: true,
-          delegate: MySliverPersistentHeaderDelegate(
-            minHeight: 108,
-            maxHeight: 108,
-            child: Stack(
-              children: [
-                Container(
-                  // color: Colors.blue.shade200,
-                  color: Colors.white,
-                  child: const Column(
-                    children: [
-                      SizedBox(height: 13),
-                      BoardPageIsPhoto(),
-                      SizedBox(height: 2),
-                      BoardPageSearch(),
-                    ],
-                  ),
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BoardCreatePage())),
+        child: const Icon(Icons.add, size: 35),
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverPersistentHeader(
+            pinned: false,
+            floating: true,
+            delegate: MySliverPersistentHeaderDelegate(
+              minHeight: 105,
+              maxHeight: 105,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    const BoardPageIsPhoto(),
+                    BoardPageSearch(),
+                  ],
                 ),
-                Container(
-                  margin: const EdgeInsets.only(right: 20),
-                  alignment: Alignment.topRight,
-                  child: ElevatedButton(
-                    style: const ButtonStyle(
-                      minimumSize: MaterialStatePropertyAll(Size.zero),
-                      padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 5, horizontal: 15)),
-                    ),
-                    onPressed: () {
-                      print("글작성버튼");
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const BoardCreatePage()));
-                    },
-                    child: Text("글 작성"),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-        SliverList.separated(
-          itemBuilder: (BuildContext context, int index) {
-            return BoardPageItem(boardMainDTO: selectBoardList[index]);
-          },
-          itemCount: selectBoardList.length,
-          separatorBuilder: (context, index) => const Divider(color: Colors.grey, height: 1, thickness: 1),
-        ),
-      ],
+          SliverList.separated(
+            itemBuilder: (BuildContext context, int index) {
+              return BoardPageItem(boardMainDTO: selectBoardList[index]);
+            },
+            itemCount: selectBoardList.length,
+            separatorBuilder: (context, index) => const Divider(color: Colors.grey, height: 1, thickness: 1),
+          ),
+          SliverToBoxAdapter(
+            child: InkWell(
+              onTap: () => ref.read(boardProvider.notifier).notifyInitAdd(),
+              child: Container(
+                height: 45,
+                decoration: BoxDecoration(color: Colors.yellow[700], border: const Border(top: BorderSide(color: Colors.grey))),
+                child: Center(child: Text(isLastPage ? "마지막 글입니다." : "더 보기", style: const TextStyle(fontSize: 17))),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

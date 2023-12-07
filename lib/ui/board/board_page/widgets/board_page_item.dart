@@ -1,7 +1,9 @@
 import 'package:fishfront/data/dto/board_main_dto.dart';
 import 'package:fishfront/data/provider/param_provider.dart';
 import 'package:fishfront/ui/_common_widgets/build_time.dart';
+import 'package:fishfront/ui/_common_widgets/get_matchword_spans.dart';
 import 'package:fishfront/ui/board/board_detail_page/board_detail_page.dart';
+import 'package:fishfront/ui/board/board_page/board_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +21,8 @@ class BoardPageItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    String keyword = ref.read(boardProvider)!.controller.text;
+
     return Container(
       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
       color: boardMainDTO.isView ? const Color.fromRGBO(210, 210, 210, 1) : Colors.white,
@@ -39,12 +43,27 @@ class BoardPageItem extends ConsumerWidget {
                 ),
                 Container(
                   constraints: BoxConstraints(maxWidth: sizeGetScreenWidth(context) * 0.6),
-                  child: Text(
-                    "${boardMainDTO.title}",
-                    style: const TextStyle(fontSize: 15, color: Colors.black),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
+                  // child: Text(
+                  //   "${boardMainDTO.title}",
+                  //   style: const TextStyle(fontSize: 15, color: Colors.black),
+                  //   overflow: TextOverflow.ellipsis,
+                  //   maxLines: 1,
+                  // ),
+                  child: keyword.isEmpty
+                      ? Text(
+                          boardMainDTO.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 15, color: Colors.black, fontFamily: "Giants"),
+                        )
+                      : RichText(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            style: const TextStyle(fontSize: 15, color: Colors.black, fontFamily: "Giants"),
+                            children: getMatchWordSpans(boardMainDTO.title, keyword, const TextStyle(color: Colors.red)),
+                          ),
+                        ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5),
