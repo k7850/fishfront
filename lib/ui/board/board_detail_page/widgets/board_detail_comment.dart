@@ -33,7 +33,6 @@ class BoardDetailComment extends ConsumerWidget {
             separatorBuilder: (context, index) => const SizedBox(height: 15),
             itemBuilder: (context, index) {
               // if (commentDTOList[index].isDelete ?? false) return const SizedBox(height: 40, child: Text("삭제된 댓글입니다."));
-
               return commentDTOList[index].isDelete ?? false
                   ? const SizedBox(height: 50, child: Text("삭제된 댓글입니다."))
                   : Column(
