@@ -1,16 +1,30 @@
-# fishfront
 
-A new Flutter project.
+# 개인프로젝트 어항 관리 앱
 
-## Getting Started
+김지원
 
-This project is a starting point for a Flutter application.
+https://github.com/k7850/fishfront
 
-A few resources to get you started if this is your first Flutter project:
+https://github.com/k7850/fishback
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 📌 시연 영상(유튜브 링크) 
+
+[![a](http://img.youtube.com/vi/hD3RAo5boKQ/0.jpg)](https://www.youtube.com/watch?v=hD3RAo5boKQ?t=0s)
+
+https://www.youtube.com/watch?v=hD3RAo5boKQ
+
+
+## 📚 기술 스택
+
+### Backend
+
+ <img src="https://img.shields.io/badge/Springboot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">
+ 
+### Frontend
+
+<img src="https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=Flutter&logoColor=white">
+
+### 데이터베이스
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+
