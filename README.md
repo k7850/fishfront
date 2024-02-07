@@ -1,7 +1,7 @@
 
 # 어항 관리 앱 프로젝트
 
-### 개발 기간 및 인원
+## 개발 기간 및 인원
 
 2023년 12월
 
@@ -43,4 +43,9 @@ https://www.youtube.com/watch?v=hD3RAo5boKQ
 
 ### 데이터베이스
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+
+## DB 설계
+
+![mma drawio](https://github.com/k7850/fishfront/assets/135561696/295d93ab-76d6-43ff-9f87-05cd8a267ea0)
+
 
