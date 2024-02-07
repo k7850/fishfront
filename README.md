@@ -5,10 +5,15 @@
 2023년 12월
 김지원 개인프로젝트
 
+프론트엔드 https://github.com/k7850/fishfront
+백엔드 https://github.com/k7850/fishback
 
-https://github.com/k7850/fishfront
+## 주요 기능
+메모, 사진, 동영상 기록
+일정 관리, 생물 관리, 어항 관리
+생물 정보 검색
+게시글 어항 정보 공유
 
-https://github.com/k7850/fishback
 
 
 ## 📌 시연 영상(유튜브 링크) 
