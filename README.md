@@ -1,6 +1,8 @@
 
 # 어항 관리 앱 프로젝트
+
 <br/>
+
 ## 개발 기간 및 인원
 
 2023년 12월
@@ -26,7 +28,6 @@ Spring 백엔드 - https://github.com/k7850/fishback
 사진이나 동영상을 첨부한 게시글 작성과 댓글<br/>
 내 어항과 연동해서 정보 공유하기
 
-
 <br/>
 
 ## 시연 영상(유튜브 링크) 
@@ -49,13 +50,14 @@ https://www.youtube.com/watch?v=hD3RAo5boKQ
 
 ### 데이터베이스
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+
 <br/>
 
 ## DB 설계
 
 ![mma drawio](https://github.com/k7850/fishfront/assets/135561696/295d93ab-76d6-43ff-9f87-05cd8a267ea0)
-<br/>
 
+<br/>
 
 ## 후기
 
