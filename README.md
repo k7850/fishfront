@@ -7,9 +7,11 @@
 
 김지원 개인프로젝트
 
-프론트엔드 https://github.com/k7850/fishfront
+#### Flutter 프론트엔드 
+ https://github.com/k7850/fishfront
 
-백엔드 https://github.com/k7850/fishback
+#### Spring 백엔드 
+ https://github.com/k7850/fishback
 
 
 ## 주요 기능
@@ -24,14 +26,14 @@
 
 
 
-## 📌 시연 영상(유튜브 링크) 
+## 시연 영상(유튜브 링크) 
 
 [![a](http://img.youtube.com/vi/hD3RAo5boKQ/0.jpg)](https://www.youtube.com/watch?v=hD3RAo5boKQ?t=0s)
 
 https://www.youtube.com/watch?v=hD3RAo5boKQ
 
 
-## 📚 기술 스택
+## 기술 스택
 
 ### Backend
 
