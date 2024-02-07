@@ -7,11 +7,11 @@
 
 김지원 개인프로젝트
 
-#### Flutter 프론트엔드 
- https://github.com/k7850/fishfront
+#### Flutter 프론트엔드
+https://github.com/k7850/fishfront
 
-#### Spring 백엔드 
- https://github.com/k7850/fishback
+#### Spring 백엔드
+https://github.com/k7850/fishback
 
 
 ## 주요 기능
